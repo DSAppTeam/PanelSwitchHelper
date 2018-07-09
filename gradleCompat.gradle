@@ -1,0 +1,31 @@
+static int toVersionCode(String input){
+    String[] values = input.tokenize(".")
+    println "input $input values:$values"
+    int result = 0
+    for (String s : values) {
+        result *= 1000
+        result += Integer.parseInt(s)
+    }
+    return result
+}
+
+def vc = toVersionCode(android_gradle_plugin)
+def vc301 = toVersionCode("3.0.1")
+println "android_gradle_plugin:$vc $vc301"
+
+ext.isGradlePlugin3 = vc >= vc301
+if (ext.isGradlePlugin3) {
+    ext.implementation = "implementation"
+    ext.api = "api"
+    ext.androidTestImplementation = "androidTestImplementation"
+    ext.testImplementation = "testImplementation"
+    ext.debugImplementation = "debugImplementation"
+    ext.releaseImplementation = "releaseImplementation"
+} else {
+    ext.implementation = "compile"
+    ext.api = "compile"
+    ext.androidTestImplementation = "androidTestCompile"
+    ext.testImplementation = "testCompile"
+    ext.debugImplementation = "debugCompile"
+    ext.releaseImplementation = "releaseCompile"
+}

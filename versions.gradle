@@ -1,0 +1,23 @@
+ext.deps = [:]
+def versions = [:]
+versions.android_gradle_plugin = android_gradle_plugin
+versions.support = "27.0.2"
+
+
+def support = [:]
+support.v7 = "com.android.support:appcompat-v7:$versions.support"
+ext.deps.support = support
+
+ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+def config = [:]
+config.min_sdk_version = 15
+config.target_sdk_version = 27
+config.compile_sdk_version = 27
+config.build_tool_version = "27.0.3"
+config.version_code = 1
+config.version_name = "1.0"
+config.java_source_version = "1.7"
+config.java_target_version = "1.7"
+ext.config = config
+
