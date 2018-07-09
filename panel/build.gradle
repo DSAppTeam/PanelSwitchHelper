@@ -1,27 +1,26 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion config.compile_sdk_version
-    buildToolsVersion config.build_tool_version
 
     defaultConfig {
-        applicationId "apt.sharedpreferencesprocessor"
         minSdkVersion config.min_sdk_version
         targetSdkVersion config.target_sdk_version
         versionCode config.version_code
         versionName config.version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
-    "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
-    "$implementation" deps.support.v7
-    implementation project(':panel')
+    "$implementation" fileTree(dir: 'libs', include: ['*.jar'])
+    "$implementation" deps.support.annotations
 }

@@ -6,6 +6,7 @@ versions.support = "27.0.2"
 
 def support = [:]
 support.v7 = "com.android.support:appcompat-v7:$versions.support"
+support.annotations = "com.android.support:support-annotations:$versions.support"
 ext.deps.support = support
 
 ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
