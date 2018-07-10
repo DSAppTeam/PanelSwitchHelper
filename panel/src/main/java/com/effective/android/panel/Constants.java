@@ -22,10 +22,11 @@ public class Constants {
     public static final int FLAG_NONE = -1;
     public static final int FLAG_KEYBOARD = 0;
 
-    public static final String LOG_TAG = "kbpanel";
+    public static final String LOG_TAG = "Panel";
 
     public static final long DELAY_SHOW_KEYBOARD_TIME = 200l;
     public static final long DELAY_UNLOCK_CONTENT_TIME = 500l;
     public static final long PROTECT_KEY_CLICK_DURATION = 500l;
 
+    static boolean DEBUG = false;
 }

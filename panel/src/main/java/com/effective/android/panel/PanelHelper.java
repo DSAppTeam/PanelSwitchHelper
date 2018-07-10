@@ -22,7 +22,7 @@ import android.view.inputmethod.InputMethodManager;
  * blog: yummylau.com
  */
 
-public final class KbPanelHelper {
+public final class PanelHelper {
 
     public static void showKeyboard(Context context, View view) {
         InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -74,7 +74,7 @@ public final class KbPanelHelper {
 
     public static int getKeyBoardHeight(Activity activity) {
         SharedPreferences sp = activity.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        boolean isPortrait = KbPanelHelper.isPortrait(activity);
+        boolean isPortrait = PanelHelper.isPortrait(activity);
         String key = isPortrait ?
                 Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
         float defaultHeight = isPortrait ?
@@ -84,7 +84,7 @@ public final class KbPanelHelper {
 
     public static boolean setKeyBoardHeight(Activity activity, int height) {
         SharedPreferences sp = activity.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        String key = KbPanelHelper.isPortrait(activity) ?
+        String key = PanelHelper.isPortrait(activity) ?
                 Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
         return sp.edit().putInt(key, height).commit();
     }

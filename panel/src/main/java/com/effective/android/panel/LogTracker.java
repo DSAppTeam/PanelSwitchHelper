@@ -1,57 +1,72 @@
 package com.effective.android.panel;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.effective.android.panel.listener.OnEditFocusChangeListener;
-import com.effective.android.panel.listener.OnKeyboardStateListener;
-import com.effective.android.panel.listener.OnPanelChangeListener;
-import com.effective.android.panel.listener.OnViewClickListener;
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
 
 /**
+ * single logTracker
  * Created by yummyLau on 18-7-07
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
 public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelChangeListener, OnViewClickListener {
 
-    public boolean open;
+    private static final String TAG = LogTracker.class.getSimpleName();
+    private static volatile LogTracker sInstance = null;
+    private boolean openLog;
 
-    public LogTracker(boolean open) {
-        this.open = open;
+    private LogTracker(boolean openLog) {
+        this.openLog = openLog;
     }
 
-    public void log(@NonNull String message) {
-        if (message == null) {
+    public static LogTracker getInstance() {
+        if (sInstance == null) {
+            synchronized (LogTracker.class) {
+                if (sInstance == null) {
+                    sInstance = new LogTracker(Constants.DEBUG);
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    public void log(String methodName, @NonNull String message) {
+        if (TextUtils.isEmpty(methodName) || TextUtils.isEmpty(message)) {
             return;
         }
-        if (open) {
-            Log.d(Constants.LOG_TAG, message);
+        if (openLog) {
+            Log.d(Constants.LOG_TAG, methodName + " -- " + message);
         }
     }
 
 
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
-        log("#onFocusChange : EditText has focus ( " + hasFocus + " )");
+        log(TAG + "#onFocusChange", "EditText has focus ( " + hasFocus + " )");
     }
 
     @Override
     public void onKeyboardChange(boolean show) {
-        log("onKeyboardChange : Keyboard is showing ( " + show + " )");
+        log(TAG + "#onKeyboardChange", "Keyboard is showing ( " + show + " )");
     }
 
     @Override
     public void onPanelChange(boolean keyboardVisible, PanelView panelView) {
-        log("onPanelChange : Keyboard is showing ( "
+        log(TAG + "#onPanelChange", " Keyboard is showing ( "
                 + keyboardVisible + " ) IPanelView is " + (panelView != null ? panelView.toString() : "null"));
     }
 
 
     @Override
     public void onViewClick(View view) {
-        log("onViewClick : IPanelView is " + (view != null ? view.toString() : "null"));
+        log(TAG + "#onViewClick", "view is " + (view != null ? view.toString() : " null "));
     }
 }

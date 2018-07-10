@@ -1,4 +1,4 @@
-package com.effective.android.panel.listener;
+package com.effective.android.panel.interfaces.listener;
 
 
 import com.effective.android.panel.view.PanelView;

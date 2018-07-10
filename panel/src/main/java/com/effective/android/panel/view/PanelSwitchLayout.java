@@ -7,9 +7,20 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.effective.android.panel.ViewAssertion;
+import com.effective.android.panel.interfaces.ViewAssertion;
 
 /**
+ *     --------------------
+ *    | PanelSwitchLayout  |
+ *    |  ----------------  |
+ *    | |                | |
+ *    | |ContentContainer| |
+ *    | |                | |
+ *    |  ----------------  |
+ *    |  ----------------  |
+ *    | | PanelContainer | |
+ *    |  ----------------  |
+ *     --------------------
  * Created by yummyLau on 18-7-10
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

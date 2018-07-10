@@ -6,18 +6,15 @@ import android.content.res.TypedArray;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.effective.android.panel.Constants;
+import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.R;
-import com.effective.android.panel.ViewAssertion;
+import com.effective.android.panel.interfaces.ViewAssertion;
 
 /**
  * interface, everyPanel should implements
@@ -26,6 +23,8 @@ import com.effective.android.panel.ViewAssertion;
  * blog: yummylau.com
  */
 public class PanelView extends FrameLayout implements ViewAssertion {
+
+    private static final String TAG = PanelView.class.getSimpleName();
 
     private int panelLayoutId;
     private int triggerViewId;
@@ -82,6 +81,7 @@ public class PanelView extends FrameLayout implements ViewAssertion {
 
 
     public void onChangeLayout(int width, int height) {
+        LogTracker.getInstance().log(TAG + "#onChangeLayout", "width : " + width + " height: " + height);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
         params.width = width;
         params.height = height;
@@ -101,9 +101,5 @@ public class PanelView extends FrameLayout implements ViewAssertion {
 
     public boolean isToggle() {
         return toggle;
-    }
-
-    public <T extends View> T getViewById(@IdRes int id) {
-        return this.findViewById(id);
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -13,10 +12,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.effective.android.panel.listener.OnEditFocusChangeListener;
-import com.effective.android.panel.listener.OnKeyboardStateListener;
-import com.effective.android.panel.listener.OnPanelChangeListener;
-import com.effective.android.panel.listener.OnViewClickListener;
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.ContentContainer;
 import com.effective.android.panel.view.PanelSwitchLayout;
 import com.effective.android.panel.view.PanelContainer;
@@ -34,9 +33,9 @@ import java.util.List;
 
 public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutListener {
 
+    private static final String TAG = PanelSwitchHelper.class.getSimpleName();
     private static long preClickTime = 0;
     private int flag = Constants.FLAG_NONE;
-
 
     private boolean isCheckoutDoing;
     private boolean isKeyboardShowing;
@@ -56,7 +55,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
     private PanelSwitchLayout mPanelSwitchLayout;
     private ContentContainer mContentContainer;
     private PanelContainer mPanelContainer;
-    private LogTracker mLogTracker;
     private SparseArray<PanelView> mPanelViewSparseArray;
 
     private PanelSwitchHelper(Builder builder) {
@@ -70,12 +68,12 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         keyboardStatusListeners = builder.keyboardStatusListeners;
         editFocusChangeListeners = builder.editFocusChangeListeners;
 
-        mLogTracker = new LogTracker(builder.logTrack);
+        Constants.DEBUG = builder.logTrack;
         if (builder.logTrack) {
-            viewClickListeners.add(mLogTracker);
-            editFocusChangeListeners.add(mLogTracker);
-            keyboardStatusListeners.add(mLogTracker);
-            panelChangeListeners.add(mLogTracker);
+            viewClickListeners.add(LogTracker.getInstance());
+            editFocusChangeListeners.add(LogTracker.getInstance());
+            keyboardStatusListeners.add(LogTracker.getInstance());
+            panelChangeListeners.add(LogTracker.getInstance());
         }
 
         this.mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -95,7 +93,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 boolean result = checkoutFlag(Constants.FLAG_KEYBOARD);
                 //editText click will make keyboard visible by system,so if checkoutFlag fail,should hide keyboard.
                 if (!result && flag != Constants.FLAG_KEYBOARD) {
-                    KbPanelHelper.hideKeyboard(mActivity, v);
+                    PanelHelper.hideKeyboard(mActivity, v);
                 }
                 notifyViewClick(v);
             }
@@ -134,7 +132,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                     public void onClick(View v) {
 
                         if (System.currentTimeMillis() - preClickTime <= Constants.PROTECT_KEY_CLICK_DURATION) {
-                            mLogTracker.log("PanelSwitchHelper#PanelSwitchHelper panelItem invalid click! preClickTime: " + preClickTime + " currentClickTime: " + System.currentTimeMillis());
+                            LogTracker.getInstance().log(TAG + "#initListener", "panelItem invalid click! preClickTime: " + preClickTime + " currentClickTime: " + System.currentTimeMillis());
                             return;
                         }
 
@@ -155,14 +153,14 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
     private boolean checkoutFlag(int endFlag) {
 
         if (isCheckoutDoing()) {
-            mLogTracker.log("PanelSwitchHelper#checkoutFlag -- is doing checkout,skip!");
+            LogTracker.getInstance().log(TAG + "#checkoutFlag", "checkout doing : skip!");
             return false;
         }
 
         isCheckoutDoing = true;
 
         if (flag == endFlag) {
-            mLogTracker.log("PanelSwitchHelper#checkoutFlag -- flag is the same as enfFlag, it doesn't need to be handled!");
+            LogTracker.getInstance().log(TAG + "#checkoutFlag", "flag is the same as enfFlag, it doesn't need to be handled!");
             isCheckoutDoing = false;
             return true;
         }
@@ -245,12 +243,10 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 break;
             }
             default: {
-                int keyboardHeight = KbPanelHelper.getKeyBoardHeight(mActivity);
-                mLogTracker.log("PanelSwitchHelper#showPanelByFlag -- keyboard get height is : " + keyboardHeight);
                 PanelView panelView = mPanelViewSparseArray.get(flag);
                 panelView.onChangeLayout(
                         mPanelSwitchLayout.getMeasuredWidth() - mPanelSwitchLayout.getPaddingLeft() - mPanelSwitchLayout.getPaddingRight(),
-                        KbPanelHelper.getKeyBoardHeight(mActivity));
+                        PanelHelper.getKeyBoardHeight(mActivity));
                 panelView.setVisibility(View.VISIBLE);
                 setEmptyViewVisible(true);
             }
@@ -265,7 +261,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
             }
             case Constants.FLAG_KEYBOARD: {
                 isHidingKeyboardByUser = true;
-                KbPanelHelper.hideKeyboard(mActivity, mContentContainer.getEditText());
+                PanelHelper.hideKeyboard(mActivity, mContentContainer.getEditText());
                 setEmptyViewVisible(false);
                 break;
             }
@@ -301,10 +297,10 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
         //get statusBar 和 navigationBar height
         int systemUIHeight;
-        int statusBarHeight = KbPanelHelper.getStatusBarHeight(mActivity);
-        int navigationBatHeight = KbPanelHelper.getNavigationBarHeight(mActivity);
-        if (KbPanelHelper.isPortrait(mActivity)) {
-            systemUIHeight = KbPanelHelper.isNavigationBarShow(mActivity) ? statusBarHeight + navigationBatHeight : statusBarHeight;
+        int statusBarHeight = PanelHelper.getStatusBarHeight(mActivity);
+        int navigationBatHeight = PanelHelper.getNavigationBarHeight(mActivity);
+        if (PanelHelper.isPortrait(mActivity)) {
+            systemUIHeight = PanelHelper.isNavigationBarShow(mActivity) ? statusBarHeight + navigationBatHeight : statusBarHeight;
         } else {
             systemUIHeight = statusBarHeight;
         }
@@ -333,8 +329,8 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         } else {
             //meet Showing keyboard,
             if (keyboardHeight > 0) {
-                Log.d(Constants.LOG_TAG, "keyboard set height is : " + keyboardHeight);
-                KbPanelHelper.setKeyBoardHeight(mActivity, keyboardHeight);
+                LogTracker.getInstance().log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                PanelHelper.setKeyBoardHeight(mActivity, keyboardHeight);
                 isKeyboardShowing = true;
                 notifyKeyboardState(true);
             }
@@ -436,7 +432,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
     private class CheckoutKeyboardRunnable implements Runnable {
         @Override
         public void run() {
-            KbPanelHelper.showKeyboard(mActivity, mContentContainer.getEditText());
+            PanelHelper.showKeyboard(mActivity, mContentContainer.getEditText());
             setEmptyViewVisible(true);
             checkoutKeyboardRunnable = null;
         }
