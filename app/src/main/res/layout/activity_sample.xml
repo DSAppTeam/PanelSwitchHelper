@@ -1,94 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.effective.android.panel.view.PanelSwitchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panel_switch_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/content_layout"
+    <com.effective.android.panel.view.ContentContainer
+        android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:background="@android:color/black"
+        android:orientation="vertical"
+        app:edit_view="@id/edit_text"
+        app:empty_view="@id/empty_view">
 
-        <LinearLayout
-            android:id="@+id/content_view"
+        <View
+            android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/black"
-            android:orientation="vertical">
+            android:layout_weight="1" />
 
-            <View
-                android:id="@+id/empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <LinearLayout
+            android:id="@+id/checkout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/checkout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="100dp"
+                android:layout_height="match_parent" />
 
-                <EditText
-                    android:id="@+id/edit_text"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/red_click"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="切换"
+                android:textColor="@android:color/holo_red_dark" />
 
-                <TextView
-                    android:id="@+id/red_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="切换"
-                    android:textColor="@android:color/holo_red_dark" />
+            <TextView
+                android:id="@+id/green_click"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="切换"
+                android:textColor="@android:color/holo_green_dark" />
 
-                <TextView
-                    android:id="@+id/green_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="切换"
-                    android:textColor="@android:color/holo_green_dark" />
-
-                <TextView
-                    android:id="@+id/blue_click"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="切换"
-                    android:textColor="@android:color/holo_blue_dark" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/blue_click"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="切换"
+                android:textColor="@android:color/holo_blue_dark" />
 
         </LinearLayout>
 
+    </com.effective.android.panel.view.ContentContainer>
 
-    </LinearLayout>
 
-    <com.example.demo.TestPanel
-        android:id="@+id/panel_red"
+    <com.effective.android.panel.view.PanelContainer
+        android:id="@+id/panel_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:visibility="gone" />
+        android:layout_height="wrap_content">
 
-    <com.example.demo.TestPanel
-        android:id="@+id/panel_green"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_dark"
-        android:visibility="gone" />
+        <com.effective.android.panel.view.PanelView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:panel_layout="@layout/panel_red_layout"
+            app:panel_trigger="@id/red_click" />
 
-    <com.example.demo.TestPanel
-        android:id="@+id/panel_blue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_bright"
-        android:visibility="gone" />
+        <com.effective.android.panel.view.PanelView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:panel_layout="@layout/panel_green_layout"
+            app:panel_trigger="@id/green_click" />
 
-</LinearLayout>
+        <com.effective.android.panel.view.PanelView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:panel_layout="@layout/panel_green_layout"
+            app:panel_trigger="@id/blue_click" />
+
+    </com.effective.android.panel.view.PanelContainer>
+
+</com.effective.android.panel.view.PanelSwitchLayout>

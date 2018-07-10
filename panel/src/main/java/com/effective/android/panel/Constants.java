@@ -1,4 +1,4 @@
-package com.sample.android.panel;
+package com.effective.android.panel;
 
 /**
  * Created by yummyLau on 18-7-07

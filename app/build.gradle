@@ -5,7 +5,7 @@ android {
     buildToolsVersion config.build_tool_version
 
     defaultConfig {
-        applicationId "apt.sharedpreferencesprocessor"
+        applicationId "com.example.demo"
         minSdkVersion config.min_sdk_version
         targetSdkVersion config.target_sdk_version
         versionCode config.version_code

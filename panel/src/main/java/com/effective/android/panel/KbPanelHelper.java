@@ -1,4 +1,4 @@
-package com.sample.android.panel;
+package com.effective.android.panel;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

@@ -1,14 +1,14 @@
-package com.sample.android.panel;
+package com.effective.android.panel;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
-import com.sample.android.panel.listener.OnEditFocusChangeListener;
-import com.sample.android.panel.listener.OnKeyboardStateListener;
-import com.sample.android.panel.listener.OnPanelChangeListener;
-import com.sample.android.panel.listener.OnViewClickListener;
-import com.sample.android.panel.panel.PanelItem;
+import com.effective.android.panel.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.listener.OnKeyboardStateListener;
+import com.effective.android.panel.listener.OnPanelChangeListener;
+import com.effective.android.panel.listener.OnViewClickListener;
+import com.effective.android.panel.view.PanelView;
 
 /**
  * Created by yummyLau on 18-7-07
@@ -44,10 +44,11 @@ public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateLis
     }
 
     @Override
-    public void onPanelChange(boolean keyboardVisible, PanelItem panelItem) {
+    public void onPanelChange(boolean keyboardVisible, PanelView panelView) {
         log("onPanelChange : Keyboard is showing ( "
-                + keyboardVisible + " ) IPanelView is " + (panelItem != null ? panelItem.getPanelName() : "null"));
+                + keyboardVisible + " ) IPanelView is " + (panelView != null ? panelView.toString() : "null"));
     }
+
 
     @Override
     public void onViewClick(View view) {

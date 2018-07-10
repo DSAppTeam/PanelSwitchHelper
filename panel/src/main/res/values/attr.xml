@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PanelView">
+        <attr name="panel_trigger" format="reference"></attr>
+        <attr name="panel_toggle" format="boolean"></attr>
+        <attr name="panel_adaptive" format="boolean"></attr>
+        <attr name="panel_layout" format="reference"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="ContentContainer">
+        <attr name="edit_view" format="reference"></attr>
+        <attr name="empty_view" format="reference"></attr>
+    </declare-styleable>
+
+</resources>
