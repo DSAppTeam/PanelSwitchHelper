@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PanelSwitchHelper</string>
+    <string name="send">发送</string>
 </resources>

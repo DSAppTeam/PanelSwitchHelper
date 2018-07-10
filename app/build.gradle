@@ -23,5 +23,6 @@ android {
 dependencies {
     "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
     "$implementation" deps.support.v7
+    "$implementation" deps.support.recyclerview
     implementation project(':panel')
 }

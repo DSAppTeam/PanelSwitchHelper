@@ -2,9 +2,11 @@ package com.example.demo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
+import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 
 public class SampleActivity extends AppCompatActivity {
 

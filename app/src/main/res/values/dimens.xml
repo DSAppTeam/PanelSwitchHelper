@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_3">3dp</dimen>
+    <dimen name="dp_7.5">7.5dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_35">35dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
+    <dimen name="dp_80">80dp</dimen>
+
+
+    <dimen name="sp_15">15sp</dimen>
+
+    <dimen name="px_1">1px</dimen>
+    <dimen name="_px_1">-1px</dimen>
+</resources>
