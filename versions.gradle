@@ -2,6 +2,7 @@ ext.deps = [:]
 def versions = [:]
 versions.android_gradle_plugin = android_gradle_plugin
 versions.support = "27.0.2"
+versions.pageindicator = "1.0.1"
 
 
 def support = [:]
@@ -10,6 +11,7 @@ support.annotations = "com.android.support:support-annotations:$versions.support
 support.recyclerview = "com.android.support:recyclerview-v7:$versions.support"
 ext.deps.support = support
 
+ext.deps.pageindicator = "com.romandanylyk:pageindicatorview:$versions.pageindicator"
 ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 
 def config = [:]

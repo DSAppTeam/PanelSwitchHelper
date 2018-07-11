@@ -15,17 +15,17 @@ import com.effective.android.panel.interfaces.ViewAssertion;
 
 
 /**
- *     --------------------
- *    | PanelSwitchLayout  |
- *    |  ----------------  |
- *    | |                | |
- *    | |ContentContainer| |
- *    | |                | |
- *    |  ----------------  |
- *    |  ----------------  |
- *    | | PanelContainer | |
- *    |  ----------------  |
- *     --------------------
+ *  --------------------
+ * | PanelSwitchLayout  |
+ * |  ----------------  |
+ * | |                | |
+ * | |ContentContainer| |
+ * | |                | |
+ * |  ----------------  |
+ * |  ----------------  |
+ * | | PanelContainer | |
+ * |  ----------------  |
+ * --------------------
  * Created by yummyLau on 18-7-10
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
@@ -108,6 +108,10 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
 
     public void setEditTextFocusChangeListener(OnFocusChangeListener l) {
         mEditText.setOnFocusChangeListener(l);
+    }
+
+    public void clearFocusByEditText() {
+        mEditText.clearFocus();
     }
 
     public void requestFocusByEditText() {

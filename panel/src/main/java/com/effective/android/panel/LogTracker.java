@@ -58,10 +58,27 @@ public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateLis
         log(TAG + "#onKeyboardChange", "Keyboard is showing ( " + show + " )");
     }
 
+
     @Override
-    public void onPanelChange(boolean keyboardVisible, PanelView panelView) {
-        log(TAG + "#onPanelChange", " Keyboard is showing ( "
-                + keyboardVisible + " ) IPanelView is " + (panelView != null ? panelView.toString() : "null"));
+    public void onKeyboard() {
+        log(TAG + "#onKeyboard", "panel： keyboard");
+    }
+
+    @Override
+    public void onNone() {
+        log(TAG + "#onNone", "panel： none");
+    }
+
+    @Override
+    public void onPanel(PanelView view) {
+        log(TAG + "#onPanel", "panel：" + (view != null ? view.toString() : "null"));
+    }
+
+    @Override
+    public void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
+        log(TAG + "#onPanelSizeChange", "panelView is " + (panelView != null ? panelView.toString() : "null" +
+                " oldWidth : " + oldWidth + " oldHeight : " + oldHeight +
+                " width : " + width + " height : " + height));
     }
 
 

@@ -4,6 +4,10 @@ android {
     compileSdkVersion config.compile_sdk_version
     buildToolsVersion config.build_tool_version
 
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.demo"
         minSdkVersion config.min_sdk_version
@@ -24,5 +28,7 @@ dependencies {
     "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
     "$implementation" deps.support.v7
     "$implementation" deps.support.recyclerview
-    implementation project(':panel')
+    "$implementation" deps.pageindicator
+
+    "$implementation" project(':panel')
 }

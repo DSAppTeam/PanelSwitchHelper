@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.effective.android.panel.view.PanelSwitchLayout
+        android:id="@+id/panel_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.effective.android.panel.view.ContentContainer
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            app:edit_view="@id/edit_text"
+            app:empty_view="@id/empty_view">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#ebebeb">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <View
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_input_layout"
+                android:gravity="bottom"
+                android:minHeight="@dimen/dp_50"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_7.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
+
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_edit_focus"
+                    android:maxLines="5"
+                    android:minHeight="@dimen/dp_35"
+                    android:paddingLeft="@dimen/dp_3"
+                    android:paddingRight="@dimen/dp_3"
+                    android:paddingBottom="@dimen/dp_3"
+                    android:paddingTop="@dimen/dp_7.5"
+                    android:textCursorDrawable="@drawable/shape_edit_cursor"
+                    android:textSize="@dimen/sp_16" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_35"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/emotion_btn"
+                        android:layout_width="@dimen/dp_35"
+                        android:layout_height="@dimen/dp_35"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:src="@drawable/selector_emotion_btn" />
+
+                    <TextView
+                        android:id="@+id/send"
+                        android:layout_width="@dimen/dp_50"
+                        android:layout_height="@dimen/dp_35"
+                        android:background="@drawable/selector_send_btn"
+                        android:gravity="center"
+                        android:text="@string/send"
+                        android:textColor="@color/color_send_btn"
+                        android:textSize="@dimen/sp_15" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.effective.android.panel.view.ContentContainer>
+
+
+        <com.effective.android.panel.view.PanelContainer
+            android:id="@+id/panel_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.effective.android.panel.view.PanelView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:panel_layout="@layout/panel_emotion_layout"
+                app:panel_trigger="@id/emotion_btn" />
+
+        </com.effective.android.panel.view.PanelContainer>
+
+    </com.effective.android.panel.view.PanelSwitchLayout>
+</layout>

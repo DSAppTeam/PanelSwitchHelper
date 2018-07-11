@@ -4,7 +4,6 @@
     <declare-styleable name="PanelView">
         <attr name="panel_trigger" format="reference"></attr>
         <attr name="panel_toggle" format="boolean"></attr>
-        <attr name="panel_adaptive" format="boolean"></attr>
         <attr name="panel_layout" format="reference"></attr>
     </declare-styleable>
 

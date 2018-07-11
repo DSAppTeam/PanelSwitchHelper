@@ -29,7 +29,6 @@ public class PanelView extends FrameLayout implements ViewAssertion {
     private int panelLayoutId;
     private int triggerViewId;
     private View panelContentView;
-    private boolean adaptive;
     private boolean toggle;
 
     public PanelView(Context context) {
@@ -56,7 +55,6 @@ public class PanelView extends FrameLayout implements ViewAssertion {
         if (typedArray != null) {
             panelLayoutId = typedArray.getResourceId(R.styleable.PanelView_panel_layout, -1);
             triggerViewId = typedArray.getResourceId(R.styleable.PanelView_panel_trigger, -1);
-            adaptive = typedArray.getBoolean(R.styleable.PanelView_panel_adaptive, false);
             toggle = typedArray.getBoolean(R.styleable.PanelView_panel_toggle, true);
             typedArray.recycle();
         }
@@ -85,11 +83,6 @@ public class PanelView extends FrameLayout implements ViewAssertion {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
         params.width = width;
         params.height = height;
-        if (adaptive) {
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
-            layoutParams.width = width;
-            layoutParams.height = height;
-        }
         requestLayout();
     }
 

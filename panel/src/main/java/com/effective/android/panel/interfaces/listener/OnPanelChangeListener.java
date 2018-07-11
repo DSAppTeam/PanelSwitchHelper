@@ -11,5 +11,11 @@ import com.effective.android.panel.view.PanelView;
 
 public interface OnPanelChangeListener {
 
-    void onPanelChange(boolean keyboardVisible, PanelView panelView);
+    void onKeyboard();
+
+    void onNone();
+
+    void onPanel(PanelView view);
+
+    void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height);
 }
