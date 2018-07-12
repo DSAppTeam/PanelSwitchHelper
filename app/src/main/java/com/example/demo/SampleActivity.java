@@ -90,7 +90,7 @@ public class SampleActivity extends AppCompatActivity {
                         @Override
                         public void onKeyboard() {
                             scrollToBottom();
-                            mBinding.emotionBtn.setSelected(true);
+                            mBinding.emotionBtn.setSelected(false);
                         }
 
                         @Override
@@ -101,17 +101,27 @@ public class SampleActivity extends AppCompatActivity {
                         @Override
                         public void onPanel(PanelView view) {
                             scrollToBottom();
-                            mBinding.emotionBtn.setSelected(false);
+                            mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
                         }
 
                         @Override
                         public void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
-                            EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                            int viewPagerSize = height - Utils.dip2px(SampleActivity.this, 30f);
-                            pagerView.buildEmotionViews(
-                                    (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                    mBinding.editText,
-                                    Emotions.getEmotions(), width, viewPagerSize);
+                            switch (panelView.getId()){
+                                case R.id.panel_emotion:{
+                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                    int viewPagerSize = height - Utils.dip2px(SampleActivity.this, 30f);
+                                    pagerView.buildEmotionViews(
+                                            (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                            mBinding.editText,
+                                            Emotions.getEmotions(), width, viewPagerSize);
+                                    break;
+                                }
+                                case R.id.panel_addition:{
+                                    //auto center,nothing to do
+                                    break;
+                                }
+                            }
+
                         }
                     })
                     .logTrack(true)

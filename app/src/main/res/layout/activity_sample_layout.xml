@@ -46,6 +46,13 @@
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10">
 
+                <ImageView
+                    android:id="@+id/add_btn"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:src="@drawable/icon_add" />
+
                 <EditText
                     android:id="@+id/edit_text"
                     android:layout_width="0dp"
@@ -98,10 +105,18 @@
             android:layout_height="wrap_content">
 
             <com.effective.android.panel.view.PanelView
+                android:id="@+id/panel_emotion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:panel_layout="@layout/panel_emotion_layout"
                 app:panel_trigger="@id/emotion_btn" />
+
+            <com.effective.android.panel.view.PanelView
+                android:id="@+id/panel_addition"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:panel_layout="@layout/panel_add_layout"
+                app:panel_trigger="@id/add_btn" />
 
         </com.effective.android.panel.view.PanelContainer>
 

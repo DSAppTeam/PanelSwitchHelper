@@ -78,15 +78,6 @@ public class PanelView extends FrameLayout implements ViewAssertion {
     }
 
 
-    public void onChangeLayout(int width, int height) {
-        LogTracker.getInstance().log(TAG + "#onChangeLayout", "width : " + width + " height: " + height);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
-        params.width = width;
-        params.height = height;
-        requestLayout();
-    }
-
-
     @NonNull
     public int getTriggerViewId() {
         return triggerViewId;
