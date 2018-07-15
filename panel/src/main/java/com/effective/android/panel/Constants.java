@@ -11,8 +11,8 @@ public class Constants {
     public static final String KEYBOARD_HEIGHT_FOR_L = "keyboard_height_for_l";
     public static final String KEYBOARD_HEIGHT_FOR_P = "keyboard_height_for_p";
 
-    public static final float DEFAULT_KEYBOARD_HEIGHT_FOR_L = 263.33f;
-    public static final float DEFAULT_KEYBOARD_HEIGHT_FOR_P = 263.33f;
+    public static final float DEFAULT_KEYBOARD_HEIGHT_FOR_L = 263f;
+    public static final float DEFAULT_KEYBOARD_HEIGHT_FOR_P = 198f;
 
     public static final String STATUS_BAR_HEIGHT_RES_NAME = "status_bar_height";
     public static final String NAVIGATION_BAR_HEIGHT_RES_NAME = "navigation_bar_height";

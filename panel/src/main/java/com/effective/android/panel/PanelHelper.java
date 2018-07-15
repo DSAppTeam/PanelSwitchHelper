@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -23,6 +24,8 @@ import android.view.inputmethod.InputMethodManager;
  */
 
 public final class PanelHelper {
+
+    private static final String TAG = PanelHelper.class.getSimpleName();
 
     public static void showKeyboard(Context context, View view) {
         InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -82,8 +85,19 @@ public final class PanelHelper {
         return sp.getInt(key, dip2px(activity, defaultHeight));
     }
 
+
     public static boolean setKeyBoardHeight(Activity activity, int height) {
         SharedPreferences sp = activity.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        boolean isPortrait = PanelHelper.isPortrait(activity);
+        //filter wrong data
+        //mActivity.getWindow().getDecorView().getHeight() may be right when onGlobalLayout listener
+        if (!isPortrait) {
+            int portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(activity, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P));
+            if (height >= portraitHeight) {
+                LogTracker.getInstance().log(TAG + "#setKeyBoardHeight","filter wrong data : "  + portraitHeight + " -> " + height);
+                return false;
+            }
+        }
         String key = PanelHelper.isPortrait(activity) ?
                 Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
         return sp.edit().putInt(key, height).commit();
