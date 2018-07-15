@@ -17,5 +17,5 @@ public interface OnPanelChangeListener {
 
     void onPanel(PanelView view);
 
-    void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height);
+    void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height);
 }

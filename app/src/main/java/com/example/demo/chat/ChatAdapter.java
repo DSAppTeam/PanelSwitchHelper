@@ -1,4 +1,4 @@
-package com.example.demo.adapter;
+package com.example.demo.chat;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -9,16 +9,12 @@ import android.view.ViewGroup;
 import com.effective.R;
 import com.effective.databinding.VhChatLeftLayoutBinding;
 import com.effective.databinding.VhChatRightLayoutBinding;
-import com.example.demo.adapter.holder.ChatBaseVH;
-import com.example.demo.adapter.holder.ChatLeftVH;
-import com.example.demo.adapter.holder.ChatRightVH;
-import com.example.demo.bean.ChatInfo;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * chatting pager adapter
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

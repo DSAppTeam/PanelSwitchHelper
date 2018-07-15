@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.emotion;
 
 import android.support.annotation.DrawableRes;
 

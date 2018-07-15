@@ -75,8 +75,9 @@ public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateLis
     }
 
     @Override
-    public void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
+    public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
         log(TAG + "#onPanelSizeChange", "panelView is " + (panelView != null ? panelView.toString() : "null" +
+                " portrait : " + portrait +
                 " oldWidth : " + oldWidth + " oldHeight : " + oldHeight +
                 " width : " + width + " height : " + height));
     }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.demo.bean.Emotion;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;

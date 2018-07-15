@@ -1,12 +1,8 @@
 package com.example.demo.emotion;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.net.Uri;
 import android.text.Editable;
 import android.text.Spannable;
-import android.util.AttributeSet;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.ImageView;
 
 import com.effective.R;
 import com.example.demo.Utils;
-import com.example.demo.bean.Emotion;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
-package com.example.demo.adapter.holder;
+package com.example.demo.chat;
 
 import com.effective.databinding.VhChatRightLayoutBinding;
-import com.example.demo.bean.ChatInfo;
 import com.example.demo.emotion.EmojiSpanBuilder;
 
 /**
+ * the right of chatting item
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 处理输入法切换
+ * the helper of panel switching
  * Created by yummyLau on 2018/6/821.
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
@@ -333,7 +333,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 flag = Constants.FLAG_NONE;
                 isKeyboardShowing = false;
                 notifyKeyboardState(false);
-            }else{
+            } else {
                 //if user adjust keyboard
                 PanelHelper.setKeyBoardHeight(mActivity, keyboardHeight);
             }
@@ -412,7 +412,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
     private void notifyPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
         for (OnPanelChangeListener listener : panelChangeListeners) {
-            listener.onPanelSizeChange(panelView, oldWidth, oldHeight, width, height);
+            listener.onPanelSizeChange(panelView, PanelHelper.isPortrait(mActivity), oldWidth, oldHeight, width, height);
         }
     }
 

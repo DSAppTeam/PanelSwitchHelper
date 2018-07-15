@@ -1,6 +1,7 @@
-package com.example.demo.bean;
+package com.example.demo.chat;
 
 /**
+ * the information of chatting item
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

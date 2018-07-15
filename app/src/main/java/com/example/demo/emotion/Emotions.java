@@ -3,7 +3,6 @@ package com.example.demo.emotion;
 import android.text.TextUtils;
 
 import com.effective.R;
-import com.example.demo.bean.Emotion;
 
 import java.util.ArrayList;
 import java.util.Iterator;

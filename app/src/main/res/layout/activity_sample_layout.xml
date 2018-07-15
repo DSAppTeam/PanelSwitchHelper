@@ -65,6 +65,7 @@
                     android:minHeight="@dimen/dp_35"
                     android:paddingLeft="@dimen/dp_3"
                     android:paddingRight="@dimen/dp_3"
+                    android:imeOptions="actionSearch"
                     android:paddingBottom="@dimen/dp_3"
                     android:paddingTop="@dimen/dp_7.5"
                     android:textCursorDrawable="@drawable/shape_edit_cursor"

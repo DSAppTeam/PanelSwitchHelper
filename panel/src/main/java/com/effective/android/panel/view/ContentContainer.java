@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -15,7 +16,7 @@ import com.effective.android.panel.interfaces.ViewAssertion;
 
 
 /**
- *  --------------------
+ * --------------------
  * | PanelSwitchLayout  |
  * |  ----------------  |
  * | |                | |
@@ -72,6 +73,9 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mEditText = findViewById(editTextId);
+        int imeOptions = mEditText.getImeOptions();
+        imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;
+        mEditText.setImeOptions(imeOptions);
         mEmptyView = findViewById(emptyViewId);
         assertView();
     }

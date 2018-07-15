@@ -16,7 +16,7 @@ import android.view.ViewConfiguration;
 import android.view.inputmethod.InputMethodManager;
 
 /**
- * 软键盘助手
+ * panel helper
  * Created by yummyLau on 18-7-07
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

@@ -1,10 +1,11 @@
-package com.example.demo.adapter.holder;
+package com.example.demo.chat;
 
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
+ * base {@link android.support.v7.widget.RecyclerView.ViewHolder} for chatting pager.
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import android.databinding.DataBindingUtil;
-import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +10,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.effective.R;
-import com.effective.android.panel.Constants;
 import com.effective.android.panel.PanelSwitchHelper;
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.PanelView;
 import com.effective.databinding.ActivitySampleLayoutBinding;
-import com.example.demo.adapter.ChatAdapter;
-import com.example.demo.bean.ChatInfo;
+import com.example.demo.chat.ChatAdapter;
+import com.example.demo.chat.ChatInfo;
 import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.EmotionView;
 import com.example.demo.emotion.Emotions;
 import com.rd.PageIndicatorView;
 
@@ -105,7 +101,7 @@ public class SampleActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
+                        public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             switch (panelView.getId()){
                                 case R.id.panel_emotion:{
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
@@ -121,7 +117,6 @@ public class SampleActivity extends AppCompatActivity {
                                     break;
                                 }
                             }
-
                         }
                     })
                     .logTrack(true)
