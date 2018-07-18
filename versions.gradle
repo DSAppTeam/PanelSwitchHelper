@@ -1,7 +1,7 @@
 ext.deps = [:]
 def versions = [:]
 versions.android_gradle_plugin = android_gradle_plugin
-versions.support = "27.0.2"
+versions.support = "27.1.1"
 versions.pageindicator = "1.0.1"
 
 

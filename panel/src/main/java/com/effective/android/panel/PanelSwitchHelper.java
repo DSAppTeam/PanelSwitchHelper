@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * the helper of panel switching
- * Created by yummyLau on 2018/6/821.
+ * Created by yummyLau on 2018-6-21.
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
@@ -353,6 +353,8 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
      * This will be called when User press System Back Button.
      * 1. if keyboard is showing, should be hide;
      * 2. if you want to hide panel(exclude keyboard),you should call it before {@link Activity#onBackPressed()} to hook it.
+     *
+     * @return if need hook
      */
     public boolean hookSystemBackForHindPanel() {
         if (flag != Constants.FLAG_NONE) {
