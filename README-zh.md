@@ -12,12 +12,12 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 ##### 效果展示
 
-[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "540" height = "960" alt="activity layout" align=center />
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "771" height = "717" alt="界面布局" align=center />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "696" height = "703" alt="界面布局" align=center />
 
 涉及的核心类有：
 

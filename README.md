@@ -12,13 +12,12 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 ##### Show results
 
-<!--[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)-->
-
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "540" height = "960" alt="activity layout" align=center />
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "771" height = "717" alt="activity layout" align=center />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "696" height = "703" alt="activity layout" align=center />
 
 The core classes ：
 
