@@ -12,7 +12,8 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 ##### Show results
 
-[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)
+<!--[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)-->
+
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
