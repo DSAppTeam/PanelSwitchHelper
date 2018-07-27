@@ -1,5 +1,5 @@
 ### PanelSwitchHelper
-[![](https://travis-ci.org/YummyLau/panelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
+[![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
@@ -12,7 +12,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 ##### 效果展示
 
-[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_video.mp4)
+[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
