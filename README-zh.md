@@ -8,13 +8,160 @@ README: [English](https://github.com/YummyLau/SharedPreferencesInjector/blob/mas
 
 #### 用于做什么
 
-在开发聊天页面时，开发者希望用户在输入法与功能面板（比如表情面板/更多选项面板等）切换过程中保持平滑过渡不闪烁。 参考了市场上主流的社交app效果及实现，综合互联网上的多种实现思路，最总整合成一个模版框架，该模版框架已经过大量测试使用。
+在开发聊天页面时，开发者希望用户在输入法与功能面板（比如表情面板/更多选项面板等）切换过程中保持平滑过渡不闪烁。 参考了市场上主流的社交app效果及实现，综合互联网上的多种实现思路，最总整合成一个模版框架，该模版框架已经过测试使用。
 
 ##### 效果展示
+<iframe height=1920 width=1080 src="http://player.youku.com/embed/XNjcyMDU4Njg0">
 
 
-##### 实现原理
-1. 
+##### 实现方法
+通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
+
+涉及的核心类有：
+
+* *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能。
+* *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。
+* *PanelContainer* ， 即绿色区域 ， 仅用于存放可切换的面板 （*PanelView*），开发者自主定制 *PanelView* 面板。
+
+以 activity_sample_layout.xml 为例子
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.effective.android.panel.view.PanelSwitchLayout
+        android:id="@+id/panel_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 内容区域 -->
+        <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
+        <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
+        <com.effective.android.panel.view.ContentContainer
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            app:edit_view="@id/edit_text"
+            app:empty_view="@id/empty_view">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#ebebeb">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <View
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_input_layout"
+                android:gravity="bottom"
+                android:minHeight="@dimen/dp_50"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_7.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
+
+                <!-- 更多入口 -->
+                <ImageView
+                    android:id="@+id/add_btn"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:src="@drawable/icon_add" />
+
+                <!-- 输入入口 -->
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_edit_focus"
+                    android:maxLines="5"
+                    android:minHeight="@dimen/dp_35"
+                    android:paddingLeft="@dimen/dp_3"
+                    android:paddingRight="@dimen/dp_3"
+                    android:imeOptions="actionSearch"
+                    android:paddingBottom="@dimen/dp_3"
+                    android:paddingTop="@dimen/dp_7.5"
+                    android:textCursorDrawable="@drawable/shape_edit_cursor"
+                    android:textSize="@dimen/sp_16" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_35"
+                    android:orientation="horizontal">
+
+                    <!-- 表情入口 -->
+                    <ImageView
+                        android:id="@+id/emotion_btn"
+                        android:layout_width="@dimen/dp_35"
+                        android:layout_height="@dimen/dp_35"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:src="@drawable/selector_emotion_btn" />
+
+                    <TextView
+                        android:id="@+id/send"
+                        android:layout_width="@dimen/dp_50"
+                        android:layout_height="@dimen/dp_35"
+                        android:background="@drawable/selector_send_btn"
+                        android:gravity="center"
+                        android:text="@string/send"
+                        android:textColor="@color/color_send_btn"
+                        android:textSize="@dimen/sp_15" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.effective.android.panel.view.ContentContainer>
+
+
+        <!-- 面板区域，仅能包含PanelView-->
+        <com.effective.android.panel.view.PanelContainer
+            android:id="@+id/panel_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 每一项面板 -->
+            <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+            <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+            <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+            <com.effective.android.panel.view.PanelView
+                android:id="@+id/panel_emotion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:panel_layout="@layout/panel_emotion_layout"
+                app:panel_trigger="@id/emotion_btn" />
+
+            <com.effective.android.panel.view.PanelView
+                android:id="@+id/panel_addition"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:panel_layout="@layout/panel_add_layout"
+                app:panel_trigger="@id/add_btn" />
+
+        </com.effective.android.panel.view.PanelContainer>
+    </com.effective.android.panel.view.PanelSwitchLayout>
+</layout>
+```
 
 
 #### 如何引用
@@ -50,8 +197,5 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.0'
 ```
 
 
-
 #### 期望
-编写该项目只是希望能提高日常开发的效率，专注于处理业务 。 javapoet 是个好东西，也可以参考 apt 文件下的三个模块，自行利用注解扩展满足自身项目需求 。
-
-如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
+编写该项目只是希望能提高日常开发的效率，专注于处理业务 。如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
