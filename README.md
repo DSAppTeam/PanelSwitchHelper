@@ -1,21 +1,24 @@
-### panelSwitchHelper
+### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/panelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
-README: [English](https://github.com/YummyLau/SharedPreferencesInjector/blob/master/README.md) | [中文](https://github.com/YummyLau/SharedPreferencesInjector/blob/master/README-zh.md)
+README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
 
 #### What to do
 
 When developing a chat page, the developer wants the user to keep a smooth transition without flickering during the keyboard and function panel (such as the emoticon panel/more options panel). Referring to the mainstream social app effect and implementation in the market, a variety of implementation ideas on the integrated Internet, the most integrated into a template framework, the template framework has been tested and used.
 
 ##### Show results
-<iframe height=1920 width=1080 src="http://player.youku.com/embed/XNjcyMDU4Njg0">
+
+[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_video.mp4)
 
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "771" height = "717" alt="activity layout" align=center />
 
 The core classes ：
 

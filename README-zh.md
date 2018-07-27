@@ -1,21 +1,23 @@
-### panelSwitchHelper
+### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/panelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
-README: [English](https://github.com/YummyLau/SharedPreferencesInjector/blob/master/README.md) | [中文](https://github.com/YummyLau/SharedPreferencesInjector/blob/master/README-zh.md)
+README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
 
 #### 用于做什么
 
 在开发聊天页面时，开发者希望用户在输入法与功能面板（比如表情面板/更多选项面板等）切换过程中保持平滑过渡不闪烁。 参考了市场上主流的社交app效果及实现，综合互联网上的多种实现思路，最总整合成一个模版框架，该模版框架已经过测试使用。
 
 ##### 效果展示
-<iframe height=1920 width=1080 src="http://player.youku.com/embed/XNjcyMDU4Njg0">
 
+[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_video.mp4)
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "771" height = "717" alt="界面布局" align=center />
 
 涉及的核心类有：
 
