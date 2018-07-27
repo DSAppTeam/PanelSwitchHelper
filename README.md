@@ -1,5 +1,5 @@
 ### PanelSwitchHelper
-[![](https://travis-ci.org/YummyLau/panelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
+[![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
@@ -12,8 +12,7 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 ##### Show results
 
-[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_video.mp4)
-
+[![ScreenShot](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_show.png)](https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_video.mp4)
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
