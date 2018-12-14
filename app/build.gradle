@@ -29,7 +29,7 @@ dependencies {
     "$implementation" deps.support.v7
     "$implementation" deps.support.recyclerview
     "$implementation" deps.pageindicator
-    "$implementation" deps.panelSwitchHelper
+//    "$implementation" deps.panelSwitchHelper
 
-//    "$implementation" project(':panel')
+    "$implementation" project(':panel')
 }
