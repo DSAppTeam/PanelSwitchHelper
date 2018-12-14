@@ -15,4 +15,7 @@
     <color name="gray_800">#424242</color>
     <color name="gray_900">#212121</color>
 
+
+    <color name="video_input_text_hint">#5FFFFFFF</color>
+
 </resources>

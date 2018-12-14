@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
+import com.effective.android.panel.interfaces.IPopupSupport;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -323,8 +325,15 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
         //get keyboard height
         int keyboardHeight = 0;
+
+        //compat popupwindow or activity window is fullScreen
         if (keyboardHeight == 0 && heightDiff > systemUIHeight) {
-            keyboardHeight = heightDiff - systemUIHeight;
+            if ((mActivity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                    != WindowManager.LayoutParams.FLAG_FULLSCREEN) {
+                keyboardHeight = heightDiff - systemUIHeight;
+            }else{
+                keyboardHeight = heightDiff;
+            }
         }
 
         if (isKeyboardShowing) {
@@ -479,6 +488,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         List<OnEditFocusChangeListener> editFocusChangeListeners;
 
         Activity activity;
+        PopupWindow popupWindow;
         PanelSwitchLayout panelSwitchLayout;
         ContentContainer contentContainer;
         PanelContainer panelContainer;
@@ -486,6 +496,15 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
         @IdRes
         private int panelSwitchLayoutId, contentContainerId, panelContainerId;
+
+        public Builder(IPopupSupport popupSupport) {
+            this.popupWindow = popupSupport.getPopupWindow();
+            this.activity = popupSupport.getActivity();
+            viewClickListeners = new ArrayList<>();
+            panelChangeListeners = new ArrayList<>();
+            keyboardStatusListeners = new ArrayList<>();
+            editFocusChangeListeners = new ArrayList<>();
+        }
 
         public Builder(Activity activity) {
             this.activity = activity;
@@ -549,7 +568,12 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : innerActivity can't be null!please set value by call #Builder");
             }
 
-            View root = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+            View root = null;
+            if (popupWindow != null) {
+                root = popupWindow.getContentView();
+            } else {
+                root = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+            }
 
             panelSwitchLayout = root.findViewById(panelSwitchLayoutId);
             if (panelSwitchLayout == null || !(panelSwitchLayout instanceof PanelSwitchLayout)) {
