@@ -73,10 +73,10 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mEditText = findViewById(editTextId);
-        int imeOptions = mEditText.getImeOptions();
-        imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;
-        mEditText.setImeOptions(imeOptions);
         mEmptyView = findViewById(emptyViewId);
+        int imeOptions = mEditText.getImeOptions();
+        imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;        //Prohibited all screens
+        mEditText.setImeOptions(imeOptions);
         assertView();
     }
 
@@ -126,7 +126,7 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
         return mEditText.hasFocus();
     }
 
-    public void preformClickByEditText() {
+    public void preformClickForEditText() {
         mEditText.performClick();
     }
 }

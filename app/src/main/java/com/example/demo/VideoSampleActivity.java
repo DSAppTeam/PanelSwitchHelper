@@ -35,6 +35,14 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
     private PanelSwitchHelper mHelper;
     private boolean isPortrait = true;
     private VideoPopWindow videoPopWindow;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (videoPopWindow != null) {
+                videoPopWindow.showKeyboard();
+            }
+        }
+    };
 
 
     @Override
@@ -86,7 +94,7 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
                         videoPopWindow = new VideoPopWindow(VideoSampleActivity.this, VideoSampleActivity.this);
                     }
                     videoPopWindow.showAtLocation(mBinding.panelSwitchLayout, Gravity.NO_GRAVITY, 0, 0);
-                    videoPopWindow.shoyKeyboard();
+                    mBinding.getRoot().postDelayed(runnable, 500);
                 }
             }
         });
@@ -148,6 +156,15 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
     }
 
     @Override
+    protected void onDestroy() {
+        if (videoPopWindow != null) {
+            videoPopWindow.onDestroy();
+        }
+        mBinding.getRoot().removeCallbacks(runnable);
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (!isPortrait) {
             if (videoPopWindow.isShowing()) {
@@ -173,10 +190,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//            WindowManager manager = this.getWindowManager();
-//            DisplayMetrics outMetrics = new DisplayMetrics();
-//            manager.getDefaultDisplay().getMetrics(outMetrics);
-//            layoutParams.height = outMetrics.heightPixels;
             layoutParams.height = layoutParams.MATCH_PARENT;
         }
         mBinding.videoView.setLayoutParams(layoutParams);

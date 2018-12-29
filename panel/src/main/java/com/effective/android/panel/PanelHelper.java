@@ -8,12 +8,14 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 /**
@@ -28,14 +30,19 @@ public final class PanelHelper {
     private static final String TAG = PanelHelper.class.getSimpleName();
 
     public static void showKeyboard(Context context, View view) {
-        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         view.requestFocus();
+        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         mInputManager.showSoftInput(view, 0);
     }
 
     public static void hideKeyboard(Context context, View view) {
         InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         mInputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static boolean isFullScreen(Activity activity) {
+        return (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                == WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -55,8 +62,27 @@ public final class PanelHelper {
         return result;
     }
 
-    public static boolean isPortrait(Context context) {
-        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+    public static boolean isPortrait(@NonNull Context context) {
+        int orientation = context.getResources().getConfiguration().orientation;
+        switch (orientation) {
+            case Configuration.ORIENTATION_PORTRAIT: {
+                return true;
+            }
+            case Configuration.ORIENTATION_LANDSCAPE: {
+                return false;
+            }
+            default: {
+                Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                Point point = new Point();
+                display.getSize(point);
+                if (point.x <= point.y) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     @TargetApi(14)
@@ -94,7 +120,7 @@ public final class PanelHelper {
         if (!isPortrait) {
             int portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(activity, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P));
             if (height >= portraitHeight) {
-                LogTracker.getInstance().log(TAG + "#setKeyBoardHeight","filter wrong data : "  + portraitHeight + " -> " + height);
+                LogTracker.getInstance().log(TAG + "#setKeyBoardHeight", "filter wrong data : " + portraitHeight + " -> " + height);
                 return false;
             }
         }

@@ -27,6 +27,10 @@ public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateLis
         this.openLog = openLog;
     }
 
+    public static void Log(String methodName, String message) {
+        getInstance().log(methodName, message);
+    }
+
     public static LogTracker getInstance() {
         if (sInstance == null) {
             synchronized (LogTracker.class) {

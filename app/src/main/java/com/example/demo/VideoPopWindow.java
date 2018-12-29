@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.effective.R;
+import com.effective.android.panel.PanelHelper;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.IPopupSupport;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -121,8 +122,16 @@ public class VideoPopWindow extends PopupWindow implements IPopupSupport {
         }
     }
 
-    public void shoyKeyboard(){
-        mHelper.showKeyboard();
+    public void onDestroy(){
+        if(mHelper != null){
+            mHelper.onDestroy();
+        }
+    }
+
+    public void showKeyboard(){
+        if(mHelper != null){
+            mHelper.showKeyboard();
+        }
     }
 
     @Override

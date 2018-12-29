@@ -24,8 +24,6 @@ import com.effective.android.panel.interfaces.ViewAssertion;
  */
 public class PanelView extends FrameLayout implements ViewAssertion {
 
-    private static final String TAG = PanelView.class.getSimpleName();
-
     private int panelLayoutId;
     private int triggerViewId;
     private View panelContentView;
