@@ -1,5 +1,7 @@
 package com.effective.android.panel;
 
+import com.effective.android.panel.view.PanelView;
+
 /**
  * Created by yummyLau on 18-7-07
  * Email: yummyl.lau@gmail.com
@@ -7,6 +9,7 @@ package com.effective.android.panel;
  */
 public class Constants {
 
+    public static final String LOG_TAG = "Panel";
     public static final String KB_PANEL_PREFERENCE_NAME = "ky_panel_name";
     public static final String KEYBOARD_HEIGHT_FOR_L = "keyboard_height_for_l";
     public static final String KEYBOARD_HEIGHT_FOR_P = "keyboard_height_for_p";
@@ -19,13 +22,17 @@ public class Constants {
     public static final String DIMEN = "dimen";
     public static final String ANDROID = "android";
 
-    public static final int FLAG_NONE = -1;
-    public static final int FLAG_KEYBOARD = 0;
+    /**
+     * panel id, custom panel (PanelView) id is panelView's triggerViewId
+     * {@link PanelView#getTriggerViewId()}
+     */
+    public static final int PANEL_NONE = -1;
+    public static final int PANEL_KEYBOARD = 0;
 
-    public static final String LOG_TAG = "Panel";
 
     public static final long DELAY_SHOW_KEYBOARD_TIME = 200l;
     public static final long DELAY_UNLOCK_CONTENT_TIME = 500l;
+
     public static final long PROTECT_KEY_CLICK_DURATION = 500l;
 
     static boolean DEBUG = false;
