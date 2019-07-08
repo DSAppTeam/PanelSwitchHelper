@@ -28,7 +28,7 @@ import com.rd.PageIndicatorView;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class SampleActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     private ActivitySampleLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
@@ -54,7 +54,7 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = mBinding.editText.getText().toString();
                 if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(SampleActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
@@ -126,7 +126,7 @@ public class SampleActivity extends AppCompatActivity {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(SampleActivity.this, 30f);
+                                    int viewPagerSize = height - Utils.dip2px(ChatActivity.this, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
@@ -154,11 +154,12 @@ public class SampleActivity extends AppCompatActivity {
     }
 
     @Override
+
     protected void onDestroy() {
         super.onDestroy();
         if (mHelper != null) {
             mHelper.onDestroy();
         }
-        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
+//        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
     }
 }
