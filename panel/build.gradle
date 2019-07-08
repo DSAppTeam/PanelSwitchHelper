@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion config.compile_sdk_version
@@ -24,6 +25,15 @@ dependencies {
     "$implementation" fileTree(dir: 'libs', include: ['*.jar'])
     "$implementation" deps.support.annotations
 }
+
+//publish {
+//    userOrg = 'yummylau'
+//    groupId = 'com.effective.android'
+//    artifactId = 'panelSwitchHelper'
+//    publishVersion = '1.0.1'
+//    desc = 'the helper that is used to checkout panel when we are chatting'
+//    website = 'https://github.com/YummyLau/Anchors'
+//}
 
 
 

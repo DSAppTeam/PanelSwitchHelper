@@ -30,6 +30,4 @@ dependencies {
     "$implementation" deps.support.recyclerview
     "$implementation" deps.pageindicator
     "$implementation" deps.panelSwitchHelper
-
-//    "$implementation" project(':panel')
 }

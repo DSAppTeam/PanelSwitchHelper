@@ -8,9 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- 内容区域 -->
-        <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
-        <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
+        <!-- 内容区域  -->
         <com.effective.android.panel.view.ContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
@@ -20,29 +18,20 @@
             app:edit_view="@id/edit_text"
             app:empty_view="@id/empty_view">
 
-            <FrameLayout
+            <View
+                android:id="@+id/empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="#ebebeb">
-
-                <!--<android.support.v7.widget.RecyclerView-->
-                    <!--android:id="@+id/recycler_view"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent" />-->
-
-                <View
-                    android:id="@+id/empty_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </FrameLayout>
-
+                android:layout_weight="1" />
 
             <LinearLayout
+                android:id="@+id/input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_input_layout"
                 android:gravity="bottom"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:minHeight="@dimen/dp_50"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/dp_7.5"
@@ -66,12 +55,12 @@
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_weight="1"
                     android:background="@drawable/selector_edit_focus"
+                    android:imeOptions="actionSearch"
                     android:maxLines="5"
                     android:minHeight="@dimen/dp_35"
+                    android:paddingBottom="@dimen/dp_3"
                     android:paddingLeft="@dimen/dp_3"
                     android:paddingRight="@dimen/dp_3"
-                    android:imeOptions="actionSearch"
-                    android:paddingBottom="@dimen/dp_3"
                     android:paddingTop="@dimen/dp_7.5"
                     android:textCursorDrawable="@drawable/shape_edit_cursor"
                     android:textSize="@dimen/sp_16" />
@@ -102,14 +91,13 @@
                 </LinearLayout>
 
             </LinearLayout>
-
         </com.effective.android.panel.view.ContentContainer>
-
 
         <!-- 面板区域，仅能包含PanelView-->
         <com.effective.android.panel.view.PanelContainer
             android:id="@+id/panel_container"
             android:layout_width="match_parent"
+            android:background="@android:color/white"
             android:layout_height="wrap_content">
 
             <!-- 每一项面板 -->
@@ -131,5 +119,8 @@
                 app:panel_trigger="@id/add_btn" />
 
         </com.effective.android.panel.view.PanelContainer>
+
     </com.effective.android.panel.view.PanelSwitchLayout>
+
+
 </layout>
