@@ -7,12 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
 import com.effective.databinding.ActivitySampleLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
@@ -26,7 +28,7 @@ import com.rd.PageIndicatorView;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class SampleActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     private ActivitySampleLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
@@ -52,7 +54,7 @@ public class SampleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = mBinding.editText.getText().toString();
                 if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(SampleActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
@@ -82,6 +84,24 @@ public class SampleActivity extends AppCompatActivity {
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .bindPanelContainerId(R.id.panel_container)
                     .bindContentContainerId(R.id.content_view)
+                    .addKeyboardStateListener(new OnKeyboardStateListener() {
+                        @Override
+                        public void onKeyboardChange(boolean visible) {
+
+                        }
+                    })
+                    .addEdittextFocesChangeListener(new OnEditFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+
+                        }
+                    })
+                    .addViewClickListener(new OnViewClickListener() {
+                        @Override
+                        public void onViewClick(View view) {
+
+                        }
+                    })
                     .addPanelChangeListener(new OnPanelChangeListener() {
 
                         @Override
@@ -103,24 +123,24 @@ public class SampleActivity extends AppCompatActivity {
 
                         @Override
                         public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            switch (panelView.getId()){
-                                case R.id.panel_emotion:{
+                            switch (panelView.getId()) {
+                                case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(SampleActivity.this, 30f);
+                                    int viewPagerSize = height - Utils.dip2px(ChatActivity.this, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
                                             Emotions.getEmotions(), width, viewPagerSize);
                                     break;
                                 }
-                                case R.id.panel_addition:{
+                                case R.id.panel_addition: {
                                     //auto center,nothing to do
                                     break;
                                 }
                             }
                         }
                     })
-                    .logTrack(true)
+                    .logTrack(true)             //output log
                     .build();
         }
     }
@@ -134,8 +154,12 @@ public class SampleActivity extends AppCompatActivity {
     }
 
     @Override
+
     protected void onDestroy() {
         super.onDestroy();
-        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
+        if (mHelper != null) {
+            mHelper.onDestroy();
+        }
+//        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
     }
 }
