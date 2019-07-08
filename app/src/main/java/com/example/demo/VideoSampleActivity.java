@@ -17,7 +17,7 @@ import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.PanelView;
-import com.effective.databinding.ActivityVideoSampleLayoutBinding;
+import com.effective.databinding.ActivityVideoLayoutBinding;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.interfaces.PopContentSupport;
@@ -30,7 +30,7 @@ import com.rd.PageIndicatorView;
  */
 public class VideoSampleActivity extends AppCompatActivity implements PopContentSupport {
 
-    private ActivityVideoSampleLayoutBinding mBinding;
+    private ActivityVideoLayoutBinding mBinding;
     private int portraitHeight;
     private PanelSwitchHelper mHelper;
     private boolean isPortrait = true;
@@ -48,7 +48,7 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_sample_layout);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_layout);
         initView();
     }
 

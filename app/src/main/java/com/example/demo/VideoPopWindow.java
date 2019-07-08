@@ -13,7 +13,6 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.effective.R;
-import com.effective.android.panel.PanelHelper;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.IPopupSupport;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -46,7 +45,7 @@ public class VideoPopWindow extends PopupWindow implements IPopupSupport {
 
     public VideoPopWindow(final Activity activity, final PopContentSupport popContentSupport) {
         super(activity);
-        final View view = LayoutInflater.from(activity).inflate(R.layout.pop_video_sample_layout, null, false);
+        final View view = LayoutInflater.from(activity).inflate(R.layout.pop_video_layout, null, false);
         this.activity = activity;;
         emotionBtn = view.findViewById(R.id.emotion_btn);
         editText = view.findViewById(R.id.edit_text);

@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding.chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ChatActivity.class));
+                startActivity(new Intent(MainActivity.this, ChatSampleActivity.class));
             }
         });
         mBinding.video.setOnClickListener(new View.OnClickListener() {

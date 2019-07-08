@@ -16,7 +16,7 @@ import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
-import com.effective.databinding.ActivitySampleLayoutBinding;
+import com.effective.databinding.ActivityChatLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
 import com.example.demo.emotion.EmotionPagerView;
@@ -28,9 +28,9 @@ import com.rd.PageIndicatorView;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class ChatActivity extends AppCompatActivity {
+public class ChatSampleActivity extends AppCompatActivity {
 
-    private ActivitySampleLayoutBinding mBinding;
+    private ActivityChatLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -39,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sample_layout);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat_layout);
         initView();
     }
 
@@ -54,7 +54,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = mBinding.editText.getText().toString();
                 if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatSampleActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
@@ -126,7 +126,7 @@ public class ChatActivity extends AppCompatActivity {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(ChatActivity.this, 30f);
+                                    int viewPagerSize = height - Utils.dip2px(ChatSampleActivity.this, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
