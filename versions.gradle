@@ -18,7 +18,7 @@ ext.deps.panelSwitchHelper = "com.effective.android:panelSwitchHelper:$versions.
 
 def config = [:]
 config.min_sdk_version = 15
-config.target_sdk_version = 27
+config.target_sdk_version = 29
 config.compile_sdk_version = 29
 config.build_tool_version = "29.0.1"
 config.version_code = 1
