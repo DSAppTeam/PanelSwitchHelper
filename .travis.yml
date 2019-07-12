@@ -1,31 +1,25 @@
-language: android
-android:
-  components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - tools
-    # - platform-tools
-
-    # The BuildTools version used by your project
-    - build-tools-27.0.3
-
-    # The SDK version used to compile your project
-    - android-27
-
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-26
-
-
-#  licenses:
-#    - 'android-sdk-preview-license-52d11cd2'
-#    - 'android-sdk-license-.+'
-#    - 'google-gdk-license-.+'
-#    - '.+'
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-#    - sys-img-armeabi-v7a-android-26
-#    - sys-img-armeabi-v7a-android-17
+language: android        #语言说明
+jdk: oraclejdk8          #jdk版本
+sudo: required           #权限要求
+env:                 #环境变量
+global:
+  - ANDROID_API=29
+  - EMULATOR_API=21
+  - ANDROID_BUILD_TOOLS=29.0.1
+  - ADB_INSTALL_TIMEOUT=5 # minutes
+android:             #Android 环境要求
+components:
+  - tools
+  - platform-tools
+  - build-tools-$ANDROID_BUILD_TOOLS
+  - android-$ANDROID_API
+  - android-$EMULATOR_API
+  - extra-google-m2repository
+  - extra-android-m2repository        # 配置design 库
+  - addon-google_apis-google-19       # 配置google play services
+  - sys-img-armeabi-v7a-android-$ANDROID_API
+  - sys-img-armeabi-v7a-android-$EMULATOR_API
+licenses:               #内容许可添加
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
