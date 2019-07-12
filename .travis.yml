@@ -1,29 +1,30 @@
 language: android        #语言说明
+dist : trusty
 jdk: oraclejdk8          #jdk版本
 sudo: true           #权限要求
 env:                 #环境变量
-global:
-  - ANDROID_API=29
-  - EMULATOR_API=21
-  - ANDROID_BUILD_TOOLS=29.0.1
-  - ADB_INSTALL_TIMEOUT=5 # minutes
-  - ANDROID_HOME=/usr/local/android-sdk # minutes
+  global:
+    - ANDROID_API=29
+    - EMULATOR_API=21
+    - ANDROID_BUILD_TOOLS=29.0.1
+    - ADB_INSTALL_TIMEOUT=5 # minutes
+    - ANDROID_HOME=/usr/local/android-sdk # minutes
 android:             #Android 环境要求
-components:
-  - tools
-  - platform-tools
-  - build-tools-$ANDROID_BUILD_TOOLS
-  - android-$ANDROID_API
-  - android-$EMULATOR_API
-  - extra-google-m2repository
-  - extra-android-m2repository        # 配置design 库
-  - addon-google_apis-google-19       # 配置google play services
-  - sys-img-armeabi-v7a-android-$ANDROID_API
-  - sys-img-armeabi-v7a-android-$EMULATOR_API
-licenses:               #内容许可添加
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+  components:
+    - tools
+    - platform-tools
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - android-$ANDROID_API
+    - android-$EMULATOR_API
+    - extra-google-m2repository
+    - extra-android-m2repository        # 配置design 库
+    - addon-google_apis-google-19       # 配置google play services
+    - sys-img-armeabi-v7a-android-$ANDROID_API
+    - sys-img-armeabi-v7a-android-$EMULATOR_API
+  licenses:               #内容许可添加
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 
 before_install:
