@@ -7,6 +7,7 @@ global:
   - EMULATOR_API=21
   - ANDROID_BUILD_TOOLS=29.0.1
   - ADB_INSTALL_TIMEOUT=5 # minutes
+  - ANDROID_HOME=/usr/local/android-sdk # minutes
 android:             #Android 环境要求
 components:
   - tools
@@ -25,10 +26,10 @@ licenses:               #内容许可添加
   - google-gdk-license-.+
 
 
-#before_install:
-#  - chmod +x gradlew
-#  - mkdir "$ANDROID_HOME/licenses" || true
-#  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-#  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-#  - yes | sdkmanager --update
-#  - yes | sdkmanager --licenses
+before_install:
+  - chmod +x gradlew
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - yes | sdkmanager --update
+  - yes | sdkmanager --licenses
