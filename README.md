@@ -10,6 +10,8 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 * 1.0.1(2019-07-08) Support compatible with AndroidQ+ focus conflict, support video mode
 
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "540" height = "960" alt="activity layout" align=center />
+
 #### What to do
 
 When developing a chat page, the developer wants the user to keep a smooth transition without flickering during the keyboard and function panel (such as the emoticon panel/more options panel). Referring to the mainstream social app effect and implementation in the market, a variety of implementation ideas on the integrated Internet, the most integrated into a template framework, the template framework has been tested and used.
