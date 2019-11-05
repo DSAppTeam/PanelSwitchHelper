@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,6 +24,9 @@ import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.rd.PageIndicatorView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
@@ -35,6 +39,7 @@ public class ChatSampleActivity extends AppCompatActivity {
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Runnable mScrollToBottomRunnable;
+    private static final String TAG = "ChatSampleActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,11 @@ public class ChatSampleActivity extends AppCompatActivity {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        mAdapter = new ChatAdapter(this);
+        List<ChatInfo> chatInfos = new ArrayList<>();
+        for(int i = 0; i < 50; i++){
+            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i+1) + "条"));
+        }
+        mAdapter = new ChatAdapter(this,chatInfos);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,39 +93,47 @@ public class ChatSampleActivity extends AppCompatActivity {
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .bindPanelContainerId(R.id.panel_container)
                     .bindContentContainerId(R.id.content_view)
+                    //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
                         public void onKeyboardChange(boolean visible) {
+                            Log.d(TAG, "系统键盘是否可见 : " + visible);
 
                         }
                     })
+                    //可选
                     .addEdittextFocesChangeListener(new OnEditFocusChangeListener() {
                         @Override
                         public void onFocusChange(View view, boolean hasFocus) {
-
+                            Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
                         }
                     })
+                    //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
                         public void onViewClick(View view) {
-
+                            Log.d(TAG, "点击了View : " + view);
                         }
                     })
+                    //可选
                     .addPanelChangeListener(new OnPanelChangeListener() {
 
                         @Override
                         public void onKeyboard() {
+                            Log.d(TAG, "唤起系统输入法");
                             scrollToBottom();
                             mBinding.emotionBtn.setSelected(false);
                         }
 
                         @Override
                         public void onNone() {
+                            Log.d(TAG, "隐藏所有面板");
                             mBinding.emotionBtn.setSelected(false);
                         }
 
                         @Override
                         public void onPanel(PanelView view) {
+                            Log.d(TAG, "唤起面板 : " + view);
                             scrollToBottom();
                             mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
                         }

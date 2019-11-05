@@ -9,6 +9,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 版本更新
 
 * 1.0.1(2019-07-08) 支持兼容AndroidQ+焦点冲突，支持视频模式
+* 1.0.2(2019-11-05) 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
 
@@ -30,6 +31,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能。
 * *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。
 * *PanelContainer* ， 即绿色区域 ， 仅用于存放可切换的面板 （*PanelView*），开发者自主定制 *PanelView* 面板。
+* *EmptyView* ， 可选配置，一般建议使用，支持1.0.2更新的功能
 
 以 activity_sample_layout.xml 为例子
 
@@ -67,7 +69,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <View
+                <com.effective.android.panel.view.EmptyView
                     android:id="@+id/empty_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -175,7 +177,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.0'
+implementation 'com.effective.android:panelSwitchHelper:1.0.2'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。
@@ -202,6 +204,14 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.0'
         super.onBackPressed();
    }
     
+```
+
+3. 框架提供了多个可解决特殊场景的api，要学会灵活使用（针对超级复杂的需求场景）
+
+```
+//具体方法可在源码查看
+PanelSwitchHelper 提供 隐藏输入法或面板 和 显示输入法方法
+PanelHelper 提供隐藏输入法，显示输入法，判断全屏，获取状态栏高度，导航栏高度，是否是横竖屏等
 ```
 
 

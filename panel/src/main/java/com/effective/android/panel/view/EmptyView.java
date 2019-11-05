@@ -2,7 +2,6 @@ package com.effective.android.panel.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -36,6 +35,7 @@ public class EmptyView extends View {
     public EmptyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
