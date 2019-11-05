@@ -63,7 +63,7 @@
                     android:textColorHint="@color/video_input_text_hint"
                     android:textSize="@dimen/sp_14" />
 
-                <View
+                <com.effective.android.panel.view.EmptyView
                     android:id="@+id/empty_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
