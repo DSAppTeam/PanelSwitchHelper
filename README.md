@@ -9,6 +9,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### Version Update
 
 * 1.0.1(2019-07-08) Support compatible with AndroidQ+ focus conflict, support video mode
+* 1.0.2(2019-11-05) Support WeChat sliding list to close the panel and list the response to the sliding event to enhance the user experience
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
 
@@ -30,6 +31,7 @@ The core classes ：
 * *PanelSwitchLayout* ，including the yellow area, can only contain *PanelContainer* and *PanelSwitchLayout* and implement some auxiliary functions
 * *ContentContainer* ，including the blue area, can store display content such as list content. And store the layout that triggers the switch, such as input box emoticons, etc.
 * *PanelContainer* ， including the green area, only for the switchable panel (*PanelView*), the developer customizes the *PanelView* panel.
+* *EmptyView* ， Optional configuration, generally recommended, support for 1.0.2 update function
 
 Take activity_sample_layout.xml as an example
 
@@ -67,7 +69,7 @@ Take activity_sample_layout.xml as an example
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <View
+                <com.effective.android.panel.view.EmptyView
                     android:id="@+id/empty_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -175,7 +177,7 @@ Take activity_sample_layout.xml as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.0'
+implementation 'com.effective.android:panelSwitchHelper:1.0.2'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
@@ -202,6 +204,15 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.0'
         super.onBackPressed();
    }
 
+```
+
+
+3. The framework provides a variety of APIs to solve special situations, and you need to learn to use it flexibly (for ultra-complex requirements)
+
+```
+//The specific method is visible in the source code
+PanelSwitchHelper, Provide hidden input method or panel and display input method
+PanelHelper, Provide hidden input method, display input method, judge full screen, get status bar height, navigation bar height, whether it is horizontal and vertical screen, etc.
 ```
 
 

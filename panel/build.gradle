@@ -30,7 +30,7 @@ dependencies {
 //    userOrg = 'yummylau'
 //    groupId = 'com.effective.android'
 //    artifactId = 'panelSwitchHelper'
-//    publishVersion = '1.0.1'
+//    publishVersion = '1.0.2'
 //    desc = 'the helper that is used to checkout panel when we are chatting'
 //    website = 'https://github.com/YummyLau/Anchors'
 //}

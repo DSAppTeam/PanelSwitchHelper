@@ -29,6 +29,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatBaseVH> {
         mContext = context;
     }
 
+    public ChatAdapter(Context context,List<ChatInfo> data) {
+        if(data != null){
+            mData = data;
+        }else{
+            mData = new ArrayList<>();
+        }
+        mContext = context;
+    }
+
     public void insertInfo(ChatInfo chatInfo) {
         if (chatInfo != null) {
             mData.add(chatInfo);

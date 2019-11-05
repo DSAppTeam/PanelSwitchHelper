@@ -126,8 +126,10 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         mContentContainer.setEmptyViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkoutPanel(Constants.PANEL_NONE);
-                notifyViewClick(v);
+                if (!isSamePaneId(Constants.PANEL_NONE)) {
+                    checkoutPanel(Constants.PANEL_NONE);
+                    notifyViewClick(v);
+                }
             }
         });
 
@@ -283,6 +285,10 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         LogTracker.Log(TAG + "#setPanelId", "panel' id :" + currentPanelId);
     }
 
+    private boolean isSamePaneId(int panelId) {
+        return this.currentPanelId == panelId;
+    }
+
     private void hidePanel(int panelId) {
         switch (panelId) {
             case Constants.PANEL_NONE: {
@@ -383,6 +389,9 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         return false;
     }
 
+    /**
+     * 外部显示输入框
+     */
     public void showKeyboard() {
         if (mContentContainer.editTextHasFocus()) {
             mContentContainer.preformClickForEditText();
@@ -391,6 +400,9 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         }
     }
 
+    /**
+     * 隐藏输入法或者面板
+     */
     public void resetState() {
         checkoutPanel(Constants.PANEL_NONE);
     }
