@@ -10,6 +10,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 * 1.0.1(2019-07-08) 支持兼容AndroidQ+焦点冲突，支持视频模式
 * 1.0.2(2019-11-05) 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
+* 1.0.3(2019-11-06) 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
 
