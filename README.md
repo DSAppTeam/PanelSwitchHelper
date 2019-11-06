@@ -10,6 +10,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 * 1.0.1(2019-07-08) Support compatible with AndroidQ+ focus conflict, support video mode
 * 1.0.2(2019-11-05) Support WeChat sliding list to close the panel and list the response to the sliding event to enhance the user experience
+* 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) Scene issues
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
 

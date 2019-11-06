@@ -383,8 +383,8 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         if (currentPanelId != Constants.PANEL_NONE) {
             if (currentPanelId != Constants.PANEL_KEYBOARD) {
                 checkoutPanel(Constants.PANEL_NONE);
+                return true;
             }
-            return true;
         }
         return false;
     }
