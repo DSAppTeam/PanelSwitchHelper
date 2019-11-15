@@ -15,6 +15,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -44,6 +45,12 @@ public final class PanelHelper {
         return (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
                 == WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
+
+    public static boolean isFullScreen(Window window) {
+        return (window.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+    }
+
 
     public static int getStatusBarHeight(Context context) {
         return getInternalDimensionSize(context.getResources(), Constants.STATUS_BAR_HEIGHT_RES_NAME);
@@ -101,30 +108,46 @@ public final class PanelHelper {
         }
     }
 
-    public static int getKeyBoardHeight(Activity activity) {
-        SharedPreferences sp = activity.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        boolean isPortrait = PanelHelper.isPortrait(activity);
+    @TargetApi(14)
+    public static boolean isNavigationBarShow(Context context,Window window) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            return realSize.y != size.y;
+        } else {
+            boolean menu = ViewConfiguration.get(context).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            return !(menu || back);
+        }
+    }
+
+    public static int getKeyBoardHeight(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        boolean isPortrait = PanelHelper.isPortrait(context);
         String key = isPortrait ?
                 Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
         float defaultHeight = isPortrait ?
                 Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P : Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_L;
-        return sp.getInt(key, dip2px(activity, defaultHeight));
+        return sp.getInt(key, dip2px(context, defaultHeight));
     }
 
 
-    public static boolean setKeyBoardHeight(Activity activity, int height) {
-        SharedPreferences sp = activity.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        boolean isPortrait = PanelHelper.isPortrait(activity);
+    public static boolean setKeyBoardHeight(Context context, int height) {
+        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        boolean isPortrait = PanelHelper.isPortrait(context);
         //filter wrong data
         //mActivity.getWindow().getDecorView().getHeight() may be right when onGlobalLayout listener
         if (!isPortrait) {
-            int portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(activity, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P));
+            int portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(context, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P));
             if (height >= portraitHeight) {
                 LogTracker.getInstance().log(TAG + "#setKeyBoardHeight", "filter wrong data : " + portraitHeight + " -> " + height);
                 return false;
             }
         }
-        String key = PanelHelper.isPortrait(activity) ?
+        String key = PanelHelper.isPortrait(context) ?
                 Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
         return sp.edit().putInt(key, height).commit();
     }

@@ -48,9 +48,12 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_layout);
         initView();
     }
+
+
 
     @Override
     public void sendContent(String content) {

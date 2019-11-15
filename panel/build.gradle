@@ -5,6 +5,7 @@ android {
     compileSdkVersion config.compile_sdk_version
 
     defaultConfig {
+        multiDexEnabled true
         minSdkVersion config.min_sdk_version
         targetSdkVersion config.target_sdk_version
         versionCode config.version_code
@@ -24,6 +25,8 @@ android {
 dependencies {
     "$implementation" fileTree(dir: 'libs', include: ['*.jar'])
     "$implementation" deps.support.annotations
+    "$implementation" deps.support.multidex
+    "$implementation" deps.support.v7
 }
 
 //publish {
