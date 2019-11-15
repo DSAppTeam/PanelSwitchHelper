@@ -3,7 +3,6 @@ package com.example.demo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
-import com.effective.android.panel.interfaces.IPopupSupport;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.PanelView;
 import com.example.demo.emotion.EmotionPagerView;
@@ -22,7 +20,7 @@ import com.example.demo.emotion.Emotions;
 import com.example.demo.interfaces.PopContentSupport;
 import com.rd.PageIndicatorView;
 
-public class VideoPopWindow extends PopupWindow implements IPopupSupport {
+public class VideoPopWindow extends PopupWindow{
 
     private PanelSwitchHelper mHelper;
     private View emotionBtn;
@@ -31,17 +29,6 @@ public class VideoPopWindow extends PopupWindow implements IPopupSupport {
     private View emptyView;
     private Activity activity;
 
-    @NonNull
-    @Override
-    public Activity getActivity() {
-        return activity;
-    }
-
-    @NonNull
-    @Override
-    public PopupWindow getPopupWindow() {
-        return this;
-    }
 
     public VideoPopWindow(final Activity activity, final PopContentSupport popContentSupport) {
         super(activity);
@@ -73,7 +60,7 @@ public class VideoPopWindow extends PopupWindow implements IPopupSupport {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(view);
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(this)
+            mHelper = new PanelSwitchHelper.Builder(activity,activity.getWindow(),getContentView())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .bindPanelContainerId(R.id.panel_container)
                     .bindContentContainerId(R.id.content_view)

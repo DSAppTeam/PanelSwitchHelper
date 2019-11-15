@@ -4,12 +4,14 @@ versions.android_gradle_plugin = android_gradle_plugin
 versions.support = "27.1.1"
 versions.pageindicator = "1.0.1"
 versions.panelSwitchHelper = "1.0.3"
+versions.multidex = "1.0.1"
 
 
 def support = [:]
 support.v7 = "com.android.support:appcompat-v7:$versions.support"
 support.annotations = "com.android.support:support-annotations:$versions.support"
 support.recyclerview = "com.android.support:recyclerview-v7:$versions.support"
+support.multidex = "com.android.support:multidex:$versions.multidex"
 ext.deps.support = support
 
 ext.deps.pageindicator = "com.romandanylyk:pageindicatorview:$versions.pageindicator"

@@ -24,6 +24,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ChatSampleActivity.class));
             }
         });
+        mBinding.chatFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatSampleFragmentActivity.startFragment(MainActivity.this);
+            }
+        });
+        mBinding.chatDialogFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatSampleFragmentActivity.startDialogFragment(MainActivity.this);
+            }
+        });
         mBinding.video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

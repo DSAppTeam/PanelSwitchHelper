@@ -26,6 +26,14 @@
         </activity>
 
         <activity
+            android:name="com.example.demo.ChatSampleFragmentActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.example.demo.VideoSampleActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/VideoActivityTheme"

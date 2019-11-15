@@ -8,24 +8,46 @@
 
         <TextView
             android:id="@+id/chat"
-            android:layout_width="200dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@android:color/black"
             android:gravity="center"
             android:padding="10dp"
-            android:text="聊天场景"
+            android:text="聊天场景-activity"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/chat_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="视频场景-fragment"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/chat_dialog_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="视频场景-dialogfragment"
             android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/video"
-            android:layout_width="200dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@android:color/black"
             android:gravity="center"
             android:padding="10dp"
-            android:text="视频场景"
+            android:text="视频场景 - (activity+popupwindow)"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </layout>
