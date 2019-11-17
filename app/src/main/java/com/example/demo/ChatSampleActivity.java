@@ -8,6 +8,7 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.effective.R;
@@ -33,7 +34,6 @@ import java.util.List;
  * blog: yummylau.com
  */
 public class ChatSampleActivity extends AppCompatActivity {
-
     private ActivityChatLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
