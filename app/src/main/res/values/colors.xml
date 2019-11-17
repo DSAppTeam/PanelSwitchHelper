@@ -15,6 +15,12 @@
     <color name="gray_800">#424242</color>
     <color name="gray_900">#212121</color>
 
+    <color name="main_bg">#5FFFFFFF</color>
+    <color name="btn_bg">@android:color/white</color>
+    <color name="btn_activity_text">#2196F3</color>
+    <color name="btn_fragment_text">#009688</color>
+    <color name="btn_dialog_fragment_text">#FFC107</color>
+    <color name="btn_video_text">#FF5722</color>
 
     <color name="video_input_text_hint">#5FFFFFFF</color>
 

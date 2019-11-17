@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,43 +12,110 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@android:color/black"
-            android:gravity="center"
+            android:background="@drawable/sh_activity_btn"
             android:padding="10dp"
-            android:text="聊天场景-activity"
-            android:textColor="@android:color/white" />
+            android:text="聊天场景-不处理状态栏-activity"
+            android:textColor="@color/btn_activity_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_color"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_activity_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状态栏着色-activity"
+            android:textColor="@color/btn_activity_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_transparent"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_activity_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状态栏透明-activity"
+            android:textColor="@color/btn_activity_text"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/chat_fragment"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@android:color/black"
-            android:gravity="center"
+            android:background="@drawable/sh_fragment_btn"
             android:padding="10dp"
-            android:text="视频场景-fragment"
-            android:textColor="@android:color/white" />
+            android:text="聊天场景-不处理状态栏-fragment"
+            android:textColor="@color/btn_fragment_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_color_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_fragment_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状态栏着色-fragment"
+            android:textColor="@color/btn_fragment_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_transparent_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_fragment_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状透明态栏-fragment"
+            android:textColor="@color/btn_fragment_text"
+            android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/chat_dialog_fragment"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@android:color/black"
-            android:gravity="center"
+            android:background="@drawable/sh_dialog_fragment_btn"
             android:padding="10dp"
-            android:text="视频场景-dialogfragment"
-            android:textColor="@android:color/white" />
+            android:text="聊天场景-不处理状态栏-dialogfragment"
+            android:textColor="@color/btn_dialog_fragment_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_color_dialog_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_dialog_fragment_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状态栏着色-dialogfragment"
+            android:textColor="@color/btn_dialog_fragment_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_transparent_dialog_fragment"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/sh_dialog_fragment_btn"
+            android:padding="10dp"
+            android:text="聊天场景-状态栏透明-dialogfragment"
+            android:textColor="@color/btn_dialog_fragment_text"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/video"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@android:color/black"
-            android:gravity="center"
+            android:background="@drawable/sh_video_btn"
             android:padding="10dp"
-            android:text="视频场景 - (activity+popupwindow)"
-            android:textColor="@android:color/white" />
+            android:text="视频场景-综合场景"
+            android:textColor="@color/btn_video_text"
+            android:textStyle="bold" />
     </LinearLayout>
 </layout>
