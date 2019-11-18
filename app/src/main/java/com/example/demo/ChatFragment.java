@@ -1,24 +1,19 @@
 package com.example.demo;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.effective.R;
@@ -28,52 +23,60 @@ import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
-import com.effective.databinding.FragmentChatLayoutBinding;
-import com.example.demo.Utils;
+import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
+import com.example.demo.anno.PageType;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
+import com.example.demo.systemui.StatusbarHelper;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatSampleDialogFragment extends DialogFragment implements DialogInterface.OnKeyListener {
+public class ChatFragment extends Fragment {
 
-    private FragmentChatLayoutBinding mBinding;
+    private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Runnable mScrollToBottomRunnable;
-    private static final String TAG = "ChatSampleFragment";
+    private static final String TAG = "ChatFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.fragment_chat_layout, container, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.common_chat_with_titlebar_layout, container, false);
+
+        int type = getArguments().getInt(Constants.KEY_PAGE_TYPE);
+
+        switch (type) {
+            case PageType.COLOR_STATUS_BAR: {
+                StatusbarHelper.setStatusBarColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.title.setText(R.string.app_name);
+                break;
+            }
+            case PageType.TRANSPARENT_STATUS_BAR: {
+                StatusbarHelper.setStatusBarColor(getActivity(), Color.TRANSPARENT);
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.title.setText(R.string.app_name);
+                break;
+            }
+            default: {
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.title.setText(R.string.app_name);
+            }
+        }
         initView();
-//        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppTheme);
         return mBinding.getRoot();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.setOnKeyListener(this);
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.getWindow().setLayout(width, height);
-        }
-    }
-
-//    @Override
-//    public int getTheme() {
-//        return R.style.FullScreenDialog;
-//    }
 
     private void initView() {
         mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -188,22 +191,6 @@ public class ChatSampleDialogFragment extends DialogFragment implements DialogIn
                     .build();
         }
     }
-
-
-    @Override
-    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
-                return true;
-            } else {
-                dismiss();
-                getActivity().finish();
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public boolean hookOnBackPressed() {
         return mHelper != null && mHelper.hookSystemBackForHindPanel();

@@ -6,6 +6,6 @@
 
     <solid android:color="@color/btn_bg"/>
 
-    <stroke android:color="@color/btn_dialog_fragment_text" android:width="2px"/>
+    <stroke android:color="@color/btn_special_page_text" android:width="2px"/>
 
 </shape>
