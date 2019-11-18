@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -29,6 +33,6 @@ dependencies {
     "$implementation" deps.support.v7
     "$implementation" deps.support.recyclerview
     "$implementation" deps.pageindicator
-//    "$implementation" deps.panelSwitchHelper
-    implementation project(":panel")
+    "$implementation" deps.panelSwitchHelper
+//    implementation project(":panel")
 }
