@@ -11,21 +11,24 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.1(2019-07-08) 支持兼容AndroidQ+焦点冲突，支持视频模式
 * 1.0.2(2019-11-05) 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
 * 1.0.3(2019-11-06) 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
-
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
+* 1.0.4(2019-11-18) 新增支持 Dialog/Fragment/DialogFragment
 
 #### 用于做什么
 
 在开发聊天页面时，开发者希望用户在输入法与功能面板（比如表情面板/更多选项面板等）切换过程中保持平滑过渡不闪烁。 参考了市场上主流的社交app效果及实现，综合互联网上的多种实现思路，最总整合成一个模版框架，该模版框架已经过测试使用。
 
 ##### 效果展示
+* 图一： 核心功能展示
+* 图二： 1.0.1 更新支持视频功能
+* 图三： 1.0.5 更新支持dialog/fragment/dialogFragment/popupwindow，各种沉浸场景展示
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "540" height = "960" alt="activity layout" align=center />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.4.gif" width = "270" height = "480" alt="activity layout" />
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_layout.jpg" width = "696" height = "703" alt="界面布局" align=center />
+
 
 涉及的核心类有：
 

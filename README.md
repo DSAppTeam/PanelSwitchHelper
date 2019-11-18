@@ -11,8 +11,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.1(2019-07-08) Support compatible with AndroidQ+ focus conflict, support video mode
 * 1.0.2(2019-11-05) Support WeChat sliding list to close the panel and list the response to the sliding event to enhance the user experience
 * 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) Scene issues
-
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center />
+* 1.0.4(2019-11-18) Added support for Dialog/Fragment/DialogFragment
 
 #### What to do
 
@@ -20,7 +19,11 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 ##### Show results
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "540" height = "960" alt="activity layout" align=center />
+* Figure 1: Core function display
+* Figure 2: 1.0.1 update support video function
+* Figure 3: 1.0.5 update supports dialog/fragment/dialogFragment/popupwindow, various immersive scenes
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "540" height = "960" alt="activity layout" align=center /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "453" height = "980" alt="activity layout" align=center /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.4.gif" width = "453" height = "980" alt="activity layout" align=center />
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
