@@ -12,6 +12,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.2(2019-11-05) 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
 * 1.0.3(2019-11-06) 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
 * 1.0.4(2019-11-18) 新增支持 Dialog/Fragment/DialogFragment
+* 1.0.5(2019-11-26) 支持适配华为/小米等支持动态导航栏隐藏的特殊机型
 
 #### 用于做什么
 
@@ -181,7 +182,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.2'
+implementation 'com.effective.android:panelSwitchHelper:1.0.5'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。

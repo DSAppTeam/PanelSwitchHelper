@@ -12,6 +12,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.2(2019-11-05) Support WeChat sliding list to close the panel and list the response to the sliding event to enhance the user experience
 * 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) Scene issues
 * 1.0.4(2019-11-18) Added support for Dialog/Fragment/DialogFragment
+* 1.0.5 (2019-11-26) Support for special models such as Huawei / Xiaomi that support the hiding of dynamic navigation bar
 
 #### What to do
 
@@ -181,7 +182,7 @@ Take activity_sample_layout.xml as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.2'
+implementation 'com.effective.android:panelSwitchHelper:1.0.5'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
