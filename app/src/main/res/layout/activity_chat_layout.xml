@@ -14,12 +14,10 @@
         <com.effective.android.panel.view.ContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:edit_view="@id/edit_text"
             app:empty_view="@id/empty_view">
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -131,5 +129,7 @@
                 app:panel_trigger="@id/add_btn" />
 
         </com.effective.android.panel.view.PanelContainer>
+
+
     </com.effective.android.panel.view.PanelSwitchLayout>
 </layout>
