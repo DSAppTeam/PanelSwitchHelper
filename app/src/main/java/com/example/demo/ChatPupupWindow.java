@@ -1,17 +1,24 @@
 package com.example.demo;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.effective.R;
@@ -21,7 +28,7 @@ import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
-import com.effective.databinding.FragmentChatLayoutBinding;
+import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
 import com.example.demo.emotion.EmotionPagerView;
@@ -31,39 +38,51 @@ import com.rd.PageIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatSampleFragment extends Fragment {
+public class ChatPupupWindow extends PopupWindow {
 
-    private FragmentChatLayoutBinding mBinding;
+    private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Runnable mScrollToBottomRunnable;
-    private static final String TAG = "ChatSampleFragment";
+    private Activity mActivity;
+    private static final String TAG = "ChatPupupWindow";
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.fragment_chat_layout, container, false);
+    public ChatPupupWindow(Activity activity) {
+        super(activity);
+        this.mActivity = activity;
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.common_chat_with_titlebar_layout, null, false);
+        setContentView(mBinding.getRoot());
+        mBinding.titleBar.setVisibility(View.VISIBLE);
+        mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
+        mBinding.title.setText(R.string.pupupwindow_name);
+        setHeight(WindowManager.LayoutParams.MATCH_PARENT);
+        setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+        setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(mActivity, R.color.common_page_bg_color)));
+        setFocusable(true);
+        setOutsideTouchable(true);
+        setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         initView();
-        return mBinding.getRoot();
     }
 
+
     private void initView() {
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager = new LinearLayoutManager(mActivity);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         List<ChatInfo> chatInfos = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
         }
-        mAdapter = new ChatAdapter(getContext(), chatInfos);
+        mAdapter = new ChatAdapter(mActivity, chatInfos);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = mBinding.editText.getText().toString();
                 if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(getContext(), "当前没有输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "当前没有输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
@@ -81,15 +100,32 @@ public class ChatSampleFragment extends Fragment {
         };
     }
 
+
     private void scrollToBottom() {
         mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void showAtLocation(View parent, int gravity, int x, int y) {
+        initHelper();
+        super.showAtLocation(parent, gravity, x, y);
+    }
+
+    @Override
+    public void dismiss() {
+        if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+            return;
+        }
+        if (mHelper != null) {
+            mHelper.onDestroy();
+        }
+        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
+        super.dismiss();
+    }
+
+    private void initHelper() {
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(this)
+            mHelper = new PanelSwitchHelper.Builder(mActivity, mActivity.getWindow(), this.getContentView())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .bindPanelContainerId(R.id.panel_container)
                     .bindContentContainerId(R.id.content_view)
@@ -143,7 +179,7 @@ public class ChatSampleFragment extends Fragment {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(getContext(), 30f);
+                                    int viewPagerSize = height - Utils.dip2px(mActivity, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
@@ -162,15 +198,4 @@ public class ChatSampleFragment extends Fragment {
         }
     }
 
-    public boolean hookOnBackPressed() {
-        return mHelper != null && mHelper.hookSystemBackForHindPanel();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
-    }
 }

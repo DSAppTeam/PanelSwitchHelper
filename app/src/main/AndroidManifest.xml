@@ -18,7 +18,7 @@
         </activity>
 
         <activity
-            android:name="com.example.demo.ChatSampleActivity"
+            android:name="com.example.demo.ChatActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name="com.example.demo.ChatSampleFragmentActivity"
+            android:name="com.example.demo.ChatFragmentActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

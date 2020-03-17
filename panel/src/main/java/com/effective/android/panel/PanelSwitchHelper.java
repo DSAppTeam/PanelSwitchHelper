@@ -498,10 +498,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
             this(activity, activity.getWindow(), activity.getWindow().getDecorView().findViewById(android.R.id.content));
         }
 
-        public Builder(Activity activity, PopupWindow popupWindow) {
-            this(activity, activity.getWindow(), popupWindow.getContentView());
-        }
-
         public Builder(Fragment fragment) {
             this(fragment.getActivity(), fragment.getActivity().getWindow(), fragment.getView());
         }

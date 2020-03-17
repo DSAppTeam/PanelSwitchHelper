@@ -1,14 +1,19 @@
 package com.example.demo;
 
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.effective.R;
@@ -18,80 +23,77 @@ import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
-import com.effective.databinding.ActivityChatLayoutBinding;
+import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
+import com.example.demo.anno.PageType;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
+import com.example.demo.systemui.StatusbarHelper;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by yummyLau on 18-7-11
- * Email: yummyl.lau@gmail.com
- * blog: yummylau.com
- */
-public class ChatSampleActivity extends AppCompatActivity {
-    private ActivityChatLayoutBinding mBinding;
+public class ChatFragment extends Fragment {
+
+    private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Runnable mScrollToBottomRunnable;
-    private static final String TAG = "ChatSampleActivity";
+    private static final String TAG = "ChatFragment";
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat_layout);
-        int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, PageType.DEFAULT);
-        //这里只是demo提前隐藏标题栏，如果应用自己实现了标题栏或者通过自定义view开发标题栏，根据业务隐藏或者设置透明色就可以了，随便扩展
-        if(type == PageType.TRANSPARENT_STATUS_BAR){
-            supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.common_chat_with_titlebar_layout, container, false);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+        int type = getArguments().getInt(Constants.KEY_PAGE_TYPE);
 
         switch (type) {
             case PageType.COLOR_STATUS_BAR: {
-                StatusbarHelper.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-                //可以在代码设置，也可以在xml设置
-                mBinding.getRoot().setFitsSystemWindows(true);
-                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                StatusbarHelper.setStatusBarColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.title.setText(R.string.app_name);
                 break;
             }
             case PageType.TRANSPARENT_STATUS_BAR: {
-                StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
-                mBinding.getRoot().setFitsSystemWindows(true);
-                mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
-                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                StatusbarHelper.setStatusBarColor(getActivity(), Color.TRANSPARENT);
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.title.setText(R.string.app_name);
                 break;
             }
             default: {
-                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.titleBar.setVisibility(View.VISIBLE);
+                mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                mBinding.title.setText(R.string.app_name);
             }
         }
->>>>>>> Stashed changes:app/src/main/java/com/example/demo/ChatActivity.java
         initView();
+        return mBinding.getRoot();
     }
 
+
     private void initView() {
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         List<ChatInfo> chatInfos = new ArrayList<>();
-        for(int i = 0; i < 50; i++){
-            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i+1) + "条"));
+        for (int i = 0; i < 50; i++) {
+            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
         }
-        mAdapter = new ChatAdapter(this,chatInfos);
+        mAdapter = new ChatAdapter(getContext(), chatInfos);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = mBinding.editText.getText().toString();
                 if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(ChatSampleActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "当前没有输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
@@ -110,12 +112,12 @@ public class ChatSampleActivity extends AppCompatActivity {
     }
 
     private void scrollToBottom() {
-        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 0);
+        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
@@ -125,9 +127,6 @@ public class ChatSampleActivity extends AppCompatActivity {
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
                         public void onKeyboardChange(boolean visible) {
-                            if(visible){
-                                scrollToBottom();
-                            }
                             Log.d(TAG, "系统键盘是否可见 : " + visible);
 
                         }
@@ -143,9 +142,6 @@ public class ChatSampleActivity extends AppCompatActivity {
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
                         public void onViewClick(View view) {
-                            if(view.getId() != R.id.empty_view){
-                                scrollToBottom();
-                            }
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -155,6 +151,7 @@ public class ChatSampleActivity extends AppCompatActivity {
                         @Override
                         public void onKeyboard() {
                             Log.d(TAG, "唤起系统输入法");
+                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(false);
                         }
 
@@ -167,6 +164,7 @@ public class ChatSampleActivity extends AppCompatActivity {
                         @Override
                         public void onPanel(PanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
+                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
                         }
 
@@ -175,7 +173,7 @@ public class ChatSampleActivity extends AppCompatActivity {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(ChatSampleActivity.this, 30f);
+                                    int viewPagerSize = height - Utils.dip2px(getContext(), 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
@@ -194,21 +192,15 @@ public class ChatSampleActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
-            return;
-        }
-        super.onBackPressed();
+    public boolean hookOnBackPressed() {
+        return mHelper != null && mHelper.hookSystemBackForHindPanel();
     }
 
     @Override
-
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (mHelper != null) {
             mHelper.onDestroy();
         }
-//        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
     }
 }

@@ -15,6 +15,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -92,36 +93,41 @@ public final class PanelHelper {
         }
     }
 
-    @TargetApi(14)
-    public static boolean isNavigationBarShow(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Display display = activity.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            Point realSize = new Point();
-            display.getSize(size);
-            display.getRealSize(realSize);
-            return realSize.y != size.y;
-        } else {
-            boolean menu = ViewConfiguration.get(activity).hasPermanentMenuKey();
-            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-            return !(menu || back);
-        }
-    }
 
     @TargetApi(14)
-    public static boolean isNavigationBarShow(Context context,Window window) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Display display = window.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            Point realSize = new Point();
-            display.getSize(size);
-            display.getRealSize(realSize);
-            return realSize.y != size.y;
-        } else {
-            boolean menu = ViewConfiguration.get(context).hasPermanentMenuKey();
-            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-            return !(menu || back);
+    public static boolean isNavigationBarShow(Context context, Window window) {
+        return isNavBarVisible(context, window);
+    }
+
+    /**
+     * Decorview 源码
+     *    public static final ColorViewAttributes NAVIGATION_BAR_COLOR_VIEW_ATTRIBUTES =
+     *             new ColorViewAttributes(
+     *                     SYSTEM_UI_FLAG_HIDE_NAVIGATION, FLAG_TRANSLUCENT_NAVIGATION,
+     *                     Gravity.BOTTOM, Gravity.RIGHT, Gravity.LEFT,
+     *                     Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME,
+     *                     com.android.internal.R.id.navigationBarBackground,
+     *                     0 /* hideWindowFlag
+     * @param context
+     * @param window
+     * @return
+     */
+    public static boolean isNavBarVisible(Context context, @NonNull final Window window) {
+        ViewGroup viewGroup = (ViewGroup) window.getDecorView();
+        if (viewGroup != null) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                int id = viewGroup.getChildAt(i).getId();
+                if (id != View.NO_ID) {
+                    String resourceEntryName = context.getResources()
+                            .getResourceEntryName(id);
+                    if ("navigationBarBackground".equals(resourceEntryName)
+                            && viewGroup.getChildAt(i).getVisibility() == View.VISIBLE) {
+                        return true;
+                    }
+                }
+            }
         }
+        return false;
     }
 
     public static int getKeyBoardHeight(Context context) {
