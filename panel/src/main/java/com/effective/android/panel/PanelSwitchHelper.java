@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -38,9 +39,9 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
     private static final String TAG = PanelSwitchHelper.class.getSimpleName();
     private static long preClickTime = 0;
-    private int currentPanelId = Constants.PANEL_NONE;
+    public static int currentPanelId = Constants.PANEL_NONE;
     private boolean isCheckoutDoing;
-    private boolean isKeyboardShowing;
+    public static boolean isKeyboardShowing;
     private boolean preventOpeningKeyboard;
 
     private final List<OnViewClickListener> viewClickListeners;
@@ -52,7 +53,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
     private UnlockContentHeightRunnable unlockContentHeightRunnable;
 
     private Context context;
-    private Window window;
+    public  static Window window;
     private PanelSwitchLayout mPanelSwitchLayout;
     private ContentContainer mContentContainer;
     private PanelContainer mPanelContainer;
@@ -99,6 +100,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         mContentContainer.setEditTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notifyViewClick(v);
                 //checkout currentFlag to keyboard
                 boolean result = checkoutPanel(Constants.PANEL_KEYBOARD);
                 //when is checkout doing, unlockContentlength unfinished
@@ -106,13 +108,13 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 if (!result && currentPanelId != Constants.PANEL_KEYBOARD) {
                     PanelHelper.hideKeyboard(context, v);
                 }
-                notifyViewClick(v);
             }
         });
 
         mContentContainer.setEditTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                notifyEditFocusChange(v, hasFocus);
                 if (hasFocus && !preventOpeningKeyboard) {
                     // checkout currentFlag to keyboard
                     boolean result = checkoutPanel(Constants.PANEL_KEYBOARD);
@@ -123,7 +125,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                     }
                 }
                 preventOpeningKeyboard = false;
-                notifyEditFocusChange(v, hasFocus);
             }
         });
 
@@ -131,8 +132,8 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
             @Override
             public void onClick(View v) {
                 if (!isSamePaneId(Constants.PANEL_NONE)) {
-                    checkoutPanel(Constants.PANEL_NONE);
                     notifyViewClick(v);
+                    checkoutPanel(Constants.PANEL_NONE);
                 }
             }
         });
@@ -150,12 +151,19 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                     @Override
                     public void onClick(View v) {
 
+                        if(v != null){
+                            mPanelSwitchLayout.toggle();
+                            return;
+                        }
+
+
+
                         long currentTime = System.currentTimeMillis();
                         if (currentTime - preClickTime <= Constants.PROTECT_KEY_CLICK_DURATION) {
                             LogTracker.Log(TAG + "#initListener", "panelItem invalid click! preClickTime: " + preClickTime + " currentClickTime: " + currentTime);
                             return;
                         }
-
+                        notifyViewClick(v);
                         int panelId = getPanelId(panelView);
                         if (currentPanelId == panelId && panelView.isToggle() && panelView.isShown()) {
                             checkoutPanel(Constants.PANEL_KEYBOARD);
@@ -164,11 +172,11 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                         }
 
                         preClickTime = currentTime;
-                        notifyViewClick(v);
                     }
                 });
             }
         }
+        mPanelContainer.addPanelChangeListener(panelChangeListeners);
     }
 
     private int getPanelId(@NonNull PanelView view) {
@@ -185,7 +193,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
             LogTracker.Log(TAG + "#checkoutPanel", "is doing checkout, skip!");
             return false;
         }
-
         isCheckoutDoing = true;
 
         if (currentPanelId == toPanelId) {
@@ -195,39 +202,83 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         }
 
         if (toPanelId == Constants.PANEL_NONE) {
-            hidePanel(currentPanelId);
-            showPanel(Constants.PANEL_NONE);
+            formPanelAtoPanelB(currentPanelId,toPanelId,false);
             isCheckoutDoing = false;
             return true;
         }
 
         switch (currentPanelId) {
             case Constants.PANEL_NONE: {
-                hidePanel(Constants.PANEL_NONE);
-                showPanel(toPanelId);
+                formPanelAtoPanelB(currentPanelId,toPanelId,false);
                 isCheckoutDoing = false;
                 break;
             }
             case Constants.PANEL_KEYBOARD: {
-                lockContentHeight(mContentContainer);
-                hidePanel(Constants.PANEL_KEYBOARD);
-                showPanelWithUnlockContentHeight(toPanelId);
+                formPanelAtoPanelB(currentPanelId,toPanelId,true);
                 break;
             }
 
             default: {
                 if (toPanelId == Constants.PANEL_KEYBOARD) {
-                    lockContentHeight(mContentContainer);
-                    hidePanel(currentPanelId);
-                    showPanelWithUnlockContentHeight(Constants.PANEL_KEYBOARD);
+                    formPanelAtoPanelB(currentPanelId,toPanelId,true);
                 } else {
-                    hidePanel(currentPanelId);
-                    showPanel(toPanelId);
+                    formPanelAtoPanelB(currentPanelId,toPanelId,false);
                     isCheckoutDoing = false;
                 }
             }
         }
         return true;
+    }
+
+    private void formPanelAtoPanelB(int panelA, int panelB,boolean hideAfterLockingAndShowWithUnlocking) {
+        if(hideAfterLockingAndShowWithUnlocking){
+            lockContentHeight(mContentContainer);
+        }
+        hidePanel(panelA,panelB);
+        if(hideAfterLockingAndShowWithUnlocking){
+            showPanelWithUnlockContentHeight(panelB);
+        }else{
+            showPanel(panelB);
+        }
+    }
+
+    private void hidePanel(int panelId,int toPanelId) {
+        switch (panelId) {
+            case Constants.PANEL_NONE: {
+                break;
+            }
+            case Constants.PANEL_KEYBOARD: {
+                PanelHelper.hideKeyboard(context, mContentContainer.getEditText());
+                setEmptyViewVisible(false);
+                break;
+            }
+            default: {
+                mPanelContainer.hidePanel(panelId,toPanelId);
+                setEmptyViewVisible(false);
+            }
+        }
+    }
+
+    private void showPanel(int panelId) {
+        switch (panelId) {
+            case Constants.PANEL_NONE: {
+                mContentContainer.clearFocusByEditText();
+                break;
+            }
+            case Constants.PANEL_KEYBOARD: {
+                PanelHelper.showKeyboard(context, mContentContainer.getEditText());
+                setEmptyViewVisible(true);
+                break;
+            }
+            default: {
+                int newWidth = mPanelSwitchLayout.getMeasuredWidth() - mPanelSwitchLayout.getPaddingLeft() - mPanelSwitchLayout.getPaddingRight();
+                int newHeight = PanelHelper.getKeyBoardHeight(context);
+                mPanelContainer.showPanel(panelId, newWidth, newHeight);
+                setEmptyViewVisible(true);
+            }
+        }
+        setPanelId(panelId);
+        mPanelContainer.notifyPanelChange(panelId);
     }
 
 
@@ -251,38 +302,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         mPanelSwitchLayout.postDelayed(checkoutPanelRunnable, delayMillis);
     }
 
-    private void showPanel(int panelId) {
-        switch (panelId) {
-            case Constants.PANEL_NONE: {
-                mContentContainer.clearFocusByEditText();
-                break;
-            }
-            case Constants.PANEL_KEYBOARD: {
-                PanelHelper.showKeyboard(context, mContentContainer.getEditText());
-                setEmptyViewVisible(true);
-                break;
-            }
-            default: {
-                PanelView panelView = mPanelViewSparseArray.get(panelId);
-                int newWidth = mPanelSwitchLayout.getMeasuredWidth() - mPanelSwitchLayout.getPaddingLeft() - mPanelSwitchLayout.getPaddingRight();
-                int newHeight = PanelHelper.getKeyBoardHeight(context);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) panelView.getLayoutParams();
-                int oldWidth = params.width;
-                int oldHeight = params.height;
-                if (oldWidth != newWidth || oldHeight != newHeight) {
-                    params.width = newWidth;
-                    params.height = newHeight;
-                    panelView.requestLayout();
-                    LogTracker.Log(TAG + "#showPanel", "change panel's layout, " + oldWidth + " -> " + newWidth + " " + oldHeight + " -> " + newHeight);
-                    notifyPanelSizeChange(panelView, oldWidth, oldHeight, newWidth, newHeight);
-                }
-                panelView.setVisibility(View.VISIBLE);
-                setEmptyViewVisible(true);
-            }
-        }
-        setPanelId(panelId);
-        notifyPanelChange(panelId);
-    }
 
     private void setPanelId(int panelId) {
         this.currentPanelId = panelId;
@@ -291,24 +310,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
 
     private boolean isSamePaneId(int panelId) {
         return this.currentPanelId == panelId;
-    }
-
-    private void hidePanel(int panelId) {
-        switch (panelId) {
-            case Constants.PANEL_NONE: {
-                break;
-            }
-            case Constants.PANEL_KEYBOARD: {
-                PanelHelper.hideKeyboard(context, mContentContainer.getEditText());
-                setEmptyViewVisible(false);
-                break;
-            }
-            default: {
-                PanelView panelView = mPanelViewSparseArray.get(panelId);
-                panelView.setVisibility(View.GONE);
-                setEmptyViewVisible(false);
-            }
-        }
     }
 
     private void lockContentHeight(@NonNull View contentView) {
@@ -344,7 +345,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
             int statusBarHeight = PanelHelper.getStatusBarHeight(context);
             int navigationBatHeight = PanelHelper.getNavigationBarHeight(context);
             if (PanelHelper.isPortrait(context)) {
-                systemUIHeight = PanelHelper.isNavigationBarShow(context,window) ? statusBarHeight + navigationBatHeight : statusBarHeight;
+                systemUIHeight = PanelHelper.isNavigationBarShow(context, window) ? statusBarHeight + navigationBatHeight : statusBarHeight;
             } else {
                 systemUIHeight = statusBarHeight;
             }
@@ -355,6 +356,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         if (keyboardHeight == 0 && calKeyboardHeight > 0) {
             keyboardHeight = calKeyboardHeight;
         }
+        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
 
         if (isKeyboardShowing) {
             //meet Hinding keyboard
@@ -363,6 +365,7 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
                 notifyKeyboardState(false);
             } else {
                 //if user adjust keyboard
+                LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
                 PanelHelper.setKeyBoardHeight(context, keyboardHeight);
             }
         } else {
@@ -418,29 +421,6 @@ public final class PanelSwitchHelper implements ViewTreeObserver.OnGlobalLayoutL
         }
     }
 
-    private void notifyPanelChange(int panelId) {
-        for (OnPanelChangeListener listener : panelChangeListeners) {
-            switch (panelId) {
-                case Constants.PANEL_NONE: {
-                    listener.onNone();
-                    break;
-                }
-                case Constants.PANEL_KEYBOARD: {
-                    listener.onKeyboard();
-                    break;
-                }
-                default: {
-                    listener.onPanel(mPanelViewSparseArray.get(panelId));
-                }
-            }
-        }
-    }
-
-    private void notifyPanelSizeChange(PanelView panelView, int oldWidth, int oldHeight, int width, int height) {
-        for (OnPanelChangeListener listener : panelChangeListeners) {
-            listener.onPanelSizeChange(panelView, PanelHelper.isPortrait(context), oldWidth, oldHeight, width, height);
-        }
-    }
 
     private void notifyKeyboardState(boolean visible) {
         for (OnKeyboardStateListener listener : keyboardStatusListeners) {

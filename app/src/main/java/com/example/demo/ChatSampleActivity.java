@@ -45,6 +45,34 @@ public class ChatSampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat_layout);
+        int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, PageType.DEFAULT);
+        //这里只是demo提前隐藏标题栏，如果应用自己实现了标题栏或者通过自定义view开发标题栏，根据业务隐藏或者设置透明色就可以了，随便扩展
+        if(type == PageType.TRANSPARENT_STATUS_BAR){
+            supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+
+        switch (type) {
+            case PageType.COLOR_STATUS_BAR: {
+                StatusbarHelper.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+                //可以在代码设置，也可以在xml设置
+                mBinding.getRoot().setFitsSystemWindows(true);
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                break;
+            }
+            case PageType.TRANSPARENT_STATUS_BAR: {
+                StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+                mBinding.getRoot().setFitsSystemWindows(true);
+                mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
+                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                break;
+            }
+            default: {
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+            }
+        }
+>>>>>>> Stashed changes:app/src/main/java/com/example/demo/ChatActivity.java
         initView();
     }
 
@@ -82,7 +110,7 @@ public class ChatSampleActivity extends AppCompatActivity {
     }
 
     private void scrollToBottom() {
-        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
+        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 0);
     }
 
     @Override
@@ -97,6 +125,9 @@ public class ChatSampleActivity extends AppCompatActivity {
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
                         public void onKeyboardChange(boolean visible) {
+                            if(visible){
+                                scrollToBottom();
+                            }
                             Log.d(TAG, "系统键盘是否可见 : " + visible);
 
                         }
@@ -112,6 +143,9 @@ public class ChatSampleActivity extends AppCompatActivity {
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
                         public void onViewClick(View view) {
+                            if(view.getId() != R.id.empty_view){
+                                scrollToBottom();
+                            }
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -121,7 +155,6 @@ public class ChatSampleActivity extends AppCompatActivity {
                         @Override
                         public void onKeyboard() {
                             Log.d(TAG, "唤起系统输入法");
-                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(false);
                         }
 
@@ -134,7 +167,6 @@ public class ChatSampleActivity extends AppCompatActivity {
                         @Override
                         public void onPanel(PanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
                         }
 
