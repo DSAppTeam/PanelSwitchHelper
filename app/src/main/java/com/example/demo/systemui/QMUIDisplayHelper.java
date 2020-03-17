@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresPermission;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -22,7 +23,6 @@ import android.view.WindowManager;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-import androidx.annotation.RequiresPermission;
 
 /**
  * @author cginechen
@@ -280,17 +280,6 @@ public class QMUIDisplayHelper {
         return flag;
     }
 
-    /**
-     * 是否有网络功能
-     *
-     * @param context
-     * @return
-     */
-    @RequiresPermission(allOf = Manifest.permission.ACCESS_NETWORK_STATE)
-    public static boolean hasInternet(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
-    }
 
     /**
      * 判断是否存在pckName包
@@ -319,25 +308,6 @@ public class QMUIDisplayHelper {
                 .getExternalStorageState());
     }
 
-    /**
-     * 获取当前国家的语言
-     *
-     * @param context
-     * @return
-     */
-    public static String getCurCountryLan(Context context) {
-        Configuration config = context.getResources().getConfiguration();
-        Locale sysLocale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            sysLocale = config.getLocales().get(0);
-        } else {
-            //noinspection deprecation
-            sysLocale = config.locale;
-        }
-        return sysLocale.getLanguage()
-                + "-"
-                + sysLocale.getCountry();
-    }
 
     /**
      * 判断是否为中文环境
