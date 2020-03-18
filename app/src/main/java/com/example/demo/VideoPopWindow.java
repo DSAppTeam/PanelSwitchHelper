@@ -116,13 +116,13 @@ public class VideoPopWindow extends PopupWindow{
 
     public void showKeyboard(){
         if(mHelper != null){
-            mHelper.showKeyboard();
+            mHelper.toKeyboardState();
         }
     }
 
     @Override
     public void dismiss() {
-        if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+        if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
             return;
         }
         super.dismiss();

@@ -203,7 +203,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+        if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
             return;
         }
         super.onBackPressed();

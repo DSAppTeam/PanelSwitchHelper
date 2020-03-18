@@ -192,7 +192,7 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+            if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
                 return true;
             } else {
                 dismiss();

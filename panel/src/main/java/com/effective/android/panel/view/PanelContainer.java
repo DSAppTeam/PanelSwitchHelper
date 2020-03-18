@@ -3,6 +3,7 @@ package com.effective.android.panel.view;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -41,7 +42,7 @@ import static android.animation.LayoutTransition.DISAPPEARING;
 public class PanelContainer extends LinearLayout implements ViewAssertion {
 
     private static final String TAG = PanelContainer.class.getSimpleName();
-    private SparseArray<PanelView> mPanelViewSparseArray;
+    private SparseArray<PanelView> mPanelViewSparseArray = new SparseArray<>();
     private List<OnPanelChangeListener> mListeners = new ArrayList<>();
     private LayoutTransition mLayoutTransition;
 
@@ -97,6 +98,14 @@ public class PanelContainer extends LinearLayout implements ViewAssertion {
     public void addPanelChangeListener(List<OnPanelChangeListener> listeners) {
         if (listeners != null && !listeners.isEmpty()) {
             mListeners.addAll(listeners);
+        }
+    }
+
+    public int getPanelId(PanelView view) {
+        if (view == null) {
+            return Constants.PANEL_KEYBOARD;
+        } else {
+            return view.getTriggerViewId();
         }
     }
 

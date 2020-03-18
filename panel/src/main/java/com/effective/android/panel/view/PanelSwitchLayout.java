@@ -9,6 +9,7 @@ import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -20,6 +21,12 @@ import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.PanelHelper;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ViewAssertion;
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.interfaces.listener.OnViewClickListener;
+
+import java.util.List;
 
 /**
  * --------------------
@@ -36,13 +43,21 @@ import com.effective.android.panel.interfaces.ViewAssertion;
  * Created by yummyLau on 18-7-10
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
- *
+ * <p>
  * updated by yummylau on 20/03/18
  * 重构整个输入法切换框架，移除旧版使用 weight+Runnable延迟切换，使用新版 layout+动画无缝衔接！
  */
 public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
     private static final String TAG = PanelSwitchLayout.class.getSimpleName();
+
+    private static long preClickTime = 0;
+
+    private List<OnViewClickListener> viewClickListeners;
+    private List<OnPanelChangeListener> panelChangeListeners;
+    private List<OnKeyboardStateListener> keyboardStatusListeners;
+    private List<OnEditFocusChangeListener> editFocusChangeListeners;
+
     private ContentContainer contentContainer;
     private PanelContainer panelContainer;
     private int panelId = Constants.PANEL_NONE;
@@ -71,31 +86,134 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         //nothing to do
     }
 
-    public void checkoutPanel(int panelId) {
-        switch (panelId) {
-            case Constants.PANEL_NONE: {
-                panelContainer.hidePanel();
-                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
-                contentContainer.clearFocusByEditText();
-                contentContainer.emptyViewVisible(false);
-                break;
+    private void initListener() {
+        /**
+         * 1. if current currentPanelId is None,should show keyboard
+         * 2. current currentPanelId is not None or KeyBoard that means some panel is showing,hide it and show keyboard
+         */
+        contentContainer.setEditTextClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notifyViewClick(v);
+                //checkout currentFlag to keyboard
+                boolean result = checkoutPanel(Constants.PANEL_KEYBOARD);
+                //when is checkout doing, unlockContentlength unfinished
+                //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
+                if (!result && panelId != Constants.PANEL_KEYBOARD) {
+                    PanelHelper.hideKeyboard(getContext(), v);
+                }
             }
-            case Constants.PANEL_KEYBOARD: {
-                panelContainer.hidePanel();
-                PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
-                contentContainer.emptyViewVisible(true);
-                break;
+        });
+
+        contentContainer.setEditTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                notifyEditFocusChange(v, hasFocus);
+                if (hasFocus) {
+                    // checkout currentFlag to keyboard
+                    boolean result = checkoutPanel(Constants.PANEL_KEYBOARD);
+                    //when is checkout doing, unlockContentlength unfinished
+                    //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
+                    if (!result && panelId != Constants.PANEL_KEYBOARD) {
+                        PanelHelper.hideKeyboard(getContext(), v);
+                    }
+                }
             }
-            default: {
-                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
-                panelContainer.showPanel(panelId);
-                contentContainer.emptyViewVisible(true);
+        });
+
+        contentContainer.setEmptyViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (panelId != Constants.PANEL_NONE) {
+                    notifyViewClick(v);
+                    checkoutPanel(Constants.PANEL_NONE);
+                }
+            }
+        });
+
+        /**
+         * save panel that you want to use these to checkout
+         */
+        SparseArray<PanelView> array = panelContainer.getPanelSparseArray();
+        for (int i = 0; i < array.size(); i++) {
+            final PanelView panelView = array.get(array.keyAt(i));
+            final View keyView = contentContainer.findViewById(panelView.getTriggerViewId());
+            if (keyView != null) {
+                keyView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - preClickTime <= Constants.PROTECT_KEY_CLICK_DURATION) {
+                            LogTracker.Log(TAG + "#initListener", "panelItem invalid click! preClickTime: " + preClickTime + " currentClickTime: " + currentTime);
+                            return;
+                        }
+                        notifyViewClick(v);
+                        int targetId = panelContainer.getPanelId(panelView);
+                        if (panelId == targetId && panelView.isToggle() && panelView.isShown()) {
+                            checkoutPanel(Constants.PANEL_KEYBOARD);
+                        } else {
+                            checkoutPanel(targetId);
+                        }
+
+                        preClickTime = currentTime;
+                    }
+                });
             }
         }
-        this.panelId = panelId;
-        LogTracker.Log(TAG + "#checkoutPanel", "panel' id :" + panelId);
-        panelContainer.notifyPanelChange(this.panelId);
-        requestLayout();
+        panelContainer.addPanelChangeListener(panelChangeListeners);
+    }
+
+    public void bindListener(List<OnViewClickListener> viewClickListeners, List<OnPanelChangeListener> panelChangeListeners,
+                             List<OnKeyboardStateListener> keyboardStatusListeners, List<OnEditFocusChangeListener> editFocusChangeListeners) {
+        this.viewClickListeners = viewClickListeners;
+        this.panelChangeListeners = panelChangeListeners;
+        this.keyboardStatusListeners = keyboardStatusListeners;
+        this.editFocusChangeListeners = editFocusChangeListeners;
+    }
+
+    private void notifyViewClick(View view) {
+        for (OnViewClickListener listener : viewClickListeners) {
+            listener.onViewClick(view);
+        }
+    }
+
+    private void notifyKeyboardState(boolean visible) {
+        for (OnKeyboardStateListener listener : keyboardStatusListeners) {
+            listener.onKeyboardChange(visible);
+        }
+    }
+
+    private void notifyEditFocusChange(View view, boolean hasFocus) {
+        for (OnEditFocusChangeListener listener : editFocusChangeListeners) {
+            listener.onFocusChange(view, hasFocus);
+        }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        assertView();
+        initListener();
+    }
+
+    @Override
+    public void assertView() {
+        if (getChildCount() != 2) {
+            throw new RuntimeException("PanelSwitchLayout -- PanelSwitchLayout should has two children,the first is ContentContainer,the other is PanelContainer！");
+        }
+        View firstView = getChildAt(0);
+        View secondView = getChildAt(1);
+
+        if (!(firstView instanceof ContentContainer)) {
+            throw new RuntimeException("PanelSwitchLayout -- the first view is ContentContainer,the other is ContentContainer！");
+        }
+        this.contentContainer = (ContentContainer) firstView;
+
+        if (!(secondView instanceof PanelContainer)) {
+            throw new RuntimeException("PanelSwitchLayout -- the second view is ContentContainer,the other is PanelContainer！");
+        }
+        this.panelContainer = (PanelContainer) secondView;
     }
 
 
@@ -113,12 +231,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int panelHeight = keyboardHeight;
         setTransition(200);
 
-
         Log.d("xxxx", "");
         Log.d("xxxx", " onLayout  =======> 被回调 ");
-        Log.d("xxxx", " 屏幕高度（不包含虚拟键高度,包含状态栏和ToolBar高度） : " + getTotalHeight());
-        Log.d("xxxx", " 界面高度（包含状态栏和ToolBar高度） " + getVisibleHeight());
-        Log.d("xxxx", " 获取ToolBar高度（包含状态栏） " + getTitleBarHeight());
         Log.d("xxxx", " layout参数 changed : " + changed + " l : " + l + " t : " + t + " r : " + r + " b : " + b);
         Log.d("xxxx", " panel场景  : " + (panelId == Constants.PANEL_NONE ? "收起" : (panelId == Constants.PANEL_KEYBOARD ? "键盘" : "面板")));
         Log.d("xxxx", " 内容 top  ：" + contentTop);
@@ -156,29 +270,56 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         TransitionManager.beginDelayedTransition(this, changeBounds);
     }
 
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        assertView();
+    /**
+     * This will be called when User press System Back Button.
+     * 1. if keyboard is showing, should be hide;
+     * 2. if you want to hide panel(exclude keyboard),you should call it before {@link Activity#onBackPressed()} to hook it.
+     *
+     * @return if need hook
+     */
+    public boolean hookSystemBackForHindPanel() {
+        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
+            checkoutPanel(Constants.PANEL_NONE);
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void assertView() {
-        if (getChildCount() != 2) {
-            throw new RuntimeException("PanelSwitchLayout -- PanelSwitchLayout should has two children,the first is ContentContainer,the other is PanelContainer！");
+    /**
+     * todo 需要处理点击切换
+     * @param panelId
+     * @return
+     */
+    public boolean checkoutPanel(int panelId) {
+        switch (panelId) {
+            case Constants.PANEL_NONE: {
+                panelContainer.hidePanel();
+                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
+                contentContainer.clearFocusByEditText();
+                contentContainer.emptyViewVisible(false);
+                break;
+            }
+            case Constants.PANEL_KEYBOARD: {
+                panelContainer.hidePanel();
+                if (contentContainer.editTextHasFocus()) {
+                    contentContainer.preformClickForEditText();
+                } else {
+                    contentContainer.requestFocusByEditText();
+                }
+//                PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
+                contentContainer.emptyViewVisible(true);
+                break;
+            }
+            default: {
+                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
+                panelContainer.showPanel(panelId);
+                contentContainer.emptyViewVisible(true);
+            }
         }
-        View firstView = getChildAt(0);
-        View secondView = getChildAt(1);
-
-        if (!(firstView instanceof ContentContainer)) {
-            throw new RuntimeException("PanelSwitchLayout -- the first view is ContentContainer,the other is ContentContainer！");
-        }
-        this.contentContainer = (ContentContainer) firstView;
-
-        if (!(secondView instanceof PanelContainer)) {
-            throw new RuntimeException("PanelSwitchLayout -- the second view is ContentContainer,the other is PanelContainer！");
-        }
-        this.panelContainer = (PanelContainer) secondView;
+        this.panelId = panelId;
+        LogTracker.Log(TAG + "#checkoutPanel", "panel' id :" + panelId);
+        panelContainer.notifyPanelChange(this.panelId);
+        requestLayout();
+        return true;
     }
 }
