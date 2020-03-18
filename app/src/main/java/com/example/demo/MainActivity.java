@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //dialogFragment
         mBinding.chatSpecialPageDialogFragment.setOnClickListener(this);
         mBinding.chatSpecialPagePopupwindow.setOnClickListener(this);
-        mBinding.chatSpecialPageDialog.setOnClickListener(this);
 
         //综合场景
         mBinding.video.setOnClickListener(this);
@@ -93,11 +92,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.chat_special_page_popupwindow: {
                 PopupWindow popupWindow = new ChatPupupWindow(this);
                 popupWindow.showAtLocation(mBinding.getRoot(), Gravity.NO_GRAVITY, 0, 0);
-                break;
-            }
-            case R.id.chat_special_page_dialog: {
-                Dialog dialog = new ChatDialog(MainActivity.this);
-                dialog.show();
                 break;
             }
             case R.id.video: {

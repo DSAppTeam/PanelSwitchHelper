@@ -44,7 +44,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
         }
     };
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
