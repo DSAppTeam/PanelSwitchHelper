@@ -12,6 +12,9 @@ import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
@@ -57,8 +60,9 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
     private ContentContainer contentContainer;
     private PanelContainer panelContainer;
-    private int panelId = Constants.PANEL_NONE;
 
+    private boolean isKeyboardShowing;
+    private int panelId = Constants.PANEL_NONE;
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -168,6 +172,35 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         this.editFocusChangeListeners = editFocusChangeListeners;
     }
 
+    public void bindWindow(final Window window){
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.getDecorView().getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int contentHeight = PanelHelper.getContentHeightWithoutSystemUI(window);
+                int screenHeight = PanelHelper.getScreenWithSystemUI(window);
+                int systemUIHeight = PanelHelper.getSystemUI(getContext(),window);
+                int keyboardHeight = screenHeight - contentHeight - systemUIHeight;
+                if (isKeyboardShowing) {
+                    if (keyboardHeight <= 0) {
+                        isKeyboardShowing = false;
+                        notifyKeyboardState(false);
+                    } else {
+                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        PanelHelper.setKeyBoardHeight(getContext(), keyboardHeight);
+                    }
+                } else {
+                    if (keyboardHeight > 0) {
+                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        PanelHelper.setKeyBoardHeight(getContext(), keyboardHeight);
+                        isKeyboardShowing = true;
+                        notifyKeyboardState(true);
+                    }
+                }
+            }
+        });
+    }
+
     private void notifyViewClick(View view) {
         for (OnViewClickListener listener : viewClickListeners) {
             listener.onViewClick(view);
@@ -186,8 +219,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         }
     }
 
-
-    public void notifyPanelChange(int panelId) {
+    private void notifyPanelChange(int panelId) {
         for (OnPanelChangeListener listener : panelChangeListeners) {
             switch (panelId) {
                 case Constants.PANEL_NONE: {
@@ -205,7 +237,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         }
     }
 
-    public void notifyPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+    private void notifyPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
         for (OnPanelChangeListener listener : panelChangeListeners) {
             listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height);
         }
@@ -237,6 +269,12 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         this.panelContainer = (PanelContainer) secondView;
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.d("xxxx", " onSizeChanged  =======> 被回调 ");
+        Log.d("xxxx", " size参数  " +  " w : " + w + " h : " + h + " oldw: " + oldw+ " oldh : " + oldh);
+    }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -311,22 +349,20 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     }
 
     /**
-     * todo 需要处理点击切换
      *
      * @param panelId
      * @return
      */
     public boolean checkoutPanel(int panelId) {
+        panelContainer.hidePanels();
         switch (panelId) {
             case Constants.PANEL_NONE: {
-                panelContainer.hidePanels();
                 PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.clearFocusByEditText();
                 contentContainer.emptyViewVisible(false);
                 break;
             }
             case Constants.PANEL_KEYBOARD: {
-                panelContainer.hidePanels();
                 PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.emptyViewVisible(true);
                 break;

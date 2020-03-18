@@ -118,7 +118,7 @@ public class ChatPupupWindow extends PopupWindow {
 
     private void initHelper() {
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(mActivity, mActivity.getWindow(), this.getContentView())
+            mHelper = new PanelSwitchHelper.Builder(mActivity.getWindow(), this.getContentView())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
