@@ -119,7 +119,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_special_page_btn"
                 android:padding="10dp"
-                android:text="聊天场景-dialogfragment"
+                android:text="聊天场景(dialogfragment)"
                 android:textColor="@color/btn_special_page_text"
                 android:textStyle="bold" />
 
@@ -130,20 +130,10 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_special_page_btn"
                 android:padding="10dp"
-                android:text="聊天场景-popupwindow"
+                android:text="聊天场景(popupwindow)"
                 android:textColor="@color/btn_special_page_text"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/chat_special_page_dialog"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/sh_special_page_btn"
-                android:padding="10dp"
-                android:text="聊天场景-dialog"
-                android:textColor="@color/btn_special_page_text"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/video"
