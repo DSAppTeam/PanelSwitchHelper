@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //fragment
         mBinding.chatFragment.setOnClickListener(this);
+        mBinding.chatFragmentToolbar.setOnClickListener(this);
         mBinding.chatColorFragment.setOnClickListener(this);
         mBinding.chatTransparentFragment.setOnClickListener(this);
 
@@ -70,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.chat_fragment: {
                 ChatFragmentActivity.startFragment(MainActivity.this, PageType.DEFAULT);
+                break;
+            }
+            case R.id.chat_fragment_toolbar: {
+                ChatFragmentActivity.startFragment(MainActivity.this, PageType.TOOLBAR);
                 break;
             }
             case R.id.chat_color_fragment: {

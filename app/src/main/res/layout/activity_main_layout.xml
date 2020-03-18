@@ -73,7 +73,19 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景-不处理状态栏-fragment"
+                android:text="聊天场景(fragment)：无toolbar"
+                android:textColor="@color/btn_fragment_text"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/chat_fragment_toolbar"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_fragment_btn"
+                android:padding="10dp"
+                android:text="聊天场景(fragment)：包含toolbar"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -84,7 +96,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景-状态栏着色-fragment"
+                android:text="聊天场景(fragment)：包含toolbar，状态栏着色"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -95,7 +107,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景-状透明态栏-fragment"
+                android:text="聊天场景(fragment)：包含toolbar，状态栏透明"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
