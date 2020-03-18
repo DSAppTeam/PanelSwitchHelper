@@ -10,7 +10,9 @@ import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
@@ -40,7 +42,7 @@ import static android.animation.LayoutTransition.DISAPPEARING;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class PanelContainer extends LinearLayout implements ViewAssertion {
+public class PanelContainer extends FrameLayout implements ViewAssertion {
 
     private SparseArray<PanelView> mPanelViewSparseArray = new SparseArray<>();
 

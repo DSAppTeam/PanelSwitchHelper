@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -20,6 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.effective.android.panel.view.ContentContainer;
+
 /**
  * panel helper
  * Created by yummyLau on 18-7-07
@@ -30,6 +33,31 @@ import android.view.inputmethod.InputMethodManager;
 public final class PanelHelper {
 
     private static final String TAG = PanelHelper.class.getSimpleName();
+
+    public static int getContentHeightWithoutSystemUI(Window window){
+        Rect r = new Rect();
+        window.getDecorView().getWindowVisibleDisplayFrame(r);
+        return  r.bottom - r.top;
+    }
+
+    public static int getScreenWithSystemUI(Window window){
+        return window.getDecorView().getHeight();
+    }
+
+    public static int getSystemUI(Context context,Window window){
+        int systemUIHeight = 0;
+        if (!isFullScreen(window)) {
+            //get statusBar 和 navigationBar height
+            int statusBarHeight = PanelHelper.getStatusBarHeight(context);
+            int navigationBatHeight = PanelHelper.getNavigationBarHeight(context);
+            if (PanelHelper.isPortrait(context)) {
+                systemUIHeight = PanelHelper.isNavigationBarShow(context, window) ? statusBarHeight + navigationBatHeight : statusBarHeight;
+            } else {
+                systemUIHeight = statusBarHeight;
+            }
+        }
+        return systemUIHeight;
+    }
 
     public static void showKeyboard(Context context, View view) {
         view.requestFocus();

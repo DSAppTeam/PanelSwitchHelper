@@ -68,7 +68,7 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
     @Override
     public void show() {
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(getContext(), getWindow(), mBinding.getRoot())
+            mHelper = new PanelSwitchHelper.Builder(getWindow(), mBinding.getRoot())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
