@@ -38,8 +38,7 @@
             <com.effective.android.panel.view.ContentContainer
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 app:edit_view="@id/edit_text"
                 app:empty_view="@id/empty_view">
