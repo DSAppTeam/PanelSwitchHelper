@@ -1,17 +1,13 @@
 package com.example.demo;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -194,7 +190,7 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+            if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
                 return true;
             } else {
                 dismiss();

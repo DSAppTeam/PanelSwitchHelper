@@ -193,7 +193,7 @@ public class ChatFragment extends Fragment {
     }
 
     public boolean hookOnBackPressed() {
-        return mHelper != null && mHelper.hookSystemBackForHindPanel();
+        return mHelper != null && mHelper.hookSystemBackByPanelSwitcher();
     }
 
     @Override

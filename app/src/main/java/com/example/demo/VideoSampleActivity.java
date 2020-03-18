@@ -88,7 +88,7 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
                 if (isPortrait) {
                     mBinding.inputLayout.setVisibility(View.VISIBLE);
                     mBinding.emptyView.setVisibility(View.VISIBLE);
-                    mHelper.showKeyboard();
+                    mHelper.toKeyboardState();
                 } else {
                     if (videoPopWindow == null) {
                         videoPopWindow = new VideoPopWindow(VideoSampleActivity.this, VideoSampleActivity.this);
@@ -174,7 +174,7 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
             }
             return;
         }
-        if (mHelper != null && mHelper.hookSystemBackForHindPanel()) {
+        if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
             return;
         }
         super.onBackPressed();
