@@ -147,5 +147,16 @@ public class PanelContainer extends LinearLayout implements ViewAssertion {
         PanelView panelView = mPanelViewSparseArray.get(panelId);
         panelView.setVisibility(View.GONE);
     }
+
+    public void hidePanel() {
+        for(int i = 0; i < mPanelViewSparseArray.size(); i++){
+            mPanelViewSparseArray.get(mPanelViewSparseArray.keyAt(i)).setVisibility(GONE);
+        }
+    }
+
+    public void showPanel(int panelId) {
+        PanelView panelView = mPanelViewSparseArray.get(panelId);
+        panelView.setVisibility(View.VISIBLE);
+    }
 }
 
