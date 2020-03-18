@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
         int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, PageType.DEFAULT);
 
         //这里只是demo提前隐藏标题栏，如果应用自己实现了标题栏或者通过自定义view开发标题栏，根据业务隐藏或者设置透明色就可以了，随便扩展
-        if(type == PageType.TRANSPARENT_STATUS_BAR){
+        if(type == PageType.TRANSPARENT_STATUS_BAR || type == PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER || type == PageType.DEFAULT){
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         }
 
@@ -75,9 +75,17 @@ public class ChatActivity extends AppCompatActivity {
                 break;
             }
             case PageType.TRANSPARENT_STATUS_BAR: {
-                StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setFitsSystemWindows(true);
+                StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
+                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                break;
+            }
+            case PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
+                mBinding.getRoot().setFitsSystemWindows(false);
+                StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
+                mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
+                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
             default: {

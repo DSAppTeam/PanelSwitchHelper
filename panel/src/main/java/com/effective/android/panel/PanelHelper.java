@@ -34,17 +34,63 @@ public final class PanelHelper {
 
     private static final String TAG = PanelHelper.class.getSimpleName();
 
-    public static int getContentHeightWithoutSystemUI(Window window){
-        Rect r = new Rect();
-        window.getDecorView().getWindowVisibleDisplayFrame(r);
-        return  r.bottom - r.top;
+    /**
+     * 获取toolar的高度，但是这个方法仅仅在非沉浸下才有用。
+     *
+     * @param window
+     * @return
+     */
+    public static int getToolbarHeight(Window window) {
+        return window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT).getTop();
     }
 
-    public static int getScreenWithSystemUI(Window window){
+    public static boolean contentViewCanDrawStatusBarArea(Window window) {
+        int[] contentViewLocationInScreen = new int[2];
+        window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT).getLocationOnScreen(contentViewLocationInScreen);
+        return contentViewLocationInScreen[1] == 0;
+    }
+
+    /**
+     * 对应 id 为 @Android：id/content 的 FrameLayout 所加载的布局。
+     * 也就是我们 setContentView 的布局高度
+     *
+     * @param window
+     * @return
+     */
+    public static int getContentViewHeight(Window window) {
+        return window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT).getHeight();
+    }
+
+
+    /**
+     * 实际上获取的是DecorView的布局高度，是一个 FrameLayout，其内置布局 id 为 com.android.internal.R.layout.screen_simple 的 LinearLayout
+     * 包含 id为 @+id/action_mode_bar_stub_ViewStub 的 ViewStub 还有 id 为 @Android：id/content 的 FrameLayout。
+     *
+     * @param window
+     * @return
+     */
+    public static int getScreenHeightWithSystemUI(Window window) {
         return window.getDecorView().getHeight();
     }
 
-    public static int getSystemUI(Context context,Window window){
+    public static int getScreenHeightWithoutNavigationBar(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public static int getScreenHeightWithoutSystemUI(Window window) {
+        Rect r = new Rect();
+        window.getDecorView().getWindowVisibleDisplayFrame(r);
+        return r.bottom - r.top;
+    }
+
+    /**
+     * 获取当前界面系统UI：包含状态栏+盗汗栏
+     *
+     * @param context
+     * @param window
+     * @return
+     */
+    public static int getSystemUI(Context context, Window window) {
         int systemUIHeight = 0;
         if (!isFullScreen(window)) {
             //get statusBar 和 navigationBar height
@@ -129,13 +175,14 @@ public final class PanelHelper {
 
     /**
      * Decorview 源码
-     *    public static final ColorViewAttributes NAVIGATION_BAR_COLOR_VIEW_ATTRIBUTES =
-     *             new ColorViewAttributes(
-     *                     SYSTEM_UI_FLAG_HIDE_NAVIGATION, FLAG_TRANSLUCENT_NAVIGATION,
-     *                     Gravity.BOTTOM, Gravity.RIGHT, Gravity.LEFT,
-     *                     Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME,
-     *                     com.android.internal.R.id.navigationBarBackground,
-     *                     0 /* hideWindowFlag
+     * public static final ColorViewAttributes NAVIGATION_BAR_COLOR_VIEW_ATTRIBUTES =
+     * new ColorViewAttributes(
+     * SYSTEM_UI_FLAG_HIDE_NAVIGATION, FLAG_TRANSLUCENT_NAVIGATION,
+     * Gravity.BOTTOM, Gravity.RIGHT, Gravity.LEFT,
+     * Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME,
+     * com.android.internal.R.id.navigationBarBackground,
+     * 0 /* hideWindowFlag
+     *
      * @param context
      * @param window
      * @return
