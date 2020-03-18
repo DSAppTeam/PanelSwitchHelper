@@ -26,8 +26,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //activity
         mBinding.chat.setOnClickListener(this);
+        mBinding.chatToolbar.setOnClickListener(this);
         mBinding.chatColor.setOnClickListener(this);
         mBinding.chatTransparent.setOnClickListener(this);
+        mBinding.chatTransparentUnderStatusBar.setOnClickListener(this);
 
         //fragment
         mBinding.chatFragment.setOnClickListener(this);
@@ -50,12 +52,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ChatActivity.start(MainActivity.this, PageType.DEFAULT);
                 break;
             }
+            case R.id.chat_toolbar: {
+                ChatActivity.start(MainActivity.this, PageType.TOOLBAR);
+                break;
+            }
             case R.id.chat_color: {
                 ChatActivity.start(MainActivity.this, PageType.COLOR_STATUS_BAR);
                 break;
             }
             case R.id.chat_transparent: {
                 ChatActivity.start(MainActivity.this, PageType.TRANSPARENT_STATUS_BAR);
+                break;
+            }
+            case R.id.chat_transparent_under_status_bar: {
+                ChatActivity.start(MainActivity.this, PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER);
                 break;
             }
             case R.id.chat_fragment: {
