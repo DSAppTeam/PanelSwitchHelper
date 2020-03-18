@@ -120,8 +120,6 @@ public class ChatPupupWindow extends PopupWindow {
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(mActivity, mActivity.getWindow(), this.getContentView())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
-                    .bindPanelContainerId(R.id.panel_container)
-                    .bindContentContainerId(R.id.content_view)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
@@ -131,7 +129,7 @@ public class ChatPupupWindow extends PopupWindow {
                         }
                     })
                     //可选
-                    .addEdittextFocesChangeListener(new OnEditFocusChangeListener() {
+                    .addEditTextFocusChangeListener(new OnEditFocusChangeListener() {
                         @Override
                         public void onFocusChange(View view, boolean hasFocus) {
                             Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
