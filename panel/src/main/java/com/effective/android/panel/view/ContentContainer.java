@@ -137,4 +137,12 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     public void preformClickForEditText() {
         mEditText.performClick();
     }
+
+    public void toKeyboardState(){
+        if (editTextHasFocus()) {
+            preformClickForEditText();
+        } else {
+            requestFocusByEditText();
+        }
+    }
 }

@@ -3,23 +3,20 @@ package com.effective.android.panel.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.PanelHelper;
-import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
@@ -44,7 +41,7 @@ import java.util.List;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  * <p>
- * updated by yummylau on 20/03/18
+ * updated by yummyLau on 20/03/18
  * 重构整个输入法切换框架，移除旧版使用 weight+Runnable延迟切换，使用新版 layout+动画无缝衔接！
  */
 public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
@@ -161,7 +158,6 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 });
             }
         }
-        panelContainer.addPanelChangeListener(panelChangeListeners);
     }
 
     public void bindListener(List<OnViewClickListener> viewClickListeners, List<OnPanelChangeListener> panelChangeListeners,
@@ -187,6 +183,31 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private void notifyEditFocusChange(View view, boolean hasFocus) {
         for (OnEditFocusChangeListener listener : editFocusChangeListeners) {
             listener.onFocusChange(view, hasFocus);
+        }
+    }
+
+
+    public void notifyPanelChange(int panelId) {
+        for (OnPanelChangeListener listener : panelChangeListeners) {
+            switch (panelId) {
+                case Constants.PANEL_NONE: {
+                    listener.onNone();
+                    break;
+                }
+                case Constants.PANEL_KEYBOARD: {
+                    listener.onKeyboard();
+                    break;
+                }
+                default: {
+                    listener.onPanel(panelContainer.getPanelView(panelId));
+                }
+            }
+        }
+    }
+
+    public void notifyPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+        for (OnPanelChangeListener listener : panelChangeListeners) {
+            listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height);
         }
     }
 
@@ -227,7 +248,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int allHeight = b - t;
         int contentTop = (panelId == Constants.PANEL_NONE) ? t : t - keyboardHeight;
         int contentHeight = allHeight;
-        int panelTop = t + contentHeight;
+        int panelTop = contentTop + contentHeight;
         int panelHeight = keyboardHeight;
         setTransition(200);
 
@@ -273,11 +294,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     /**
      * This will be called when User press System Back Button.
      * 1. if keyboard is showing, should be hide;
-     * 2. if you want to hide panel(exclude keyboard),you should call it before {@link Activity#onBackPressed()} to hook it.
+     * 2. if you want to hide panel(exclude keyboard),you should call it before {@link android.support.v7.app.AppCompatActivity#onBackPressed()} to hook it.
      *
      * @return if need hook
      */
-    public boolean hookSystemBackForHindPanel() {
+    public boolean hookSystemBackByPanelSwitcher() {
         if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
             checkoutPanel(Constants.PANEL_NONE);
             return true;
@@ -285,40 +306,44 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         return false;
     }
 
+    public void toKeyboardState() {
+        contentContainer.toKeyboardState();
+    }
+
     /**
      * todo 需要处理点击切换
+     *
      * @param panelId
      * @return
      */
     public boolean checkoutPanel(int panelId) {
         switch (panelId) {
             case Constants.PANEL_NONE: {
-                panelContainer.hidePanel();
+                panelContainer.hidePanels();
                 PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.clearFocusByEditText();
                 contentContainer.emptyViewVisible(false);
                 break;
             }
             case Constants.PANEL_KEYBOARD: {
-                panelContainer.hidePanel();
-                if (contentContainer.editTextHasFocus()) {
-                    contentContainer.preformClickForEditText();
-                } else {
-                    contentContainer.requestFocusByEditText();
-                }
-//                PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
+                panelContainer.hidePanels();
+                PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.emptyViewVisible(true);
                 break;
             }
             default: {
                 PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
-                panelContainer.showPanel(panelId);
+                Pair<Integer, Integer> size = new Pair<>(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), PanelHelper.getKeyBoardHeight(getContext()));
+                Pair<Integer, Integer> oldSize = panelContainer.showPanel(panelId, size);
+                if (size.first != oldSize.first || size.second != oldSize.second) {
+                    notifyPanelSizeChange(panelContainer.getPanelView(panelId), PanelHelper.isPortrait(getContext()), oldSize.first, oldSize.second, size.first, size.second);
+                }
                 contentContainer.emptyViewVisible(true);
             }
         }
         this.panelId = panelId;
         LogTracker.Log(TAG + "#checkoutPanel", "panel' id :" + panelId);
-        panelContainer.notifyPanelChange(this.panelId);
+        notifyPanelChange(this.panelId);
         requestLayout();
         return true;
     }

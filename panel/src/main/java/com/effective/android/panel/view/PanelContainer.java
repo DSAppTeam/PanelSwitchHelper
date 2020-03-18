@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
@@ -41,10 +42,7 @@ import static android.animation.LayoutTransition.DISAPPEARING;
  */
 public class PanelContainer extends LinearLayout implements ViewAssertion {
 
-    private static final String TAG = PanelContainer.class.getSimpleName();
     private SparseArray<PanelView> mPanelViewSparseArray = new SparseArray<>();
-    private List<OnPanelChangeListener> mListeners = new ArrayList<>();
-    private LayoutTransition mLayoutTransition;
 
     public PanelContainer(Context context) {
         this(context, null);
@@ -66,8 +64,6 @@ public class PanelContainer extends LinearLayout implements ViewAssertion {
     }
 
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-//        mLayoutTransition = new LayoutTransition();
-        mLayoutTransition = null;
     }
 
     @Override
@@ -90,15 +86,14 @@ public class PanelContainer extends LinearLayout implements ViewAssertion {
         }
     }
 
-
+    @NonNull
     public SparseArray<PanelView> getPanelSparseArray() {
         return mPanelViewSparseArray;
     }
 
-    public void addPanelChangeListener(List<OnPanelChangeListener> listeners) {
-        if (listeners != null && !listeners.isEmpty()) {
-            mListeners.addAll(listeners);
-        }
+    @Nullable
+    public PanelView getPanelView(int panelId) {
+        return mPanelViewSparseArray.get(panelId);
     }
 
     public int getPanelId(PanelView view) {
@@ -109,63 +104,24 @@ public class PanelContainer extends LinearLayout implements ViewAssertion {
         }
     }
 
-    public void notifyPanelChange(int panelId) {
-        for (OnPanelChangeListener listener : mListeners) {
-            switch (panelId) {
-                case Constants.PANEL_NONE: {
-                    listener.onNone();
-                    break;
-                }
-                case Constants.PANEL_KEYBOARD: {
-                    listener.onKeyboard();
-                    break;
-                }
-                default: {
-                    listener.onPanel(mPanelViewSparseArray.get(panelId));
-                }
-            }
+    public void hidePanels() {
+        for (int i = 0; i < mPanelViewSparseArray.size(); i++) {
+            PanelView panelView = mPanelViewSparseArray.get(mPanelViewSparseArray.keyAt(i));
+            panelView.setVisibility(GONE);
         }
     }
 
-    public void notifyPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-        LogTracker.Log(TAG + "#showPanel", "change panel's layout, " + oldWidth + " -> " + width + " " + oldHeight + " -> " + height);
-        for (OnPanelChangeListener listener : mListeners) {
-            listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height);
-        }
-    }
-
-    public Pair<Integer, Integer> showPanel(int panelId, int width, int height) {
-        setLayoutTransition(mLayoutTransition);
+    public Pair<Integer, Integer> showPanel(int panelId, @NonNull Pair<Integer, Integer> size) {
         PanelView panelView = mPanelViewSparseArray.get(panelId);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) panelView.getLayoutParams();
-        int oldWidth = params.width;
-        int oldHeight = params.height;
-        if (oldWidth != width || oldHeight != height) {
-            params.width = width;
-            params.height = height;
-            panelView.requestLayout();
-            boolean isPortrait = PanelHelper.isPortrait(getContext());
-            notifyPanelSizeChange(panelView, isPortrait, oldWidth, oldHeight, width, height);
+        ViewGroup.LayoutParams layoutParams = panelView.getLayoutParams();
+        Pair<Integer, Integer> curSize = new Pair<>(layoutParams.width, layoutParams.height);
+        if (curSize.first != size.first || curSize.second != size.second) {
+            layoutParams.width = size.first;
+            layoutParams.height = size.second;
+            panelView.setLayoutParams(layoutParams);
         }
         panelView.setVisibility(View.VISIBLE);
-        return new Pair<>(oldWidth, oldHeight);
-    }
-
-    public void hidePanel(int panelId, int toPanelId) {
-        setLayoutTransition(toPanelId == Constants.PANEL_NONE ? null : mLayoutTransition);
-        PanelView panelView = mPanelViewSparseArray.get(panelId);
-        panelView.setVisibility(View.GONE);
-    }
-
-    public void hidePanel() {
-        for(int i = 0; i < mPanelViewSparseArray.size(); i++){
-            mPanelViewSparseArray.get(mPanelViewSparseArray.keyAt(i)).setVisibility(GONE);
-        }
-    }
-
-    public void showPanel(int panelId) {
-        PanelView panelView = mPanelViewSparseArray.get(panelId);
-        panelView.setVisibility(View.VISIBLE);
+        return curSize;
     }
 }
 
