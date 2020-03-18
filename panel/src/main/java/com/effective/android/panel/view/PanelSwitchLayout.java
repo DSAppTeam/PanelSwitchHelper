@@ -320,14 +320,18 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         //如果该可见界面允许绘制到状态栏位置，则需要再加上状态栏
         //t 表示 panelSwitchLayout 被绘制的位置，如果 t == 0，则表示绘制在根部局左上角
         if (PanelHelper.contentViewCanDrawStatusBarArea(window)) {
-
             //常见于 activity中，如果 t > 0,则意味着布局可能在fragment中。
             if(t == 0){
                 allHeight += statusBarHeight;
             }
         }
+
         //t 则意味着 PanelSwitchLayout 顶部在父容器顶部为 t 高度，所以有效高度需要减去 t，常见于fragment布局中，被activity xml 所读取
-        allHeight -= t;
+        if(t > 0){
+            allHeight += toolbarHeight;
+            allHeight -= t;
+        }
+
 
         int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : - keyboardHeight;
         contentContainerTop += paddingTop;
