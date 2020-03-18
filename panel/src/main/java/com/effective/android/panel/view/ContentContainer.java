@@ -98,6 +98,12 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
         return mEmptyView;
     }
 
+    public void emptyViewVisible(boolean visible) {
+        if (mEmptyView != null) {
+            mEmptyView.setVisibility(visible ? VISIBLE : GONE);
+        }
+    }
+
     public EditText getEditText() {
         return mEditText;
     }
