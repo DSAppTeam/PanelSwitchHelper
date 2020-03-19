@@ -62,14 +62,12 @@ public class ChatFragment extends Fragment {
             }
             case PageType.TRANSPARENT_STATUS_BAR: {
                 StatusbarHelper.setStatusBarColor(getActivity(), Color.TRANSPARENT);
-                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
                 mBinding.titleBar.setVisibility(View.VISIBLE);
                 mBinding.title.setText(R.string.app_name);
                 break;
             }
             default: {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
-                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
                 mBinding.titleBar.setVisibility(type == PageType.DEFAULT ? View.GONE : View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.title.setText(R.string.app_name);

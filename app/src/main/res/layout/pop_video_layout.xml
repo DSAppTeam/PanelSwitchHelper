@@ -101,7 +101,7 @@
         <com.effective.android.panel.view.PanelContainer
             android:id="@+id/panel_container"
             android:layout_width="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/common_page_bg_color"
             android:layout_height="wrap_content">
 
             <!-- 每一项面板 -->
