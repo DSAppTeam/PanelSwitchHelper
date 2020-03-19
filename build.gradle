@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath deps.android_gradle_plugin
-//        classpath 'com.novoda:bintray-release:0.9'
+        classpath 'com.novoda:bintray-release:0.9'
     }
 }
 
