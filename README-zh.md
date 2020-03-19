@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -13,6 +13,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.3(2019-11-06) 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
 * 1.0.4(2019-11-18) 新增支持 Dialog/Fragment/DialogFragment
 * 1.0.5(2019-11-26) 支持适配华为/小米等支持动态导航栏隐藏的特殊机型
+* 1.1.0(2020-03-18) 追求极致的切换体验
+	* 支持切换流程中动画加持，效果同步“微信聊天”场景，但支持的场景远远不止这些（见Demo），同时支持自定义动画速度
+	* 优化框架内部切换流程，摈弃旧逻辑实现，新实现通过自定义绘制切换界面，无需担心内存泄漏
+	* Demo新增自定义标题栏场景，优化视频场景体验
 
 #### 用于做什么
 
@@ -25,6 +29,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.4.gif" width = "270" height = "480" alt="activity layout" />
 
+* 图四： 1.1.0 动画效果展示
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" />
+
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
 
@@ -33,20 +41,22 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 涉及的核心类有：
 
-* *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能。
+* *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能，1.1.0   核心实现框架功能，支持配置动画速度。
 * *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。
 * *PanelContainer* ， 即绿色区域 ， 仅用于存放可切换的面板 （*PanelView*），开发者自主定制 *PanelView* 面板。
 * *EmptyView* ， 可选配置，一般建议使用，支持1.0.2更新的功能
 
-以 activity_sample_layout.xml 为例子
+以 Demo 为例子
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- 1.1.0及以后版本支持设置动画速度,速度共4级：慢，标准，适中，快 -->
     <com.effective.android.panel.view.PanelSwitchLayout
         android:id="@+id/panel_switch_layout"
+        app:animationSpeed="standard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -54,11 +64,11 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
         <!-- 内容区域 -->
         <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
         <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
+        <!-- 1.1.0及以后版本不再需要设置 weight -->
         <com.effective.android.panel.view.ContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:edit_view="@id/edit_text"
             app:empty_view="@id/empty_view">
@@ -182,10 +192,11 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.5'
+implementation 'com.effective.android:panelSwitchHelper:1.1.0'
 ```
 
-2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。
+2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  
+
 ```
    private PanelSwitchHelper mHelper;
 
@@ -195,8 +206,6 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.5'
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)        //绑定PanelSwitchLayout 对象
-                    .bindPanelContainerId(R.id.panel_container)             //绑定ContentContainer 对象
-                    .bindContentContainerId(R.id.content_view)              //绑定PanelContainer 对象
                     .build();
         }
     }
@@ -217,8 +226,10 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.5'
 //具体方法可在源码查看
 PanelSwitchHelper 提供 隐藏输入法或面板 和 显示输入法方法
 PanelHelper 提供隐藏输入法，显示输入法，判断全屏，获取状态栏高度，导航栏高度，是否是横竖屏等
+PanelSwitchLayout 核心实现，动态调整子布局结构及动画支持
 ```
 
+> 如果框架对你有帮助，可安利给身边的伙伴，每一个 start 都是对框架付出的肯定
 
 #### 期望
 编写该项目只是希望能提高日常开发的效率，专注于处理业务 。如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
