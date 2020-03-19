@@ -3,16 +3,12 @@ package com.effective.android.panel.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-
-import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 
@@ -26,7 +22,6 @@ public class PanelView extends FrameLayout implements ViewAssertion {
 
     private int panelLayoutId;
     private int triggerViewId;
-    private View panelContentView;
     private boolean toggle;
 
     public PanelView(Context context) {
@@ -66,7 +61,7 @@ public class PanelView extends FrameLayout implements ViewAssertion {
         if (getChildCount() > 0) {
             throw new RuntimeException("PanelView -- you can't have any child!");
         }
-        panelContentView = LayoutInflater.from(getContext()).inflate(panelLayoutId, this, true);
+        LayoutInflater.from(getContext()).inflate(panelLayoutId, this, true);
     }
 
     @Override

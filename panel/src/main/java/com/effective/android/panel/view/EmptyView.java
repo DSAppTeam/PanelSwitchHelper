@@ -36,7 +36,6 @@ public class EmptyView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
