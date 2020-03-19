@@ -27,13 +27,10 @@ public class VideoPopWindow extends PopupWindow{
     private EditText editText;
     private View inputLayout;
     private View emptyView;
-    private Activity activity;
-
 
     public VideoPopWindow(final Activity activity, final PopContentSupport popContentSupport) {
         super(activity);
         final View view = LayoutInflater.from(activity).inflate(R.layout.pop_video_layout, null, false);
-        this.activity = activity;;
         emotionBtn = view.findViewById(R.id.emotion_btn);
         editText = view.findViewById(R.id.edit_text);
         inputLayout = view.findViewById(R.id.input_layout);
