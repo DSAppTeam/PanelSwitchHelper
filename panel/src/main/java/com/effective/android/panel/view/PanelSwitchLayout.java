@@ -127,7 +127,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
             public void onClick(View v) {
                 if (panelId != Constants.PANEL_NONE) {
                     notifyViewClick(v);
-                    checkoutPanel(Constants.PANEL_NONE);
+                    if(panelId == Constants.PANEL_KEYBOARD){
+                        PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
+                    }else{
+                        checkoutPanel(Constants.PANEL_NONE);
+                    }
                 }
             }
         });
@@ -333,7 +337,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int panelContainerTop = contentContainerTop + contentContainerHeight;
         int panelContainerHeight = keyboardHeight;
 
-        setTransition(200);
+        setTransition(300);
 
 //        Log.d(TAG, "   ");
 //        Log.d(TAG, " onLayout  =======> 被回调 ");
