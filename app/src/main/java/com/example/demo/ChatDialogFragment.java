@@ -133,7 +133,7 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
                     //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
-                        public void onViewClick(View view) {
+                        public void onClickBefore(View view) {
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -203,8 +203,5 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
     public void onDestroy() {
         super.onDestroy();
         mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
     }
 }

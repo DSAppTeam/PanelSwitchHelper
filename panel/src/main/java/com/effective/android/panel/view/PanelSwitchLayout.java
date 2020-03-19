@@ -2,7 +2,6 @@ package com.effective.android.panel.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
@@ -211,7 +210,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
     private void notifyViewClick(View view) {
         for (OnViewClickListener listener : viewClickListeners) {
-            listener.onViewClick(view);
+            listener.onClickBefore(view);
         }
     }
 
@@ -299,18 +298,18 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         }
 
         int screenHeight = PanelHelper.getScreenHeightWithSystemUI(window);
-        int screenWithoutSystemUIHeight = PanelHelper.getScreenHeightWithoutSystemUI(window);
+//        int screenWithoutSystemUIHeight = PanelHelper.getScreenHeightWithoutSystemUI(window);
         int screenWithoutNavigationIHeight = PanelHelper.getScreenHeightWithoutNavigationBar(getContext());
-        int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
-        int statusBarHeight = PanelHelper.getStatusBarHeight(getContext());
+//        int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
+//        int statusBarHeight = PanelHelper.getStatusBarHeight(getContext());
         int navigationBarHeight = PanelHelper.getNavigationBarHeight(getContext());
         boolean navigationBarShow = PanelHelper.isNavigationBarShow(getContext(), window);
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
-        int toolbarHeight = PanelHelper.getToolbarHeight(window);
-        if (toolbarHeight == statusBarHeight) {
-            toolbarHeight = 0;
-        }
-        int contentViewHeight = PanelHelper.getContentViewHeight(window);
+//        int toolbarHeight = PanelHelper.getToolbarHeight(window);
+//        if (toolbarHeight == statusBarHeight) {
+//            toolbarHeight = 0;
+//        }
+//        int contentViewHeight = PanelHelper.getContentViewHeight(window);
 
 
         int keyboardHeight = PanelHelper.getKeyBoardHeight(getContext());
@@ -321,7 +320,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
             //兼容性测试中，国产手机支持完全隐藏导航栏或者动态隐藏显示导航栏。前者往往使用实键或者手势来控制页面的返回。针对前者，screenHeight是会等于screenWithoutNavigationHeight，后者则一直不相等
             //为了实时使布局响应界面导航栏引起的变化，需要在隐藏导航栏的时候，把这部分高度归还给我们的界面
             if(screenHeight != screenWithoutNavigationIHeight){
-                allHeight += PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext());
+                allHeight += navigationBarShow? 0 : navigationBarHeight;
             }
 
         }
@@ -339,28 +338,27 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         setTransition(200);
 
-        Log.d(TAG, "   ");
-        Log.d(TAG, " onLayout  =======> 被回调 ");
-        Log.d(TAG, " layout参数 changed : " + changed + " l : " + l + " t : " + t + " r : " + r + " b : " + b);
-        Log.d(TAG, " panel场景  : " + (panelId == Constants.PANEL_NONE ? "收起" : (panelId == Constants.PANEL_KEYBOARD ? "键盘" : "面板")));
-
-        Log.d(TAG, " 界面高度（包含系统UI）  ：" + screenHeight);
-        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationIHeight);
-        Log.d(TAG, " 内容高度（不包含系统UI）  ：" + screenWithoutSystemUIHeight);
-        Log.d(TAG, " 系统UI高度  ：" + systemUIHeight);
-        Log.d(TAG, " 系统状态栏高度  ：" + statusBarHeight);
-        Log.d(TAG, " 系统导航栏高度  ：" + navigationBarHeight);
-        Log.d(TAG, " 系统导航栏是否显示  ：" + navigationBarShow);
-        Log.d(TAG, " contentView高度  ：" + contentViewHeight);
-        Log.d(TAG, " switchLayout 绘制起点  ：（" + localLocation[0] + "，" + localLocation[1] + "）");
-        Log.d(TAG, " toolbar高度  ：" + toolbarHeight);
-        Log.d(TAG, " paddingTop  ：" + paddingTop);
-        Log.d(TAG, " 输入法高度  ：" + keyboardHeight);
-
-        Log.d(TAG, " 内容 top  ：" + contentContainerTop);
-        Log.d(TAG, " 内容 高度 ：" + contentContainerHeight);
-        Log.d(TAG, " 面板 top ：" + panelContainerTop);
-        Log.d(TAG, " 面板 高度 " + panelContainerHeight);
+//        Log.d(TAG, "   ");
+//        Log.d(TAG, " onLayout  =======> 被回调 ");
+//        Log.d(TAG, " layout参数 changed : " + changed + " l : " + l + " t : " + t + " r : " + r + " b : " + b);
+//        Log.d(TAG, " panel场景  : " + (panelId == Constants.PANEL_NONE ? "收起" : (panelId == Constants.PANEL_KEYBOARD ? "键盘" : "面板")));
+//
+//        Log.d(TAG, " 界面高度（包含系统UI）  ：" + screenHeight);
+//        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationIHeight);
+//        Log.d(TAG, " 内容高度（不包含系统UI）  ：" + screenWithoutSystemUIHeight);
+//        Log.d(TAG, " 系统UI高度  ：" + systemUIHeight);
+//        Log.d(TAG, " 系统状态栏高度  ：" + statusBarHeight);
+//        Log.d(TAG, " 系统导航栏高度  ：" + navigationBarHeight);
+//        Log.d(TAG, " 系统导航栏是否显示  ：" + navigationBarShow);
+//        Log.d(TAG, " contentView高度  ：" + contentViewHeight);
+//        Log.d(TAG, " switchLayout 绘制起点  ：（" + localLocation[0] + "，" + localLocation[1] + "）");
+//        Log.d(TAG, " toolbar高度  ：" + toolbarHeight);
+//        Log.d(TAG, " paddingTop  ：" + paddingTop);
+//        Log.d(TAG, " 输入法高度  ：" + keyboardHeight);
+//        Log.d(TAG, " 内容 top  ：" + contentContainerTop);
+//        Log.d(TAG, " 内容 高度 ：" + contentContainerHeight);
+//        Log.d(TAG, " 面板 top ：" + panelContainerTop);
+//        Log.d(TAG, " 面板 高度 " + panelContainerHeight);
 
         //处理第一个view contentContainer
         {

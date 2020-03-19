@@ -158,9 +158,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
 
     @Override
     protected void onDestroy() {
-        if (videoPopWindow != null) {
-            videoPopWindow.onDestroy();
-        }
         mBinding.getRoot().removeCallbacks(runnable);
         super.onDestroy();
     }
