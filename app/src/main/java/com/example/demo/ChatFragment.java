@@ -139,7 +139,7 @@ public class ChatFragment extends Fragment {
                     //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
-                        public void onViewClick(View view) {
+                        public void onClickBefore(View view) {
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -197,8 +197,5 @@ public class ChatFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
     }
 }

@@ -91,7 +91,7 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
                     //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
-                        public void onViewClick(View view) {
+                        public void onClickBefore(View view) {
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -147,9 +147,6 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
     public void dismiss() {
         super.dismiss();
         mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
     }
 
     private void initView() {

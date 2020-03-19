@@ -51,7 +51,6 @@ public class ChatActivity extends AppCompatActivity {
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private Runnable mScrollToBottomRunnable;
     private static final String TAG = "ChatActivity";
 
     @Override
@@ -119,18 +118,10 @@ public class ChatActivity extends AppCompatActivity {
                 scrollToBottom();
             }
         });
-        mScrollToBottomRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mAdapter.getItemCount() > 0) {
-                    mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
-                }
-            }
-        };
     }
 
     private void scrollToBottom() {
-        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
+        mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
     @Override
@@ -152,12 +143,22 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onFocusChange(View view, boolean hasFocus) {
                             Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
+                            if(hasFocus){
+                                scrollToBottom();
+                            }
                         }
                     })
                     //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
-                        public void onViewClick(View view) {
+                        public void onClickBefore(View view) {
+                            switch (view.getId()){
+                                case R.id.edit_text:
+                                case R.id.add_btn:
+                                case R.id.emotion_btn:{
+                                    scrollToBottom();
+                                }
+                            }
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })
@@ -167,7 +168,6 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onKeyboard() {
                             Log.d(TAG, "唤起系统输入法");
-                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(false);
                         }
 
@@ -180,7 +180,6 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onPanel(PanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            scrollToBottom();
                             mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
                         }
 
@@ -214,15 +213,5 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
-    }
-
-    @Override
-
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
-//        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
     }
 }

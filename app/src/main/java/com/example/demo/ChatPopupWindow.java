@@ -109,9 +109,6 @@ public class ChatPopupWindow extends PopupWindow {
         if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
             return;
         }
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
         mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
         super.dismiss();
     }
@@ -138,7 +135,7 @@ public class ChatPopupWindow extends PopupWindow {
                     //可选
                     .addViewClickListener(new OnViewClickListener() {
                         @Override
-                        public void onViewClick(View view) {
+                        public void onClickBefore(View view) {
                             Log.d(TAG, "点击了View : " + view);
                         }
                     })

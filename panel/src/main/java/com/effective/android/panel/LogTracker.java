@@ -88,7 +88,7 @@ public class LogTracker implements OnEditFocusChangeListener, OnKeyboardStateLis
 
 
     @Override
-    public void onViewClick(View view) {
+    public void onClickBefore(View view) {
         log(TAG + "#onViewClick", "view is " + (view != null ? view.toString() : " null "));
     }
 }

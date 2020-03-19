@@ -106,12 +106,6 @@ public class VideoPopWindow extends PopupWindow{
         }
     }
 
-    public void onDestroy(){
-        if(mHelper != null){
-            mHelper.onDestroy();
-        }
-    }
-
     public void showKeyboard(){
         if(mHelper != null){
             mHelper.toKeyboardState();
