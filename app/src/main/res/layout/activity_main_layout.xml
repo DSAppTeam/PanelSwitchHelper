@@ -18,7 +18,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无toolbar"
+                android:text="聊天场景(Activity)：无Toolbar"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -29,7 +29,18 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：包含toolbar"
+                android:text="聊天场景(Activity)：包含Toolbar"
+                android:textColor="@color/btn_activity_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chat_cus_toolbar"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_activity_btn"
+                android:padding="10dp"
+                android:text="聊天场景(Activity)：自定义Toolbar"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -40,7 +51,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：包含toolbar，状态栏着色"
+                android:text="聊天场景(Activity)：包含Toolbar，状态栏着色"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -51,7 +62,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无toolbar，状态栏透明，不绘制到顶"
+                android:text="聊天场景(Activity)：无Toolbar，状态栏透明，不绘制到顶"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -62,7 +73,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无toolbar，状态栏透明，绘制到顶"
+                android:text="聊天场景(Activity)：无Toolbar，状态栏透明，绘制到顶"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -73,7 +84,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(fragment)：无toolbar"
+                android:text="聊天场景(Fragment)：无Toolbar"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -85,7 +96,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(fragment)：包含toolbar"
+                android:text="聊天场景(Fragment)：包含Toolbar"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -96,7 +107,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(fragment)：包含toolbar，状态栏着色"
+                android:text="聊天场景(Fragment)：包含Toolbar，状态栏着色"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -107,7 +118,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(fragment)：包含toolbar，状态栏透明"
+                android:text="聊天场景(Fragment)：包含Toolbar，状态栏透明"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -119,7 +130,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_special_page_btn"
                 android:padding="10dp"
-                android:text="聊天场景(dialogfragment)"
+                android:text="聊天场景(DialogFragment)"
                 android:textColor="@color/btn_special_page_text"
                 android:textStyle="bold" />
 
@@ -130,7 +141,18 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_special_page_btn"
                 android:padding="10dp"
-                android:text="聊天场景(popupwindow)"
+                android:text="聊天场景(PopupWindow)"
+                android:textColor="@color/btn_special_page_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chat_special_page_dialog"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_special_page_btn"
+                android:padding="10dp"
+                android:text="聊天场景(Dialog)"
                 android:textColor="@color/btn_special_page_text"
                 android:textStyle="bold" />
 

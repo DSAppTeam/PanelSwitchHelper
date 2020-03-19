@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //activity
         mBinding.chat.setOnClickListener(this);
         mBinding.chatToolbar.setOnClickListener(this);
+        mBinding.chatCusToolbar.setOnClickListener(this);
         mBinding.chatColor.setOnClickListener(this);
         mBinding.chatTransparent.setOnClickListener(this);
         mBinding.chatTransparentUnderStatusBar.setOnClickListener(this);
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //dialogFragment
         mBinding.chatSpecialPageDialogFragment.setOnClickListener(this);
         mBinding.chatSpecialPagePopupwindow.setOnClickListener(this);
+        mBinding.chatSpecialPageDialog.setOnClickListener(this);
 
         //综合场景
         mBinding.video.setOnClickListener(this);
@@ -54,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.chat_toolbar: {
                 ChatActivity.start(MainActivity.this, PageType.TOOLBAR);
+                break;
+            }
+            case R.id.chat_cus_toolbar: {
+                ChatActivity.start(MainActivity.this, PageType.CUS_TOOLBAR);
                 break;
             }
             case R.id.chat_color: {
@@ -90,8 +96,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.chat_special_page_popupwindow: {
-                PopupWindow popupWindow = new ChatPupupWindow(this);
+                PopupWindow popupWindow = new ChatPopupWindow(this);
                 popupWindow.showAtLocation(mBinding.getRoot(), Gravity.NO_GRAVITY, 0, 0);
+                break;
+            }
+            case R.id.chat_special_page_dialog: {
+                Dialog dialog = new ChatDialog(MainActivity.this);
+                dialog.show();
                 break;
             }
             case R.id.video: {

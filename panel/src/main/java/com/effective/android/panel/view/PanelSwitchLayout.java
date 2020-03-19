@@ -303,34 +303,24 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int screenWithoutNavigationIHeight = PanelHelper.getScreenHeightWithoutNavigationBar(getContext());
         int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
         int statusBarHeight = PanelHelper.getStatusBarHeight(getContext());
-        int navigationBarHeight = PanelHelper.isNavigationBarShow(getContext(), window) ? PanelHelper.getNavigationBarHeight(getContext()) : 0;
+        int navigationBarHeight = PanelHelper.getNavigationBarHeight(getContext());
+        boolean navigationBarShow = PanelHelper.isNavigationBarShow(getContext(),window);
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         int toolbarHeight = PanelHelper.getToolbarHeight(window);
         if(toolbarHeight == statusBarHeight){
             toolbarHeight = 0;
         }
         int contentViewHeight = PanelHelper.getContentViewHeight(window);
+
+
         int keyboardHeight = PanelHelper.getKeyBoardHeight(getContext());
         int paddingTop = getPaddingTop();
-
-
-        //screenWithoutNavigationIHeight - toolbarHeight - statusBarHeight 表示不包含导航栏，状态栏和标题栏的可见界面高度
-        //(PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext())) 表示当前界面动态显示的导航栏，比如华为手机等可以随时隐藏和显示
-        int allHeight = screenWithoutNavigationIHeight - toolbarHeight - statusBarHeight + (PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext()));
-        //如果该可见界面允许绘制到状态栏位置，则需要再加上状态栏
-        //t 表示 panelSwitchLayout 被绘制的位置，如果 t == 0，则表示绘制在根部局左上角
-        if (PanelHelper.contentViewCanDrawStatusBarArea(window)) {
-            //常见于 activity中，如果 t > 0,则意味着布局可能在fragment中。
-            if(t == 0){
-                allHeight += statusBarHeight;
-            }
+        int allHeight = screenWithoutNavigationIHeight;
+        if(PanelHelper.isPortrait(getContext())){
+            allHeight +=(PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext()));
         }
-
-        //t 则意味着 PanelSwitchLayout 顶部在父容器顶部为 t 高度，所以有效高度需要减去 t，常见于fragment布局中，被activity xml 所读取
-        if(t > 0){
-            allHeight += toolbarHeight;
-            allHeight -= t;
-        }
+        int[] localLocation = PanelHelper.getLocationOnScreen(this);
+        allHeight -= localLocation[1];
 
 
         int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : - keyboardHeight;
@@ -354,7 +344,9 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         Log.d(TAG, " 系统UI高度  ：" + systemUIHeight);
         Log.d(TAG, " 系统状态栏高度  ：" + statusBarHeight);
         Log.d(TAG, " 系统导航栏高度  ：" + navigationBarHeight);
+        Log.d(TAG, " 系统导航栏是否显示  ：" + navigationBarShow);
         Log.d(TAG, " contentView高度  ：" + contentViewHeight);
+        Log.d(TAG, " switchLayout 绘制起点  ：（" + localLocation[0] + "，" + localLocation[1] + "）");
         Log.d(TAG, " toolbar高度  ：" + toolbarHeight);
         Log.d(TAG, " paddingTop  ：" + paddingTop);
         Log.d(TAG, " 输入法高度  ：" + keyboardHeight);
