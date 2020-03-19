@@ -2,6 +2,7 @@ package com.effective.android.panel.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.PanelHelper;
+import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
@@ -63,6 +65,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private Window window;
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
+    private int animationSpeed = 300;  //standard
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -84,7 +87,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     }
 
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        //nothing to do
+        final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.PanelSwitchLayout, defStyleAttr, 0);
+        if (typedArray != null) {
+            animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed);
+            typedArray.recycle();
+        }
     }
 
     private void initListener() {
@@ -127,9 +134,9 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
             public void onClick(View v) {
                 if (panelId != Constants.PANEL_NONE) {
                     notifyViewClick(v);
-                    if(panelId == Constants.PANEL_KEYBOARD){
+                    if (panelId == Constants.PANEL_KEYBOARD) {
                         PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
-                    }else{
+                    } else {
                         checkoutPanel(Constants.PANEL_NONE);
                     }
                 }
@@ -320,8 +327,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
             //兼容性测试中，国产手机支持完全隐藏导航栏或者动态隐藏显示导航栏。前者往往使用实键或者手势来控制页面的返回。针对前者，screenHeight是会等于screenWithoutNavigationHeight，后者则一直不相等
             //为了实时使布局响应界面导航栏引起的变化，需要在隐藏导航栏的时候，把这部分高度归还给我们的界面
-            if(screenHeight != screenWithoutNavigationIHeight){
-                allHeight += navigationBarShow? 0 : navigationBarHeight;
+            if (screenHeight != screenWithoutNavigationIHeight) {
+                allHeight += navigationBarShow ? 0 : navigationBarHeight;
             }
 
         }
@@ -337,7 +344,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int panelContainerTop = contentContainerTop + contentContainerHeight;
         int panelContainerHeight = keyboardHeight;
 
-        setTransition(300);
+        setTransition(animationSpeed);
 
 //        Log.d(TAG, "   ");
 //        Log.d(TAG, " onLayout  =======> 被回调 ");
