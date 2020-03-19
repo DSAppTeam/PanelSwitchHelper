@@ -81,14 +81,12 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setFitsSystemWindows(true);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
-                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
             case PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
                 mBinding.getRoot().setFitsSystemWindows(false);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
-                mBinding.panelContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
             default: {
