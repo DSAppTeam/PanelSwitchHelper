@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -13,6 +13,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) Scene issues
 * 1.0.4(2019-11-18) Added support for Dialog/Fragment/DialogFragment
 * 1.0.5 (2019-11-26) Support for special models such as Huawei / Xiaomi that support the hiding of dynamic navigation bar
+* 1.1.0 (2020-03-18) Pursuing the ultimate switching experience
+	* Support animation blessing in the switching process, the effect is synchronized with "WeChat chat" scenes, but the supported scenes are far more than this (see Demo), and support custom animation speed
+	* Optimize the internal switching process of the framework, abandon the old logic implementation, and the new implementation uses custom drawing to switch the interface without worrying about memory leaks
+	* Demo adds custom title bar scene to optimize video scene experience
 
 #### What to do
 
@@ -26,6 +30,10 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.1.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.0.4.gif" width = "270" height = "480" alt="activity layout" />
 
+* Figure 4: 1.1.0 Animation effect display
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" />
+
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
 
@@ -33,20 +41,22 @@ Get the keyboard's height by listening to the window's changes and dynamically a
 
 The core classes ：
 
-* *PanelSwitchLayout* ，including the yellow area, can only contain *PanelContainer* and *PanelSwitchLayout* and implement some auxiliary functions
+* *PanelSwitchLayout* ，including the yellow area, can only contain *PanelContainer* and *PanelSwitchLayout* and implement some auxiliary functions. 1.1.0 Core implementation framework functions，Support to configure animation speed.
 * *ContentContainer* ，including the blue area, can store display content such as list content. And store the layout that triggers the switch, such as input box emoticons, etc.
 * *PanelContainer* ， including the green area, only for the switchable panel (*PanelView*), the developer customizes the *PanelView* panel.
 * *EmptyView* ， Optional configuration, generally recommended, support for 1.0.2 update function
 
-Take activity_sample_layout.xml as an example
+Take Demo as an example
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+	<!-- 1.1.0 and later versions support setting animation speed. There are 4 levels of speed: slow, standard, moderate, and fast -->
     <com.effective.android.panel.view.PanelSwitchLayout
         android:id="@+id/panel_switch_layout"
+        app:animationSpeed="standard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -54,11 +64,11 @@ Take activity_sample_layout.xml as an example
         <!-- Content area -->
         <!-- edit_view, specify an EditText for input, required-->
         <!-- empty_view, specify the panel or keyboard to hide when the user clicks the View corresponding to the ID. -->
+        <!-- 1.1.0 and later versions no longer need to set weight -->
         <com.effective.android.panel.view.ContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:edit_view="@id/edit_text"
             app:empty_view="@id/empty_view">
@@ -182,7 +192,7 @@ Take activity_sample_layout.xml as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.0.5'
+implementation 'com.effective.android:panelSwitchHelper:1.1.0'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
@@ -195,8 +205,6 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.5'
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)        //Binding a panelSwitchLayout
-                    .bindPanelContainerId(R.id.panel_container)             //Binding a contentContainer
-                    .bindContentContainerId(R.id.content_view)              //Binding a panelContainer
                     .build();
         }
     }
@@ -218,8 +226,10 @@ implementation 'com.effective.android:panelSwitchHelper:1.0.5'
 //The specific method is visible in the source code
 PanelSwitchHelper, Provide hidden input method or panel and display input method
 PanelHelper, Provide hidden input method, display input method, judge full screen, get status bar height, navigation bar height, whether it is horizontal and vertical screen, etc.
+PanelSwitchLayout core implementation, dynamic adjustment of sub layout structure and animation support
 ```
 
+> If the framework is helpful to you, Amway can give your partners around, every start is an affirmation of the framework.
 
 #### Expect
 The project was written only to improve the efficiency of day-to-day development and focus on the business. If you have a better practice or suggestions, please write to yummyl.lau@gmail.com.
