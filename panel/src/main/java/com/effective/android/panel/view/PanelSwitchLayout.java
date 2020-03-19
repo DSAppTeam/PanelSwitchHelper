@@ -187,7 +187,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= 0) {
                         isKeyboardShowing = false;
-                        if(panelId == Constants.PANEL_KEYBOARD){
+                        if (panelId == Constants.PANEL_KEYBOARD) {
                             panelId = Constants.PANEL_NONE;
                             PanelSwitchLayout.this.requestLayout();
                         }
@@ -304,10 +304,10 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
         int statusBarHeight = PanelHelper.getStatusBarHeight(getContext());
         int navigationBarHeight = PanelHelper.getNavigationBarHeight(getContext());
-        boolean navigationBarShow = PanelHelper.isNavigationBarShow(getContext(),window);
+        boolean navigationBarShow = PanelHelper.isNavigationBarShow(getContext(), window);
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         int toolbarHeight = PanelHelper.getToolbarHeight(window);
-        if(toolbarHeight == statusBarHeight){
+        if (toolbarHeight == statusBarHeight) {
             toolbarHeight = 0;
         }
         int contentViewHeight = PanelHelper.getContentViewHeight(window);
@@ -316,14 +316,20 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int keyboardHeight = PanelHelper.getKeyBoardHeight(getContext());
         int paddingTop = getPaddingTop();
         int allHeight = screenWithoutNavigationIHeight;
-        if(PanelHelper.isPortrait(getContext())){
-            allHeight +=(PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext()));
+        if (PanelHelper.isPortrait(getContext())) {
+
+            //兼容性测试中，国产手机支持完全隐藏导航栏或者动态隐藏显示导航栏。前者往往使用实键或者手势来控制页面的返回。针对前者，screenHeight是会等于screenWithoutNavigationHeight，后者则一直不相等
+            //为了实时使布局响应界面导航栏引起的变化，需要在隐藏导航栏的时候，把这部分高度归还给我们的界面
+            if(screenHeight != screenWithoutNavigationIHeight){
+                allHeight += PanelHelper.isNavigationBarShow(getContext(), window) ? 0 : PanelHelper.getNavigationBarHeight(getContext());
+            }
+
         }
         int[] localLocation = PanelHelper.getLocationOnScreen(this);
         allHeight -= localLocation[1];
 
 
-        int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : - keyboardHeight;
+        int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -keyboardHeight;
         contentContainerTop += paddingTop;
 
 
@@ -359,7 +365,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         //处理第一个view contentContainer
         {
             contentContainer.layout(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
-            Log.d(TAG, " layout参数 contentContainer : height - " +contentContainerHeight);
+            Log.d(TAG, " layout参数 contentContainer : height - " + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight));
             ViewGroup.LayoutParams layoutParams = contentContainer.getLayoutParams();
             if (layoutParams.height != contentContainerHeight) {
@@ -371,8 +377,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         //处理第二个view panelContainer
         {
             panelContainer.layout(l, panelContainerTop, r, panelContainerTop + panelContainerHeight);
-            Log.d(TAG, " layout参数 panelContainerTop : height - " +panelContainerHeight);
-            Log.d(TAG, " layout参数 panelContainer : " +  " l : " + l + "  : " + panelContainerTop + " r : " + r + " b : " + (panelContainerTop + panelContainerHeight));
+            Log.d(TAG, " layout参数 panelContainerTop : height - " + panelContainerHeight);
+            Log.d(TAG, " layout参数 panelContainer : " + " l : " + l + "  : " + panelContainerTop + " r : " + r + " b : " + (panelContainerTop + panelContainerHeight));
             ViewGroup.LayoutParams layoutParams = panelContainer.getLayoutParams();
             if (layoutParams.height != panelContainerHeight) {
                 layoutParams.height = panelContainerHeight;
