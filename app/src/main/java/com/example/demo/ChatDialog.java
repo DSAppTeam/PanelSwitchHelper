@@ -1,6 +1,9 @@
 package com.example.demo;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
@@ -8,10 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.effective.R;
@@ -31,94 +36,42 @@ import com.rd.PageIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatPupupWindow extends PopupWindow {
+public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener {
 
     private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Runnable mScrollToBottomRunnable;
-    private Activity mActivity;
-    private static final String TAG = "ChatPupupWindow";
+    private static final String TAG = "ChatDialog";
+    private Activity activity;
 
-    public ChatPupupWindow(Activity activity) {
-        super(activity);
-        this.mActivity = activity;
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.common_chat_with_titlebar_layout, null, false);
+    public ChatDialog(Activity context) {
+        super(context);
+        this.activity = context;
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.common_chat_with_titlebar_layout, null, false);
         setContentView(mBinding.getRoot());
         mBinding.titleBar.setVisibility(View.VISIBLE);
-        mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
-        mBinding.title.setText(R.string.pupupwindow_name);
-        setHeight(WindowManager.LayoutParams.MATCH_PARENT);
-        setWidth(WindowManager.LayoutParams.MATCH_PARENT);
-        setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(mActivity, R.color.common_page_bg_color)));
-        setFocusable(true);
-        setOutsideTouchable(true);
-        setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        mBinding.title.setText(R.string.dialog_name);
+        Window window = getWindow();
+        if (window != null) {
+            window.setGravity(Gravity.CENTER);
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            window.setAttributes(lp);
+            window.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(getContext(),R.color.common_page_bg_color)));
+        }
+        setCanceledOnTouchOutside(true);
+        setOnKeyListener(this);
         initView();
     }
 
-
-    private void initView() {
-        mLinearLayoutManager = new LinearLayoutManager(mActivity);
-        mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
-        ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        List<ChatInfo> chatInfos = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
-        }
-        mAdapter = new ChatAdapter(mActivity, chatInfos);
-        mBinding.recyclerView.setAdapter(mAdapter);
-        mBinding.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String content = mBinding.editText.getText().toString();
-                if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(mActivity, "当前没有输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mAdapter.insertInfo(ChatInfo.CREATE(content));
-                mBinding.editText.setText(null);
-                scrollToBottom();
-            }
-        });
-        mScrollToBottomRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mAdapter.getItemCount() > 0) {
-                    mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
-                }
-            }
-        };
-    }
-
-
-    private void scrollToBottom() {
-        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
-    }
-
     @Override
-    public void showAtLocation(View parent, int gravity, int x, int y) {
-        initHelper();
-        super.showAtLocation(parent, gravity, x, y);
-    }
-
-    @Override
-    public void dismiss() {
-        if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
-            return;
-        }
-        if (mHelper != null) {
-            mHelper.onDestroy();
-        }
-        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
-        super.dismiss();
-    }
-
-    private void initHelper() {
+    public void show() {
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(mActivity.getWindow(), this.getContentView())
+            mHelper = new PanelSwitchHelper.Builder(activity.getWindow(), mBinding.getRoot())
                     .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
@@ -170,7 +123,7 @@ public class ChatPupupWindow extends PopupWindow {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(mActivity, 30f);
+                                    int viewPagerSize = height - Utils.dip2px(getContext(), 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,
@@ -187,6 +140,66 @@ public class ChatPupupWindow extends PopupWindow {
                     .logTrack(true)             //output log
                     .build();
         }
+        super.show();
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        mBinding.recyclerView.removeCallbacks(mScrollToBottomRunnable);
+        if (mHelper != null) {
+            mHelper.onDestroy();
+        }
+    }
+
+    private void initView() {
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
+        ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        List<ChatInfo> chatInfos = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
+        }
+        mAdapter = new ChatAdapter(getContext(), chatInfos);
+        mBinding.recyclerView.setAdapter(mAdapter);
+        mBinding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String content = mBinding.editText.getText().toString();
+                if (TextUtils.isEmpty(content)) {
+                    Toast.makeText(getContext(), "当前没有输入", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mAdapter.insertInfo(ChatInfo.CREATE(content));
+                mBinding.editText.setText(null);
+                scrollToBottom();
+            }
+        });
+        mScrollToBottomRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mAdapter.getItemCount() > 0) {
+                    mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
+                }
+            }
+        };
+    }
+
+    private void scrollToBottom() {
+        mBinding.recyclerView.postDelayed(mScrollToBottomRunnable, 300);
+    }
+
+
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
+                return true;
+            } else {
+                dismiss();
+                return true;
+            }
+        }
+        return false;
+    }
 }

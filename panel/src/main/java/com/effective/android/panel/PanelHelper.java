@@ -44,10 +44,14 @@ public final class PanelHelper {
         return window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT).getTop();
     }
 
-    public static boolean contentViewCanDrawStatusBarArea(Window window) {
+    public static int[] getLocationOnScreen(View view){
         int[] contentViewLocationInScreen = new int[2];
-        window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT).getLocationOnScreen(contentViewLocationInScreen);
-        return contentViewLocationInScreen[1] == 0;
+        view.getLocationOnScreen(contentViewLocationInScreen);
+        return contentViewLocationInScreen;
+    }
+
+    public static boolean contentViewCanDrawStatusBarArea(Window window) {
+        return getLocationOnScreen(window.getDecorView().findViewById(Window.ID_ANDROID_CONTENT))[1] == 0;
     }
 
     /**

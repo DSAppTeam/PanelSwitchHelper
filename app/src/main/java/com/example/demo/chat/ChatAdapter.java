@@ -67,7 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatBaseVH> {
 
     @Override
     public void onBindViewHolder(ChatBaseVH holder, int position) {
-        holder.bindData (mData.get(position), position);
+        holder.bindData   (mData.get(position), position);
     }
 
     @Override
