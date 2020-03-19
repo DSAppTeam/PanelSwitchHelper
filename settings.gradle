@@ -1,2 +1,2 @@
 include ':app'
-include ':panel'
+//include ':panel'
