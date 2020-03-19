@@ -63,7 +63,6 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private Window window;
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
-    private int prePanelId = Constants.PANEL_NONE;
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -279,8 +278,6 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.d(TAG, " onSizeChanged  =======> 被回调 ");
-        Log.d(TAG, " size :  w : " + w + " h : " + h + " oldw : " + oldw + " oldh : " + oldh);
     }
 
     /**
@@ -439,7 +436,6 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 contentContainer.emptyViewVisible(true);
             }
         }
-        this.prePanelId = this.panelId;
         this.panelId = panelId;
         LogTracker.Log(TAG + "#checkoutPanel", "panel' id :" + panelId);
         notifyPanelChange(this.panelId);

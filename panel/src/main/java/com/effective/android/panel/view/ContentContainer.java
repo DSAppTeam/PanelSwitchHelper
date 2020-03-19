@@ -89,14 +89,6 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
         }
     }
 
-    public boolean hasEmptyView() {
-        return mEmptyView != null;
-    }
-
-    @Nullable
-    public View getEmptyView() {
-        return mEmptyView;
-    }
 
     public void emptyViewVisible(boolean visible) {
         if (mEmptyView != null) {
