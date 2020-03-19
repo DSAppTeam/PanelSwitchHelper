@@ -32,7 +32,7 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 * Figure 4: 1.1.0 Animation effect display
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" />
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
