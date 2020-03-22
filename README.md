@@ -13,7 +13,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) Scene issues
 * 1.0.4(2019-11-18) Added support for Dialog/Fragment/DialogFragment
 * 1.0.5 (2019-11-26) Support for special models such as Huawei / Xiaomi that support the hiding of dynamic navigation bar
-* 1.1.0 (2020-03-18) Pursuing the ultimate switching experience
+* 1.1.0 (2020-03-18) Pursuing the ultimate switching experience [See details](http://yummylau.com/2020/03/22/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE_20120-03-22_%E8%BE%93%E5%85%A5%E6%B3%95%E5%88%87%E6%8D%A2%E6%A1%86%E6%9E%B6(2)/)
 	* Support animation blessing in the switching process, the effect is synchronized with "WeChat chat" scenes, but the supported scenes are far more than this (see Demo), and support custom animation speed
 	* Optimize the internal switching process of the framework, abandon the old logic implementation, and the new implementation uses custom drawing to switch the interface without worrying about memory leaks
 	* Demo adds custom title bar scene to optimize video scene experience
