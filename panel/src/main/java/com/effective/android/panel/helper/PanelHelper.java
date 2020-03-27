@@ -1,4 +1,4 @@
-package com.effective.android.panel;
+package com.effective.android.panel.helper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -8,20 +8,14 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Display;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.effective.android.panel.view.ContentContainer;
 
 /**
  * panel helper

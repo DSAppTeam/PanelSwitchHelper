@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
-import com.effective.android.panel.PanelHelper;
+import com.effective.android.panel.helper.PanelHelper;
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
