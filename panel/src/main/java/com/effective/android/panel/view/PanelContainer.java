@@ -1,6 +1,5 @@
 package com.effective.android.panel.view;
 
-import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,20 +10,11 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
-import com.effective.android.panel.PanelHelper;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.animation.LayoutTransition.APPEARING;
-import static android.animation.LayoutTransition.DISAPPEARING;
 
 /**
  * --------------------
