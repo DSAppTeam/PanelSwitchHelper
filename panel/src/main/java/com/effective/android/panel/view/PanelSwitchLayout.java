@@ -67,7 +67,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private Window window;
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
-    private int animationSpeed = 300;  //standard
+    private int animationSpeed = 200;  //standard
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
