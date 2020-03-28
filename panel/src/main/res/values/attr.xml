@@ -3,10 +3,9 @@
 
     <declare-styleable name="PanelSwitchLayout">
         <attr name="animationSpeed" format="integer">
-            <enum name="slow" value="500"/>
-            <enum name="moderate" value="400"/>
-            <enum name="standard" value="300"/>
-            <enum name="fast" value="200"/>
+            <enum name="slow" value="400"/>
+            <enum name="mid" value="300"/>
+            <enum name="standard" value="200"/>
         </attr>
     </declare-styleable>
 
