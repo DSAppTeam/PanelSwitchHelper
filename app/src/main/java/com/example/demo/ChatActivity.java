@@ -26,6 +26,7 @@ import com.effective.databinding.CommonChatLayoutBinding;
 import com.example.demo.anno.PageType;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
+import com.example.demo.chat.CusRecyclerView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
@@ -204,6 +205,12 @@ public class ChatActivity extends AppCompatActivity {
                     })
                     .logTrack(true)             //output log
                     .build();
+            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
+                @Override
+                public void resetPanel() {
+                    mHelper.hookSystemBackByPanelSwitcher();
+                }
+            });
         }
     }
 

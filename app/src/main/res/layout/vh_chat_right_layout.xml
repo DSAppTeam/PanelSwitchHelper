@@ -19,6 +19,7 @@
             android:textSize="@dimen/sp_16" />
 
         <ImageView
+            android:id="@+id/avatar"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
             android:layout_marginRight="@dimen/dp_10"

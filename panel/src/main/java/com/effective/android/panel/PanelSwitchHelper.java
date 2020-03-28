@@ -94,7 +94,7 @@ public final class PanelSwitchHelper {
 
         public Builder(@NonNull Window window, @NonNull View root) {
             this.window = window;
-            this.rootView = root;
+            this.rootView =root;
             viewClickListeners = new ArrayList<>();
             panelChangeListeners = new ArrayList<>();
             keyboardStatusListeners = new ArrayList<>();

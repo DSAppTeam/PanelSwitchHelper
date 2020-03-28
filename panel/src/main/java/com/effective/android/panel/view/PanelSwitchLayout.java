@@ -201,6 +201,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                         isKeyboardShowing = false;
                         if (panelId == Constants.PANEL_KEYBOARD) {
                             panelId = Constants.PANEL_NONE;
+                            contentContainer.clearFocusByEditText();
+                            contentContainer.emptyViewVisible(false);
                             PanelSwitchLayout.this.requestLayout();
                         }
                         notifyKeyboardState(false);
@@ -308,6 +310,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        LogTracker.Log(TAG + "#onLayout", "onLayout");
         int visibility = getVisibility();
         if (visibility != VISIBLE) {
             return;
@@ -427,7 +430,10 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      * @return if need hook
      */
     public boolean hookSystemBackByPanelSwitcher() {
-        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
+        if (panelId != Constants.PANEL_NONE) {
+            if(panelId == Constants.PANEL_KEYBOARD){
+                PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
+            }
             checkoutPanel(Constants.PANEL_NONE);
             return true;
         }
