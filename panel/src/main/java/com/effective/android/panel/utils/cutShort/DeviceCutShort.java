@@ -1,4 +1,4 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.view.View;

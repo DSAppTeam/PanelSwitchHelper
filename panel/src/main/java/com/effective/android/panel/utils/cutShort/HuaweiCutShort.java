@@ -1,4 +1,4 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.view.View;
@@ -7,11 +7,14 @@ import java.lang.reflect.Method;
 
 /**
  * 华为刘海计算
+ * https://devcenter-test.huawei.com/consumer/cn/devservice/doc/50114
  * Created by yummyLau on 20-03-27
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
 public class HuaweiCutShort implements DeviceCutShort {
+
+    public static final String VENDOR = "Huawei";
 
     @Override
     public boolean hasCutShort(Context context) {

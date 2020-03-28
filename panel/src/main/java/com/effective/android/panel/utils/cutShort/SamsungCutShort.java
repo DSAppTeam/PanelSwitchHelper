@@ -1,4 +1,4 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,6 +19,8 @@ import java.util.List;
  * blog: yummylau.com
  */
 public class SamsungCutShort implements DeviceCutShort {
+
+    public static final String VENDOR = "Samsung";
 
     @Override
     public boolean hasCutShort(Context context) {
