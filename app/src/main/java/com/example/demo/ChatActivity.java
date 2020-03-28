@@ -130,7 +130,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override

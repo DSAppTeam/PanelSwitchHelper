@@ -106,7 +106,6 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
         super.onActivityCreated(savedInstanceState);
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
