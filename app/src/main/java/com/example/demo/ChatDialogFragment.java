@@ -29,6 +29,7 @@ import com.effective.android.panel.view.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
+import com.example.demo.chat.CusRecyclerView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.rd.PageIndicatorView;
@@ -180,6 +181,12 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
                     })
                     .logTrack(true)             //output log
                     .build();
+            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
+                @Override
+                public void resetPanel() {
+                    mHelper.hookSystemBackByPanelSwitcher();
+                }
+            });
         }
     }
 

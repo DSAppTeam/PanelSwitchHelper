@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.effective.android.panel.Constants;
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 
@@ -130,7 +131,7 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
         mEditText.performClick();
     }
 
-    public void toKeyboardState(){
+    public void toKeyboardState() {
         if (editTextHasFocus()) {
             preformClickForEditText();
         } else {
