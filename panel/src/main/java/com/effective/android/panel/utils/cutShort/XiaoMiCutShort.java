@@ -1,7 +1,9 @@
 package com.effective.android.panel.utils.cutShort;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -39,10 +41,19 @@ public class XiaoMiCutShort implements DeviceCutShort {
         }
     }
 
+    @TargetApi(17)
     @Override
-    public int getCutShortHeight(View view) {
+    public boolean isCusShortVisible(Context context) {
+        return Settings.Global.getInt(context.getContentResolver(), "force_black", 0) == 1;
+    }
+
+    @Override
+    public int getCurrentCutShortHeight(View view) {
+        Context context = view.getContext();
+        if(!isCusShortVisible(context)){
+            return 0;
+        }
         try {
-            Context context = view.getContext();
             int resourceId = context.getResources().getIdentifier("notch_height", "dimen", "android");
             int height = 0;
             if (resourceId > 0) {

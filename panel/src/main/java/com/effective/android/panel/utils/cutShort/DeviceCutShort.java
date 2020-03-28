@@ -7,5 +7,7 @@ public interface DeviceCutShort {
 
     boolean hasCutShort(Context context);
 
-    int getCutShortHeight(View view);
+    boolean isCusShortVisible(Context context);
+
+    int getCurrentCutShortHeight(View view);
 }

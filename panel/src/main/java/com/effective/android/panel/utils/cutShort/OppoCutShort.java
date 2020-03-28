@@ -35,7 +35,16 @@ public class OppoCutShort implements DeviceCutShort {
     }
 
     @Override
-    public int getCutShortHeight(View view) {
+    public boolean isCusShortVisible(Context context) {
+        return true;
+    }
+
+    @Override
+    public int getCurrentCutShortHeight(View view) {
+        Context context = view.getContext();
+        if(!isCusShortVisible(context)){
+            return 0;
+        }
         return 80;
     }
 

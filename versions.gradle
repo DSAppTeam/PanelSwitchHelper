@@ -19,7 +19,7 @@ ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.andro
 ext.deps.panelSwitchHelper = "com.effective.android:panelSwitchHelper:$versions.panelSwitchHelper"
 
 def config = [:]
-config.min_sdk_version = 16
+config.min_sdk_version = 17
 config.target_sdk_version = 29
 config.compile_sdk_version = 29
 config.build_tool_version = "29.0.1"

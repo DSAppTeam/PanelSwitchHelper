@@ -37,7 +37,16 @@ public class SamsungCutShort implements DeviceCutShort {
     }
 
     @Override
-    public int getCutShortHeight(View view) {
+    public boolean isCusShortVisible(Context context) {
+        return true;
+    }
+
+    @Override
+    public int getCurrentCutShortHeight(View view) {
+        Context context = view.getContext();
+        if(!isCusShortVisible(context)){
+            return 0;
+        }
         try {
             if (Build.VERSION.SDK_INT >= 23 && view != null && view.getRootWindowInsets() != null) {
                 WindowInsets windowInsets = view.getRootWindowInsets();
