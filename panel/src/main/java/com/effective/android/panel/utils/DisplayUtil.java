@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,6 @@ import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
 
 public class DisplayUtil {
-
-    private static final String TAG = PanelUtil.class.getSimpleName();
 
     /**
      * 获取toolar的高度，但是这个方法仅仅在非沉浸下才有用。
@@ -98,16 +97,6 @@ public class DisplayUtil {
         return systemUIHeight;
     }
 
-    public static void showKeyboard(Context context, View view) {
-        view.requestFocus();
-        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        mInputManager.showSoftInput(view, 0);
-    }
-
-    public static void hideKeyboard(Context context, View view) {
-        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        mInputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 
     public static boolean isFullScreen(Activity activity) {
         return (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)

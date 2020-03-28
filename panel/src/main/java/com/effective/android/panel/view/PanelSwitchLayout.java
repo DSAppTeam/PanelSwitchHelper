@@ -195,6 +195,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 int screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window);
                 int systemUIHeight = DisplayUtil.getSystemUI(getContext(), window);
                 int keyboardHeight = screenHeight - contentHeight - systemUIHeight;
+                LogTracker.Log(TAG + "#onGlobalLayout", "keyboardHeight is : " + keyboardHeight);
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= 0) {
                         isKeyboardShowing = false;
@@ -203,15 +204,20 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                             PanelSwitchLayout.this.requestLayout();
                         }
                         notifyKeyboardState(false);
-                        LogTracker.Log(TAG + "#onGlobalLayout", "keyboardHeight is : " + 0);
                     } else {
-                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
-                        PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                            PanelSwitchLayout.this.requestLayout();
+                            PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                            LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        }
                     }
                 } else {
                     if (keyboardHeight > 0) {
-                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
-                        PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                            PanelSwitchLayout.this.requestLayout();
+                            PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                            LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        }
                         isKeyboardShowing = true;
                         notifyKeyboardState(true);
                     }
@@ -308,12 +314,14 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         }
 
         int screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window);
-        int screenWithoutSystemUIHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window);
-        int screenWithoutNavigationIHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(getContext());
-        int systemUIHeight = DisplayUtil.getSystemUI(getContext(), window);
-        int statusBarHeight = DisplayUtil.getStatusBarHeight(getContext());
         int navigationBarHeight = DisplayUtil.getNavigationBarHeight(getContext());
         boolean navigationBarShow = DisplayUtil.isNavigationBarShow(getContext(), window);
+
+
+        int screenWithoutSystemUIHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window);
+        int screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(getContext());
+        int systemUIHeight = DisplayUtil.getSystemUI(getContext(), window);
+        int statusBarHeight = DisplayUtil.getStatusBarHeight(getContext());
 //        以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         int toolbarHeight = DisplayUtil.getToolbarHeight(window);
         if (toolbarHeight == statusBarHeight) {
@@ -324,19 +332,28 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         int keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
         int paddingTop = getPaddingTop();
-        int allHeight = screenWithoutNavigationIHeight + CusShortUtil.getDeviceCutShortHeight(window.getDecorView());
+        int allHeight = screenHeight;
         if (DisplayUtil.isPortrait(getContext())) {
 
-            //兼容性测试中，国产手机支持完全隐藏导航栏或者动态隐藏显示导航栏。前者往往使用实键或者手势来控制页面的返回。针对前者，screenHeight是会等于screenWithoutNavigationHeight，后者则一直不相等
-            //为了实时使布局响应界面导航栏引起的变化，需要在隐藏导航栏的时候，把这部分高度归还给我们的界面
-            if (screenHeight != screenWithoutNavigationIHeight) {
-                allHeight += navigationBarShow ? 0 : navigationBarHeight;
+            /**
+             * 1.1.0 使用 screenWithoutNavigationHeight + navigationBarHeight ，结合 navigationBarShow 来动态计算高度，但是部分特殊机型
+             * 比如水滴屏，刘海屏，等存在刘海区域，甚至华为，小米支持动态切换刘海模式（不隐藏刘海，隐藏后状态栏在刘海内，隐藏后状态栏在刘海外）
+             * 同时还存在全面屏，挖孔屏，这套方案存在兼容问题。
+             * CusShortUtil 支持计算绝大部分机型的刘海高度，但是考虑到动态切换的模式计算太过于复杂，且不能完全兼容所有场景。
+             * 1.1.1 使用 screenHeight - navigationBarHeight，结合 navigationBarShow 来动态计算告诉，原因是：
+             *  无论现不现实刘海区域，只需要记住应用的绘制区域以 getDecorView 的绘制区域为准，我们只需要关注一个关系：
+             *  刘海区域与状态栏区域的是否重叠。
+             *  如果状态栏与刘海不重叠，则 screenHeight 不包含刘海
+             *  如果状态栏与刘海重叠，则 screenHeight 包含刘海
+             *  这样抽象逻辑变得更加简单。
+             */
+            if (navigationBarShow) {
+                allHeight -= navigationBarHeight;
             }
 
         }
         int[] localLocation = DisplayUtil.getLocationOnScreen(this);
         allHeight -= localLocation[1];
-
 
         int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -keyboardHeight;
         contentContainerTop += paddingTop;
@@ -352,9 +369,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         Log.d(TAG, " onLayout  =======> 被回调 ");
         Log.d(TAG, " layout参数 changed : " + changed + " l : " + l + " t : " + t + " r : " + r + " b : " + b);
         Log.d(TAG, " panel场景  : " + (panelId == Constants.PANEL_NONE ? "收起" : (panelId == Constants.PANEL_KEYBOARD ? "键盘" : "面板")));
-
         Log.d(TAG, " 界面高度（包含系统UI）  ：" + screenHeight);
-        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationIHeight);
+        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationHeight);
         Log.d(TAG, " 内容高度（不包含系统UI）  ：" + screenWithoutSystemUIHeight);
         Log.d(TAG, " 刘海高度  ：" + CusShortUtil.getDeviceCutShortHeight(window.getDecorView()));
         Log.d(TAG, " 系统UI高度  ：" + systemUIHeight);

@@ -2,7 +2,6 @@ package com.effective.android.panel.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.effective.android.panel.utils.cutShort.DeviceCutShort;
@@ -27,61 +26,27 @@ public class CusShortUtil {
     private static final DeviceCutShort VIVO = new ViVoCutShort();
     private static final DeviceCutShort XIAOMI = new XiaoMiCutShort();
     private static final DeviceCutShort SAMSUNG = new SamsungCutShort();
-    private static String vendor = "";
 
-    private CusShortUtil() {}
+    private CusShortUtil() {
+    }
 
     public static int getDeviceCutShortHeight(@NonNull View view) {
-        switch (vendor) {
-            case HuaweiCutShort.VENDOR: {
-                return HUAWEI.getCutShortHeight(view);
-            }
-            case OfficialCutShort.VENDOR: {
-                return OFFICIAL.getCutShortHeight(view);
-            }
-            case OppoCutShort.VENDOR: {
-                return OPPO.getCutShortHeight(view);
-            }
-            case ViVoCutShort.VENDOR: {
-                return VIVO.getCutShortHeight(view);
-            }
-            case XiaoMiCutShort.VENDOR: {
-                return XIAOMI.getCutShortHeight(view);
-            }
-            case SamsungCutShort.VENDOR: {
-                return SAMSUNG.getCutShortHeight(view);
-            }
-            default: {
-                Context context = view.getContext();
-                if (HUAWEI.hasCutShort(context)) {
-                    vendor = HuaweiCutShort.VENDOR;
-                    PanelUtil.setDeviceVendor(context,vendor);
-                    return HUAWEI.getCutShortHeight(view);
-                }
-                if (OPPO.hasCutShort(context)) {
-                    vendor = OppoCutShort.VENDOR;
-                    PanelUtil.setDeviceVendor(context,vendor);
-                    return OPPO.getCutShortHeight(view);
-                }
-                if (VIVO.hasCutShort(context)) {
-                    vendor = ViVoCutShort.VENDOR;
-                    PanelUtil.setDeviceVendor(context,vendor);
-                    return VIVO.getCutShortHeight(view);
-                }
-                if (XIAOMI.hasCutShort(context)) {
-                    vendor = XiaoMiCutShort.VENDOR;
-                    PanelUtil.setDeviceVendor(context,vendor);
-                    return XIAOMI.getCutShortHeight(view);
-                }
-                if (SAMSUNG.hasCutShort(context)) {
-                    vendor = SamsungCutShort.VENDOR;
-                    PanelUtil.setDeviceVendor(context,vendor);
-                    return SAMSUNG.getCutShortHeight(view);
-                }
-                vendor = OfficialCutShort.VENDOR;
-                PanelUtil.setDeviceVendor(context,vendor);
-                return OFFICIAL.getCutShortHeight(view);
-            }
+        Context context = view.getContext();
+        if (HUAWEI.hasCutShort(context)) {
+            return HUAWEI.getCurrentCutShortHeight(view);
         }
+        if (OPPO.hasCutShort(context)) {
+            return OPPO.getCurrentCutShortHeight(view);
+        }
+        if (VIVO.hasCutShort(context)) {
+            return VIVO.getCurrentCutShortHeight(view);
+        }
+        if (XIAOMI.hasCutShort(context)) {
+            return XIAOMI.getCurrentCutShortHeight(view);
+        }
+        if (SAMSUNG.hasCutShort(context)) {
+            return SAMSUNG.getCurrentCutShortHeight(view);
+        }
+        return OFFICIAL.getCurrentCutShortHeight(view);
     }
 }

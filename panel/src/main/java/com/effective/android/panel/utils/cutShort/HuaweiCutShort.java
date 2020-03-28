@@ -34,7 +34,16 @@ public class HuaweiCutShort implements DeviceCutShort {
     }
 
     @Override
-    public int getCutShortHeight(View view) {
+    public boolean isCusShortVisible(Context context) {
+        return true;
+    }
+
+    @Override
+    public int getCurrentCutShortHeight(View view) {
+        Context context = view.getContext();
+        if(!isCusShortVisible(context)){
+            return 0;
+        }
         try {
             int[] widthAndHeight = getHuaweiDisplayCutoutSize(view.getContext());
             return widthAndHeight != null && widthAndHeight.length == 2 ? widthAndHeight[1] : 0;

@@ -43,17 +43,6 @@ public final class PanelUtil {
         mInputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static String getDeviceVendor(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return sp.getString(Constants.DEVICE_VENDOR, "");
-    }
-
-    public static boolean setDeviceVendor(Context context, String vendor) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return sp.edit().putString(Constants.DEVICE_VENDOR, vendor).commit();
-    }
-
-
     public static int getKeyBoardHeight(Context context) {
         SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
         boolean isPortrait = DisplayUtil.isPortrait(context);

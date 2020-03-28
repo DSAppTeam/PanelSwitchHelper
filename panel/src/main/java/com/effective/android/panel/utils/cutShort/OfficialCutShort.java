@@ -21,10 +21,19 @@ public class OfficialCutShort implements DeviceCutShort {
     }
 
     @Override
-    public int getCutShortHeight(View view) {
+    public boolean isCusShortVisible(Context context) {
+        return true;
+    }
+
+    @Override
+    public int getCurrentCutShortHeight(View view) {
+        Context context = view.getContext();
+        if(!isCusShortVisible(context)){
+            return 0;
+        }
         int displayCutoutHeight = 0;
         try {
-            if (Build.VERSION.SDK_INT >= 28 && view != null && view.getRootWindowInsets() != null && view.getRootWindowInsets().getDisplayCutout() != null) {
+            if (Build.VERSION.SDK_INT >= 28 && view.getRootWindowInsets() != null && view.getRootWindowInsets().getDisplayCutout() != null) {
                 displayCutoutHeight = view.getRootWindowInsets().getDisplayCutout().getSafeInsetTop();
             }
             return displayCutoutHeight;
