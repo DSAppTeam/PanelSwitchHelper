@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
@@ -94,7 +95,7 @@ public final class PanelSwitchHelper {
 
         public Builder(@NonNull Window window, @NonNull View root) {
             this.window = window;
-            this.rootView =root;
+            this.rootView = root;
             viewClickListeners = new ArrayList<>();
             panelChangeListeners = new ArrayList<>();
             keyboardStatusListeners = new ArrayList<>();
@@ -156,8 +157,8 @@ public final class PanelSwitchHelper {
                 throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : rootView can't be null!please set value by call #Builder");
             }
 
-            panelSwitchLayout = rootView.findViewById(panelSwitchLayoutId);
-            if (panelSwitchLayout == null || !(panelSwitchLayout instanceof PanelSwitchLayout)) {
+            findSwitchLayout(rootView);
+            if (panelSwitchLayout == null) {
                 throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : not found PanelSwitchLayout by id(" + panelSwitchLayoutId + ")");
             }
 
@@ -171,6 +172,22 @@ public final class PanelSwitchHelper {
         public PanelSwitchHelper build() {
             return build(false);
         }
-    }
 
+        private void findSwitchLayout(View view) {
+            if (view instanceof PanelSwitchLayout) {
+                if(panelSwitchLayout != null){
+                    throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : rootView has one more panelSwitchLayout!");
+                }
+                panelSwitchLayout = (PanelSwitchLayout) view;
+                return;
+            }
+
+            if(view instanceof ViewGroup){
+                int childCount = ((ViewGroup) view).getChildCount();
+                for(int i = 0; i <  childCount; i++){
+                    findSwitchLayout(((ViewGroup) view).getChildAt(i));
+                }
+            }
+        }
+    }
 }

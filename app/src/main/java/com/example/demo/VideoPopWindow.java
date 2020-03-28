@@ -58,7 +58,6 @@ public class VideoPopWindow extends PopupWindow{
         setContentView(view);
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(activity.getWindow(),getContentView())
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .addPanelChangeListener(new OnPanelChangeListener() {
 
                         @Override

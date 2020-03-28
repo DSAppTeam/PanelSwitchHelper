@@ -112,7 +112,6 @@ public class ChatFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
