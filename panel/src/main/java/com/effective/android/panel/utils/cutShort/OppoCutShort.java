@@ -1,18 +1,20 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 
-import java.lang.reflect.Method;
 /**
  * oppo 刘海计算
+ * https://id.heytap.com/index.html?callback=https%3A//open.oppomobile.com/service/message/detail%3Fid%3D61876
  * Created by yummyLau on 20-03-27
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
 public class OppoCutShort implements DeviceCutShort {
+
+    public static final String VENDOR = "Oppo";
 
     @Override
     public boolean hasCutShort(Context context) {

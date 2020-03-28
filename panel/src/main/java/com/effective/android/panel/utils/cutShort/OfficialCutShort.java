@@ -1,21 +1,19 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.View;
-
-import com.effective.android.panel.helper.PanelHelper;
-
-import java.lang.reflect.Method;
 
 /**
  * 官方刘海计算
+ * https://developer.android.com/guide/topics/display-cutout
  * Created by yummyLau on 20-03-27
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
 public class OfficialCutShort implements DeviceCutShort {
+
+    public static final String VENDOR = "Officail";
 
     @Override
     public boolean hasCutShort(Context context) {

@@ -1,21 +1,25 @@
-package com.effective.android.panel.helper.cutShort;
+package com.effective.android.panel.utils.cutShort;
 
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.effective.android.panel.helper.PanelHelper;
+import com.effective.android.panel.utils.DisplayUtil;
+import com.effective.android.panel.utils.PanelUtil;
 
 import java.lang.reflect.Method;
 
 /**
  * vivo刘海计算
+ * https://dev.vivo.com.cn/documentCenter/doc/103
  * Created by yummyLau on 20-03-27
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
 public class ViVoCutShort implements DeviceCutShort {
+
+    public static final String VENDOR = "ViVo";
 
     @Override
     public boolean hasCutShort(Context context) {
@@ -40,7 +44,7 @@ public class ViVoCutShort implements DeviceCutShort {
 
     @Override
     public int getCutShortHeight(View view) {
-        return PanelHelper.dip2px(view.getContext(),27.0F);
+        return DisplayUtil.dip2px(view.getContext(),27.0F);
     }
 
 }
