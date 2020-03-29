@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -17,6 +17,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* Support animation blessing in the switching process, the effect is synchronized with "WeChat chat" scenes, but the supported scenes are far more than this (see Demo), and support custom animation speed
 	* Optimize the internal switching process of the framework, abandon the old logic implementation, and the new implementation uses custom drawing to switch the interface without worrying about memory leaks
 	* Demo adds custom title bar scene to optimize video scene experience
+* 1.1.1 (2020-03-29) Support for special scenes such as full screen / bangs screen / water drop screen
+	* Optimize internal calculation effective area height, compatible with special scene
+	* Eliminate the call to bindPanelSwitchLayout api, complete the logic inside the framework
+	* Demo adds complex IM interaction scenarios
 
 #### What to do
 
@@ -34,6 +38,15 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0_2.gif" width = "270" height = "480" alt="activity layout" />
 
+* Figures 5 to 10: 1.1.1 Suitable for scenes such as full screen / drop screen / bang screen
+* Figure 5-Xiaomi full screen
+* Figure 6-Huawei bangs screen, Figure 7-Huawei bangs screen hide top area
+* Figure 8-Xiaomi water drop screen, Figure 9-Xiaomi water drop screen is hidden but the status bar is in cutou, Figure 10-Xiaomi water drop screen is hidden but the status bar is in cutou
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_全面屏.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏_隐藏顶部区域.gif" width = "270" height = "480" alt="activity layout" />
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_不隐藏刘海.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海内.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海外.gif" width = "270" height = "480" alt="activity layout" />
+
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
 
@@ -44,7 +57,7 @@ The core classes ：
 * *PanelSwitchLayout* ，including the yellow area, can only contain *PanelContainer* and *PanelSwitchLayout* and implement some auxiliary functions. 1.1.0 Core implementation framework functions，Support to configure animation speed.
 * *ContentContainer* ，including the blue area, can store display content such as list content. And store the layout that triggers the switch, such as input box emoticons, etc.
 * *PanelContainer* ， including the green area, only for the switchable panel (*PanelView*), the developer customizes the *PanelView* panel.
-* *EmptyView* ， Optional configuration, generally recommended, support for 1.0.2 update function
+* *EmptyView* ， Optional configuration, support 1.0.2 update function, complex scene can refer to Activity complex scene.
 
 Take Demo as an example
 
@@ -192,7 +205,7 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.0'
+implementation 'com.effective.android:panelSwitchHelper:1.1.1'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
@@ -204,7 +217,6 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.0'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)        //Binding a panelSwitchLayout
                     .build();
         }
     }
