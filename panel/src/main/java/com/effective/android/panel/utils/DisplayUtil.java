@@ -1,4 +1,4 @@
-package com.effective.android.panel;
+package com.effective.android.panel.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -8,31 +8,19 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.effective.android.panel.view.ContentContainer;
+import com.effective.android.panel.Constants;
+import com.effective.android.panel.LogTracker;
 
-/**
- * panel helper
- * Created by yummyLau on 18-7-07
- * Email: yummyl.lau@gmail.com
- * blog: yummylau.com
- */
-
-public final class PanelHelper {
-
-    private static final String TAG = PanelHelper.class.getSimpleName();
+public class DisplayUtil {
 
     /**
      * 获取toolar的高度，但是这个方法仅仅在非沉浸下才有用。
@@ -98,10 +86,10 @@ public final class PanelHelper {
         int systemUIHeight = 0;
         if (!isFullScreen(window)) {
             //get statusBar 和 navigationBar height
-            int statusBarHeight = PanelHelper.getStatusBarHeight(context);
-            int navigationBatHeight = PanelHelper.getNavigationBarHeight(context);
-            if (PanelHelper.isPortrait(context)) {
-                systemUIHeight = PanelHelper.isNavigationBarShow(context, window) ? statusBarHeight + navigationBatHeight : statusBarHeight;
+            int statusBarHeight = getStatusBarHeight(context);
+            int navigationBatHeight = getNavigationBarHeight(context);
+            if (isPortrait(context)) {
+                systemUIHeight = isNavigationBarShow(context, window) ? statusBarHeight + navigationBatHeight : statusBarHeight;
             } else {
                 systemUIHeight = statusBarHeight;
             }
@@ -109,16 +97,6 @@ public final class PanelHelper {
         return systemUIHeight;
     }
 
-    public static void showKeyboard(Context context, View view) {
-        view.requestFocus();
-        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        mInputManager.showSoftInput(view, 0);
-    }
-
-    public static void hideKeyboard(Context context, View view) {
-        InputMethodManager mInputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        mInputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 
     public static boolean isFullScreen(Activity activity) {
         return (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -207,34 +185,6 @@ public final class PanelHelper {
             }
         }
         return false;
-    }
-
-    public static int getKeyBoardHeight(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        boolean isPortrait = PanelHelper.isPortrait(context);
-        String key = isPortrait ?
-                Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
-        float defaultHeight = isPortrait ?
-                Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P : Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_L;
-        return sp.getInt(key, dip2px(context, defaultHeight));
-    }
-
-
-    public static boolean setKeyBoardHeight(Context context, int height) {
-        SharedPreferences sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        boolean isPortrait = PanelHelper.isPortrait(context);
-        //filter wrong data
-        //mActivity.getWindow().getDecorView().getHeight() may be right when onGlobalLayout listener
-        if (!isPortrait) {
-            int portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(context, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P));
-            if (height >= portraitHeight) {
-                LogTracker.getInstance().log(TAG + "#setKeyBoardHeight", "filter wrong data : " + portraitHeight + " -> " + height);
-                return false;
-            }
-        }
-        String key = PanelHelper.isPortrait(context) ?
-                Constants.KEYBOARD_HEIGHT_FOR_P : Constants.KEYBOARD_HEIGHT_FOR_L;
-        return sp.edit().putInt(key, height).commit();
     }
 
     public static int dip2px(Context context, float dipValue) {

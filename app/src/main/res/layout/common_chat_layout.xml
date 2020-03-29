@@ -41,24 +41,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:edit_view="@id/edit_text"
-                app:empty_view="@id/empty_view">
+                app:edit_view="@id/edit_text">
 
-                <FrameLayout
+
+                <com.example.demo.chat.CusRecyclerView
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                    <com.effective.android.panel.view.EmptyView
-                        android:id="@+id/empty_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
+                    android:layout_weight="1" />
 
 
                 <LinearLayout

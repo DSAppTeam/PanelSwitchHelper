@@ -19,7 +19,9 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
-import com.effective.android.panel.PanelHelper;
+import com.effective.android.panel.utils.CusShortUtil;
+import com.effective.android.panel.utils.DisplayUtil;
+import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
@@ -65,7 +67,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private Window window;
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
-    private int animationSpeed = 300;  //standard
+    private int animationSpeed = 200;  //standard
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -108,7 +110,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 //when is checkout doing, unlockContentlength unfinished
                 //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
                 if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                    PanelHelper.hideKeyboard(getContext(), v);
+                    PanelUtil.hideKeyboard(getContext(), v);
                 }
             }
         });
@@ -123,7 +125,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                     //when is checkout doing, unlockContentlength unfinished
                     //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
                     if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                        PanelHelper.hideKeyboard(getContext(), v);
+                        PanelUtil.hideKeyboard(getContext(), v);
                     }
                 }
             }
@@ -135,7 +137,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                 if (panelId != Constants.PANEL_NONE) {
                     notifyViewClick(v);
                     if (panelId == Constants.PANEL_KEYBOARD) {
-                        PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
+                        PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
                     } else {
                         checkoutPanel(Constants.PANEL_NONE);
                     }
@@ -189,27 +191,35 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         window.getDecorView().getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                int contentHeight = PanelHelper.getScreenHeightWithoutSystemUI(window);
-                int screenHeight = PanelHelper.getScreenHeightWithSystemUI(window);
-                int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
+                int contentHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window);
+                int screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window);
+                int systemUIHeight = DisplayUtil.getSystemUI(getContext(), window);
                 int keyboardHeight = screenHeight - contentHeight - systemUIHeight;
+                LogTracker.Log(TAG + "#onGlobalLayout", "keyboardHeight is : " + keyboardHeight);
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= 0) {
                         isKeyboardShowing = false;
                         if (panelId == Constants.PANEL_KEYBOARD) {
                             panelId = Constants.PANEL_NONE;
+                            contentContainer.clearFocusByEditText();
+                            contentContainer.emptyViewVisible(false);
                             PanelSwitchLayout.this.requestLayout();
                         }
                         notifyKeyboardState(false);
-                        LogTracker.Log(TAG + "#onGlobalLayout", "keyboardHeight is : " + 0);
                     } else {
-                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
-                        PanelHelper.setKeyBoardHeight(getContext(), keyboardHeight);
+                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                            PanelSwitchLayout.this.requestLayout();
+                            PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                            LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        }
                     }
                 } else {
                     if (keyboardHeight > 0) {
-                        LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
-                        PanelHelper.setKeyBoardHeight(getContext(), keyboardHeight);
+                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                            PanelSwitchLayout.this.requestLayout();
+                            PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
+                            LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
+                        }
                         isKeyboardShowing = true;
                         notifyKeyboardState(true);
                     }
@@ -300,41 +310,53 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+//        LogTracker.Log(TAG + "#onLayout", "onLayout");
         int visibility = getVisibility();
         if (visibility != VISIBLE) {
             return;
         }
 
-        int screenHeight = PanelHelper.getScreenHeightWithSystemUI(window);
-//        int screenWithoutSystemUIHeight = PanelHelper.getScreenHeightWithoutSystemUI(window);
-        int screenWithoutNavigationIHeight = PanelHelper.getScreenHeightWithoutNavigationBar(getContext());
-//        int systemUIHeight = PanelHelper.getSystemUI(getContext(), window);
-//        int statusBarHeight = PanelHelper.getStatusBarHeight(getContext());
-        int navigationBarHeight = PanelHelper.getNavigationBarHeight(getContext());
-        boolean navigationBarShow = PanelHelper.isNavigationBarShow(getContext(), window);
-        //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
-//        int toolbarHeight = PanelHelper.getToolbarHeight(window);
+        int screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window);
+        int navigationBarHeight = DisplayUtil.getNavigationBarHeight(getContext());
+        boolean navigationBarShow = DisplayUtil.isNavigationBarShow(getContext(), window);
+//
+//
+//        int screenWithoutSystemUIHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window);
+//        int screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(getContext());
+//        int systemUIHeight = DisplayUtil.getSystemUI(getContext(), window);
+//        int statusBarHeight = DisplayUtil.getStatusBarHeight(getContext());
+////        以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
+//        int toolbarHeight = DisplayUtil.getToolbarHeight(window);
 //        if (toolbarHeight == statusBarHeight) {
 //            toolbarHeight = 0;
 //        }
-//        int contentViewHeight = PanelHelper.getContentViewHeight(window);
+//        int contentViewHeight = DisplayUtil.getContentViewHeight(window);
 
 
-        int keyboardHeight = PanelHelper.getKeyBoardHeight(getContext());
+        int keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
         int paddingTop = getPaddingTop();
-        int allHeight = screenWithoutNavigationIHeight;
-        if (PanelHelper.isPortrait(getContext())) {
+        int allHeight = screenHeight;
+        if (DisplayUtil.isPortrait(getContext())) {
 
-            //兼容性测试中，国产手机支持完全隐藏导航栏或者动态隐藏显示导航栏。前者往往使用实键或者手势来控制页面的返回。针对前者，screenHeight是会等于screenWithoutNavigationHeight，后者则一直不相等
-            //为了实时使布局响应界面导航栏引起的变化，需要在隐藏导航栏的时候，把这部分高度归还给我们的界面
-            if (screenHeight != screenWithoutNavigationIHeight) {
-                allHeight += navigationBarShow ? 0 : navigationBarHeight;
+            /**
+             * 1.1.0 使用 screenWithoutNavigationHeight + navigationBarHeight ，结合 navigationBarShow 来动态计算高度，但是部分特殊机型
+             * 比如水滴屏，刘海屏，等存在刘海区域，甚至华为，小米支持动态切换刘海模式（不隐藏刘海，隐藏后状态栏在刘海内，隐藏后状态栏在刘海外）
+             * 同时还存在全面屏，挖孔屏，这套方案存在兼容问题。
+             * CusShortUtil 支持计算绝大部分机型的刘海高度，但是考虑到动态切换的模式计算太过于复杂，且不能完全兼容所有场景。
+             * 1.1.1 使用 screenHeight - navigationBarHeight，结合 navigationBarShow 来动态计算告诉，原因是：
+             *  无论现不现实刘海区域，只需要记住应用的绘制区域以 getDecorView 的绘制区域为准，我们只需要关注一个关系：
+             *  刘海区域与状态栏区域的是否重叠。
+             *  如果状态栏与刘海不重叠，则 screenHeight 不包含刘海
+             *  如果状态栏与刘海重叠，则 screenHeight 包含刘海
+             *  这样抽象逻辑变得更加简单。
+             */
+            if (navigationBarShow) {
+                allHeight -= navigationBarHeight;
             }
 
         }
-        int[] localLocation = PanelHelper.getLocationOnScreen(this);
+        int[] localLocation = DisplayUtil.getLocationOnScreen(this);
         allHeight -= localLocation[1];
-
 
         int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -keyboardHeight;
         contentContainerTop += paddingTop;
@@ -350,10 +372,10 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 //        Log.d(TAG, " onLayout  =======> 被回调 ");
 //        Log.d(TAG, " layout参数 changed : " + changed + " l : " + l + " t : " + t + " r : " + r + " b : " + b);
 //        Log.d(TAG, " panel场景  : " + (panelId == Constants.PANEL_NONE ? "收起" : (panelId == Constants.PANEL_KEYBOARD ? "键盘" : "面板")));
-//
 //        Log.d(TAG, " 界面高度（包含系统UI）  ：" + screenHeight);
-//        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationIHeight);
+//        Log.d(TAG, " 界面高度（不包含导航栏）  ：" + screenWithoutNavigationHeight);
 //        Log.d(TAG, " 内容高度（不包含系统UI）  ：" + screenWithoutSystemUIHeight);
+//        Log.d(TAG, " 刘海高度  ：" + CusShortUtil.getDeviceCutShortHeight(window.getDecorView()));
 //        Log.d(TAG, " 系统UI高度  ：" + systemUIHeight);
 //        Log.d(TAG, " 系统状态栏高度  ：" + statusBarHeight);
 //        Log.d(TAG, " 系统导航栏高度  ：" + navigationBarHeight);
@@ -408,7 +430,10 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      * @return if need hook
      */
     public boolean hookSystemBackByPanelSwitcher() {
-        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
+        if (panelId != Constants.PANEL_NONE) {
+            if(panelId == Constants.PANEL_KEYBOARD){
+                PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
+            }
             checkoutPanel(Constants.PANEL_NONE);
             return true;
         }
@@ -427,22 +452,22 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         panelContainer.hidePanels();
         switch (panelId) {
             case Constants.PANEL_NONE: {
-                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
+                PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.clearFocusByEditText();
                 contentContainer.emptyViewVisible(false);
                 break;
             }
             case Constants.PANEL_KEYBOARD: {
-                PanelHelper.showKeyboard(getContext(), contentContainer.getEditText());
+                PanelUtil.showKeyboard(getContext(), contentContainer.getEditText());
                 contentContainer.emptyViewVisible(true);
                 break;
             }
             default: {
-                PanelHelper.hideKeyboard(getContext(), contentContainer.getEditText());
-                Pair<Integer, Integer> size = new Pair<>(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), PanelHelper.getKeyBoardHeight(getContext()));
+                PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
+                Pair<Integer, Integer> size = new Pair<>(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), PanelUtil.getKeyBoardHeight(getContext()));
                 Pair<Integer, Integer> oldSize = panelContainer.showPanel(panelId, size);
                 if (size.first != oldSize.first || size.second != oldSize.second) {
-                    notifyPanelSizeChange(panelContainer.getPanelView(panelId), PanelHelper.isPortrait(getContext()), oldSize.first, oldSize.second, size.first, size.second);
+                    notifyPanelSizeChange(panelContainer.getPanelView(panelId), DisplayUtil.isPortrait(getContext()), oldSize.first, oldSize.second, size.first, size.second);
                 }
                 contentContainer.emptyViewVisible(true);
             }

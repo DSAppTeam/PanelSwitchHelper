@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -17,6 +17,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* 支持切换流程中动画加持，效果同步“微信聊天”场景，但支持的场景远远不止这些（见Demo），同时支持自定义动画速度
 	* 优化框架内部切换流程，摈弃旧逻辑实现，新实现通过自定义绘制切换界面，无需担心内存泄漏
 	* Demo新增自定义标题栏场景，优化视频场景体验
+* 1.1.1(2020-03-29) 支持适配全面屏/刘海屏/水滴屏幕等特殊场景
+	* 优化内部计算有效面积高度，兼容特殊场景
+	* 免去 bindPanelSwitchLayout api 调用，框架内部自定完成逻辑
+	* Demo新增复杂IM交互场景
 
 #### 用于做什么
 
@@ -33,6 +37,15 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.0_2.gif" width = "270" height = "480" alt="activity layout" />
 
+* 图五至十： 1.1.1 适配全面屏/水滴屏/刘海屏等场景
+	* 图五-小米全面屏
+	* 图六-华为刘海屏幕，图七-华为刘海屏隐藏顶部区域
+	* 图八-小米水滴屏，图九-小米水滴屏隐藏但状态栏在刘海内，图十--小米水滴屏隐藏但状态栏在刘海外
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_全面屏.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏_隐藏顶部区域.gif" width = "270" height = "480" alt="activity layout" />
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_不隐藏刘海.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海内.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海外.gif" width = "270" height = "480" alt="activity layout" />
+
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
 
@@ -41,7 +54,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能，1.1.0   核心实现框架功能，支持配置动画速度。
 * *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。
 * *PanelContainer* ， 即绿色区域 ， 仅用于存放可切换的面板 （*PanelView*），开发者自主定制 *PanelView* 面板。
-* *EmptyView* ， 可选配置，一般建议使用，支持1.0.2更新的功能
+* *EmptyView* ， 可选配置，支持1.0.2更新的功能,复杂场景可参考 Activity 复杂场景。
 
 以 Demo 为例子
 
@@ -189,7 +202,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.0'
+implementation 'com.effective.android:panelSwitchHelper:1.1.1'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  
@@ -202,7 +215,6 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.0'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)        //绑定PanelSwitchLayout 对象
                     .build();
         }
     }

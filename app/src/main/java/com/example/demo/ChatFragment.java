@@ -27,6 +27,7 @@ import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.anno.PageType;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
+import com.example.demo.chat.CusRecyclerView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
@@ -111,7 +112,6 @@ public class ChatFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     //可选
                     .addKeyboardStateListener(new OnKeyboardStateListener() {
                         @Override
@@ -186,6 +186,12 @@ public class ChatFragment extends Fragment {
                     })
                     .logTrack(true)             //output log
                     .build();
+            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
+                @Override
+                public void resetPanel() {
+                    mHelper.hookSystemBackByPanelSwitcher();
+                }
+            });
         }
     }
 
