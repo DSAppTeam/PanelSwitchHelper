@@ -10,7 +10,10 @@ import com.effective.android.panel.view.PanelView;
 public class Constants {
 
     public static final String LOG_TAG = "Panel";
+
+    //输入法高度
     public static final String KB_PANEL_PREFERENCE_NAME = "ky_panel_name";
+
     public static final String KEYBOARD_HEIGHT_FOR_L = "keyboard_height_for_l";
     public static final String KEYBOARD_HEIGHT_FOR_P = "keyboard_height_for_p";
 

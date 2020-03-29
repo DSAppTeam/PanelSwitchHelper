@@ -110,7 +110,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .bindPanelSwitchLayout(R.id.panel_switch_layout)
                     .addPanelChangeListener(new OnPanelChangeListener() {
 
                         @Override
