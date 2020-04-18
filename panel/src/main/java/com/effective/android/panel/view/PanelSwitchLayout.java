@@ -433,8 +433,9 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         if (panelId != Constants.PANEL_NONE) {
             if(panelId == Constants.PANEL_KEYBOARD){
                 PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
+            }else{
+                checkoutPanel(Constants.PANEL_NONE);
             }
-            checkoutPanel(Constants.PANEL_NONE);
             return true;
         }
         return false;
