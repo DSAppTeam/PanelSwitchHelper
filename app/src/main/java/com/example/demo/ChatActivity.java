@@ -101,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         List<ChatInfo> chatInfos = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 4; i++) {
             chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
         }
         mAdapter = new ChatAdapter(this, chatInfos);

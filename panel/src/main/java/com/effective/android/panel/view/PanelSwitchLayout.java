@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
-import com.effective.android.panel.utils.CusShortUtil;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
@@ -392,6 +391,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         //处理第一个view contentContainer
         {
+            contentContainer.keyboardHeight = keyboardHeight;
+            contentContainer.panelState = panelId;
             contentContainer.layout(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : height - " + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight));
