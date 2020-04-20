@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -21,6 +21,11 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* 优化内部计算有效面积高度，兼容特殊场景
 	* 免去 bindPanelSwitchLayout api 调用，框架内部自定完成逻辑
 	* Demo新增复杂IM交互场景
+* 1.1.2(2020-04-20) 新增内容滑动模式/内容固定模式动态切换api
+	* 优化隐藏面板逻辑，提升动画流畅性
+	* 新增内容滑动模式，内容区域可动态滑动到界面外部，类 adjustPan，默认开启
+	* 新增内容固定模式，内容区域动态调整绘制区域，类 adjustResize 
+	* 解决 IM 场景下可能因为内容过少而被滑动外部的问题，支持动态切换模式，优化体验
 
 #### 用于做什么
 
@@ -45,6 +50,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_全面屏.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏_隐藏顶部区域.gif" width = "270" height = "480" alt="activity layout" />
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_不隐藏刘海.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海内.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海外.gif" width = "270" height = "480" alt="activity layout" />
+
+* 图十一：支持 1.1.2 版本动态切换滑动模式
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
@@ -202,7 +211,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.1'
+implementation 'com.effective.android:panelSwitchHelper:1.1.2'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  
@@ -215,6 +224,8 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.1'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
+            			//可选模式，默认true，scrollOutsideEnable() 可动态设置
+            			.contentCanScrollOutside(false) 
                     .build();
         }
     }
@@ -231,12 +242,11 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.1'
 
 3. 框架提供了多个可解决特殊场景的api，要学会灵活使用（针对超级复杂的需求场景）
 
-```
-//具体方法可在源码查看
-PanelSwitchHelper 提供 隐藏输入法或面板 和 显示输入法方法
-PanelHelper 提供隐藏输入法，显示输入法，判断全屏，获取状态栏高度，导航栏高度，是否是横竖屏等
-PanelSwitchLayout 核心实现，动态调整子布局结构及动画支持
-```
+**具体方法可在源码查看**
+
+* PanelSwitchHelper 提供 隐藏输入法或面板 和 显示输入法方法
+* PanelHelper 提供隐藏输入法，显示输入法，判断全屏，获取状态栏高度，导航栏高度，是否是横竖屏等
+* PanelSwitchLayout 核心实现，动态调整子布局结构及动画支持
 
 > 如果框架对你有帮助，可安利给身边的伙伴，每一个 start 都是对框架付出的肯定
 

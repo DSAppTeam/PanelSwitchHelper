@@ -101,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         List<ChatInfo> chatInfos = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 4; i++) {
             chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
         }
         mAdapter = new ChatAdapter(this, chatInfos);
@@ -115,6 +115,10 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
+                //如果超过某些条目，可开启滑动外部，使得更为流畅
+                if(mAdapter.getItemCount() > 10){
+                    mHelper.scrollOutsideEnable(true);
+                }
                 mBinding.editText.setText(null);
                 scrollToBottom();
             }
@@ -202,6 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     })
+                    .contentCanScrollOutside(false)
                     .logTrack(true)             //output log
                     .build();
             mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
