@@ -1,9 +1,6 @@
 package com.effective.android.panel;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
+import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.PanelSwitchLayout;
 
 import java.util.ArrayList;
@@ -34,9 +33,11 @@ import java.util.List;
 public final class PanelSwitchHelper {
 
     private PanelSwitchLayout mPanelSwitchLayout;
+    private boolean canScrollOutside;
 
     private PanelSwitchHelper(Builder builder) {
         Constants.DEBUG = builder.logTrack;
+        this.canScrollOutside = builder.contentCanScrollOutside;
         if (builder.logTrack) {
             builder.viewClickListeners.add(LogTracker.getInstance());
             builder.panelChangeListeners.add(LogTracker.getInstance());
@@ -44,6 +45,22 @@ public final class PanelSwitchHelper {
             builder.editFocusChangeListeners.add(LogTracker.getInstance());
         }
         mPanelSwitchLayout = builder.panelSwitchLayout;
+        mPanelSwitchLayout.setScrollOutsideBorder(new OnScrollOutsideBorder() {
+            @Override
+            public boolean canLayoutOutsideBorder() {
+                return canScrollOutside;
+            }
+
+            @Override
+            public int getOutsideHeight() {
+                return PanelUtil.getKeyBoardHeight(mPanelSwitchLayout.getContext());
+            }
+
+            @Override
+            public int getCurrentPanedId() {
+                return mPanelSwitchLayout.getPanedId();
+            }
+        });
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners);
         mPanelSwitchLayout.bindWindow(builder.window);
     }
@@ -51,6 +68,11 @@ public final class PanelSwitchHelper {
     public boolean hookSystemBackByPanelSwitcher() {
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher();
     }
+
+    public void scrollOutsideEnable(boolean enable){
+        this.canScrollOutside = enable;
+    }
+
 
     /**
      * 外部显示输入框
@@ -77,9 +99,7 @@ public final class PanelSwitchHelper {
         Window window;
         View rootView;
         boolean logTrack;
-
-        @IdRes
-        private int panelSwitchLayoutId;
+        boolean contentCanScrollOutside = true;
 
         public Builder(@NonNull Activity activity) {
             this(activity.getWindow(), activity.getWindow().getDecorView().findViewById(android.R.id.content));
@@ -101,12 +121,6 @@ public final class PanelSwitchHelper {
             keyboardStatusListeners = new ArrayList<>();
             editFocusChangeListeners = new ArrayList<>();
         }
-
-        public Builder bindPanelSwitchLayout(@IdRes int panelSwitchLayoutId) {
-            this.panelSwitchLayoutId = panelSwitchLayoutId;
-            return this;
-        }
-
 
         /**
          * note: helper will set view's onClickListener to View ,so you should add OnViewClickListener for your project.
@@ -142,6 +156,11 @@ public final class PanelSwitchHelper {
             return this;
         }
 
+        public Builder contentCanScrollOutside(boolean canScrollOutside){
+            this.contentCanScrollOutside = canScrollOutside;
+            return this;
+        }
+
         public Builder logTrack(boolean logTrack) {
             this.logTrack = logTrack;
             return this;
@@ -159,7 +178,7 @@ public final class PanelSwitchHelper {
 
             findSwitchLayout(rootView);
             if (panelSwitchLayout == null) {
-                throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : not found PanelSwitchLayout by id(" + panelSwitchLayoutId + ")");
+                throw new IllegalArgumentException("PanelSwitchHelper$Builder#build : not found PanelSwitchLayout!");
             }
 
             final PanelSwitchHelper panelSwitchHelper = new PanelSwitchHelper(this);

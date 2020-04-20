@@ -25,6 +25,7 @@ public class CusRecyclerView extends RecyclerView {
 
     public void setResetPanel(ResetPanel resetPanel){
         this.resetPanel = resetPanel;
+        setItemAnimator(null);
     }
 
     public interface ResetPanel{
