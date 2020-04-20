@@ -3,6 +3,7 @@ package com.example.demo.chat;
 import android.view.View;
 import android.widget.Toast;
 
+import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.databinding.VhChatRightLayoutBinding;
 import com.example.demo.emotion.EmojiSpanBuilder;
 
@@ -32,6 +33,7 @@ public class ChatRightVH extends ChatBaseVH<VhChatRightLayoutBinding, ChatInfo> 
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"点击了头像",Toast.LENGTH_SHORT).show();
+                PanelSwitchHelper.enableScrollContent = false;
             }
         });
         binding.text.setOnLongClickListener(new View.OnLongClickListener() {
@@ -45,6 +47,7 @@ public class ChatRightVH extends ChatBaseVH<VhChatRightLayoutBinding, ChatInfo> 
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"点击了消息",Toast.LENGTH_SHORT).show();
+                PanelSwitchHelper.enableScrollContent = true;
             }
         });
     }

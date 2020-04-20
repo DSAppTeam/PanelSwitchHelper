@@ -204,6 +204,7 @@ public class ChatActivity extends AppCompatActivity {
                     })
                     .logTrack(true)             //output log
                     .build();
+            mBinding.recyclerView.setItemAnimator(null);
             mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
                 @Override
                 public void resetPanel() {

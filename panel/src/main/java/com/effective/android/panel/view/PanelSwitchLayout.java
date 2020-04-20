@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
+import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
@@ -67,6 +68,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
     private int animationSpeed = 200;  //standard
+    private int keyboardHeight;
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -332,7 +334,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 //        int contentViewHeight = DisplayUtil.getContentViewHeight(window);
 
 
-        int keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
+        keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
         int paddingTop = getPaddingTop();
         int allHeight = screenHeight;
         if (DisplayUtil.isPortrait(getContext())) {
@@ -365,7 +367,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int panelContainerTop = contentContainerTop + contentContainerHeight;
         int panelContainerHeight = keyboardHeight;
 
-        setTransition(animationSpeed);
+        setTransition(animationSpeed,panelId);
 
 //        Log.d(TAG, "   ");
 //        Log.d(TAG, " onLayout  =======> 被回调 ");
@@ -417,10 +419,19 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     }
 
     @TargetApi(19)
-    private void setTransition(long duration) {
-        ChangeBounds changeBounds = new ChangeBounds();
-        changeBounds.setDuration(duration);
-        TransitionManager.beginDelayedTransition(this, changeBounds);
+    private void setTransition(long duration,int panelId) {
+        if(!PanelSwitchHelper.enableScrollContent){
+            if(panelId != Constants.PANEL_NONE){
+                ChangeBounds changeBounds = new ChangeBounds();
+                changeBounds.setDuration(duration);
+                TransitionManager.beginDelayedTransition(this, changeBounds);
+            }
+
+        }else {
+            ChangeBounds changeBounds = new ChangeBounds();
+            changeBounds.setDuration(duration);
+            TransitionManager.beginDelayedTransition(this, changeBounds);
+        }
     }
 
     /**
