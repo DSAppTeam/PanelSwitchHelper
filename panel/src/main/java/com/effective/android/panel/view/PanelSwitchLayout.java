@@ -3,6 +3,7 @@ package com.effective.android.panel.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.PanelSwitchHelper;
+import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
@@ -68,7 +70,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private boolean isKeyboardShowing;
     private int panelId = Constants.PANEL_NONE;
     private int animationSpeed = 200;  //standard
-    private int keyboardHeight;
+    private OnScrollOutsideBorder scrollOutsideBorder;
 
     public PanelSwitchLayout(Context context) {
         this(context, null);
@@ -186,6 +188,14 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         this.editFocusChangeListeners = editFocusChangeListeners;
     }
 
+    public void setScrollOutsideBorder(@NonNull OnScrollOutsideBorder scrollOutsideBorder) {
+        this.scrollOutsideBorder = scrollOutsideBorder;
+    }
+
+    public int getPanedId() {
+        return panelId;
+    }
+
     public void bindWindow(final Window window) {
         this.window = window;
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -208,7 +218,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                         }
                         notifyKeyboardState(false);
                     } else {
-                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                        if (PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight) {
                             PanelSwitchLayout.this.requestLayout();
                             PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
                             LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
@@ -216,7 +226,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
                     }
                 } else {
                     if (keyboardHeight > 0) {
-                        if(PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight){
+                        if (PanelUtil.getKeyBoardHeight(getContext()) != keyboardHeight) {
                             PanelSwitchLayout.this.requestLayout();
                             PanelUtil.setKeyBoardHeight(getContext(), keyboardHeight);
                             LogTracker.Log(TAG + "#onGlobalLayout", "setKeyBoardHeight is : " + keyboardHeight);
@@ -334,7 +344,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 //        int contentViewHeight = DisplayUtil.getContentViewHeight(window);
 
 
-        keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
+        int scrollOutsideHeight = scrollOutsideBorder.getOutsideHeight();
         int paddingTop = getPaddingTop();
         int allHeight = screenHeight;
         if (DisplayUtil.isPortrait(getContext())) {
@@ -359,15 +369,15 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int[] localLocation = DisplayUtil.getLocationOnScreen(this);
         allHeight -= localLocation[1];
 
-        int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -keyboardHeight;
+        int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -scrollOutsideHeight;
         contentContainerTop += paddingTop;
 
 
         int contentContainerHeight = allHeight - paddingTop;
         int panelContainerTop = contentContainerTop + contentContainerHeight;
-        int panelContainerHeight = keyboardHeight;
+        int panelContainerHeight = scrollOutsideHeight;
 
-        setTransition(animationSpeed,panelId);
+        setTransition(animationSpeed, panelId);
 
 //        Log.d(TAG, "   ");
 //        Log.d(TAG, " onLayout  =======> 被回调 ");
@@ -393,8 +403,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         //处理第一个view contentContainer
         {
-            contentContainer.keyboardHeight = keyboardHeight;
-            contentContainer.panelState = panelId;
+            contentContainer.onScrollOutsideBorder = scrollOutsideBorder;
             contentContainer.layout(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : height - " + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight));
@@ -419,15 +428,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     }
 
     @TargetApi(19)
-    private void setTransition(long duration,int panelId) {
-        if(!PanelSwitchHelper.enableScrollContent){
-            if(panelId != Constants.PANEL_NONE){
-                ChangeBounds changeBounds = new ChangeBounds();
-                changeBounds.setDuration(duration);
-                TransitionManager.beginDelayedTransition(this, changeBounds);
-            }
-
-        }else {
+    private void setTransition(long duration, int panelId) {
+        //如果禁止了内容区域滑出边界且当当前是收起面板，则取消动画。
+        //因为禁止滑出边界使用动态更改高度，动画过程中界面已绘制内容会有极其短暂的重叠，故禁止动画。
+        if (scrollOutsideBorder.canLayoutOutsideBorder()
+                || (!scrollOutsideBorder.canLayoutOutsideBorder() && panelId != Constants.PANEL_NONE)) {
             ChangeBounds changeBounds = new ChangeBounds();
             changeBounds.setDuration(duration);
             TransitionManager.beginDelayedTransition(this, changeBounds);
@@ -443,9 +448,9 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      */
     public boolean hookSystemBackByPanelSwitcher() {
         if (panelId != Constants.PANEL_NONE) {
-            if(panelId == Constants.PANEL_KEYBOARD){
+            if (panelId == Constants.PANEL_KEYBOARD) {
                 PanelUtil.hideKeyboard(getContext(), contentContainer.getEditText());
-            }else{
+            } else {
                 checkoutPanel(Constants.PANEL_NONE);
             }
             return true;

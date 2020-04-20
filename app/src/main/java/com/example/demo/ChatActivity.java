@@ -115,6 +115,10 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
+                //如果超过某些条目，可开启滑动外部，使得更为流畅
+                if(mAdapter.getItemCount() > 10){
+                    mHelper.scrollOutsideEnable(true);
+                }
                 mBinding.editText.setText(null);
                 scrollToBottom();
             }
@@ -202,9 +206,9 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     })
+                    .contentCanScrollOutside(false)
                     .logTrack(true)             //output log
                     .build();
-            mBinding.recyclerView.setItemAnimator(null);
             mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
                 @Override
                 public void resetPanel() {
