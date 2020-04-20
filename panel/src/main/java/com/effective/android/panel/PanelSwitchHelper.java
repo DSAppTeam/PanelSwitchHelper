@@ -32,8 +32,6 @@ import java.util.List;
 
 public final class PanelSwitchHelper {
 
-    public static boolean enableScrollContent = false;
-
     private PanelSwitchLayout mPanelSwitchLayout;
     private boolean canScrollOutside;
 
