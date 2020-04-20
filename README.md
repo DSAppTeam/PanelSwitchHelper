@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -21,6 +21,11 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* Optimize internal calculation effective area height, compatible with special scene
 	* Eliminate the call to bindPanelSwitchLayout api, complete the logic inside the framework
 	* Demo adds complex IM interaction scenarios
+* 1.1.2 (2020-04-20) Added content sliding mode / content fixed mode dynamic switching API
+	* Optimized hidden panel logic to improve animation fluency
+	* Added content sliding mode, the content area can dynamically slide to the outside of the interface, adjustPan
+	* Added content fixed mode, content area dynamically adjusts drawing area, class adjustResize
+	* Solve the problem of being slid outside due to too little content in IM scenarios, support dynamic switching mode, optimize experience
 
 #### What to do
 
@@ -46,6 +51,10 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_全面屏.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_刘海屏_隐藏顶部区域.gif" width = "270" height = "480" alt="activity layout" />
 
 <img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_不隐藏刘海.gif" width = "270" height = "480" alt="activity layout"/><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海内.gif" width = "270" height = "480" alt="activity layout" /><img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.1_水滴屏_隐藏刘海_状态栏在刘海外.gif" width = "270" height = "480" alt="activity layout" />
+
+* Figure 11: Support 1.1.2 version dynamic switch sliding mode
+
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
@@ -205,7 +214,7 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.1'
+implementation 'com.effective.android:panelSwitchHelper:1.1.2'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
@@ -217,7 +226,9 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.1'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-                    .build();
+            			// Optional mode, default true, scrollOutsideEnable() can be set dynamically         
+            			.contentCanScrollOutside(false)            
+            			.build();
         }
     }
 
@@ -235,11 +246,11 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.1'
 3. The framework provides a variety of APIs to solve special situations, and you need to learn to use it flexibly (for ultra-complex requirements)
 
 ```
-//The specific method is visible in the source code
-PanelSwitchHelper, Provide hidden input method or panel and display input method
-PanelHelper, Provide hidden input method, display input method, judge full screen, get status bar height, navigation bar height, whether it is horizontal and vertical screen, etc.
-PanelSwitchLayout core implementation, dynamic adjustment of sub layout structure and animation support
-```
+**The specific method is visible in the source code**
+
+* PanelSwitchHelper, Provide hidden input method or panel and display input method
+* PanelHelper, Provide hidden input method, display input method, judge full screen, get status bar height, navigation bar height, whether it is horizontal and vertical screen, etc.
+* PanelSwitchLayout core implementation, dynamic adjustment of sub layout structure and animation support
 
 > If the framework is helpful to you, Amway can give your partners around, every start is an affirmation of the framework.
 
