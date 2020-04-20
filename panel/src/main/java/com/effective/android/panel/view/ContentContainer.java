@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
+import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.utils.PanelUtil;
@@ -47,7 +48,6 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     int emptyViewId;
 
     public int panelState = Constants.PANEL_NONE;
-    public int lastState = Constants.PANEL_NONE;
     public boolean isModify = false;
     public int keyboardHeight = 0;
 
@@ -170,15 +170,17 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
                     e.printStackTrace();
                 }
 
-                if(i == 0){
-                    if(panelState != Constants.PANEL_NONE){
-                        if(!isModify){
-                            childTop += keyboardHeight;
-                            childHeight -= keyboardHeight;
-                        }
-                    }else{
-                        if(isModify){
-                            isModify = false;
+                if(!PanelSwitchHelper.enableScrollContent){
+                    if(i == 0){
+                        if(panelState != Constants.PANEL_NONE){
+                            if(!isModify){
+                                childTop += keyboardHeight;
+                                childHeight -= keyboardHeight;
+                            }
+                        }else{
+                            if(isModify){
+                                isModify = false;
+                            }
                         }
                     }
                 }

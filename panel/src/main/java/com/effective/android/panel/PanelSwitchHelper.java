@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.effective.android.panel.interfaces.OnBorderLayout;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -33,6 +34,8 @@ import java.util.List;
 
 public final class PanelSwitchHelper {
 
+    public static boolean enableScrollContent = false;
+
     private PanelSwitchLayout mPanelSwitchLayout;
 
     private PanelSwitchHelper(Builder builder) {
@@ -51,6 +54,7 @@ public final class PanelSwitchHelper {
     public boolean hookSystemBackByPanelSwitcher() {
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher();
     }
+
 
     /**
      * 外部显示输入框
