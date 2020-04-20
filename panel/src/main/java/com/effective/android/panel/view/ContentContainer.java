@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.R;
+import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
 import com.effective.android.panel.interfaces.ViewAssertion;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.utils.ReflectionUtils;
@@ -46,10 +47,8 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     int editTextId;
     @IdRes
     int emptyViewId;
-
-    public int panelState = Constants.PANEL_NONE;
-    public boolean isModify = false;
-    public int keyboardHeight = 0;
+    public OnScrollOutsideBorder onScrollOutsideBorder;
+    private boolean isModify = false;
 
     public ContentContainer(Context context) {
         this(context, null);
@@ -82,10 +81,10 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        layoutVertical(changed,l, t, r, b);
+        layoutVertical(changed, l, t, r, b);
     }
 
-    void layoutVertical(boolean changed,int left, int top, int right, int bottom) {
+    void layoutVertical(boolean changed, int left, int top, int right, int bottom) {
         final int paddingLeft = getPaddingLeft();
         final int paddingRight = getPaddingRight();
         final int paddingTop = getPaddingTop();
@@ -126,6 +125,7 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
                 break;
         }
 
+        boolean isFirstVisibleChild = true;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
             if (child == null) {
@@ -170,18 +170,17 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
                     e.printStackTrace();
                 }
 
-                if(!PanelSwitchHelper.enableScrollContent){
-                    if(i == 0){
-                        if(panelState != Constants.PANEL_NONE){
-                            if(!isModify){
-                                childTop += keyboardHeight;
-                                childHeight -= keyboardHeight;
-                            }
-                        }else{
-                            if(isModify){
-                                isModify = false;
-                            }
+                int outsideHeight = getOutsideHeight();
+                int panelId = getPanedId();
+                if (!canScrollOutsideBorder()) {
+                    if (isFirstVisibleChild) {
+                        if (panelId != Constants.PANEL_NONE && !isModify) {
+                            childTop += outsideHeight;
+                            childHeight -= outsideHeight;
+                        } else if (panelId == Constants.PANEL_NONE && isModify) {
+                            isModify = false;
                         }
+                        isFirstVisibleChild = false;
                     }
                 }
 
@@ -220,6 +219,27 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
                 }
             }
         }
+    }
+
+    private boolean canScrollOutsideBorder(){
+        if(onScrollOutsideBorder != null){
+            return onScrollOutsideBorder.canLayoutOutsideBorder();
+        }
+        return true;
+    }
+
+    private int getPanedId(){
+        if(onScrollOutsideBorder != null){
+            return onScrollOutsideBorder.getCurrentPanedId();
+        }
+        return Constants.PANEL_NONE;
+    }
+
+    private int getOutsideHeight() {
+        if (onScrollOutsideBorder != null) {
+            return onScrollOutsideBorder.getOutsideHeight();
+        }
+        return PanelUtil.getKeyBoardHeight(getContext());
     }
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
