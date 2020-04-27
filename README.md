@@ -55,7 +55,7 @@ When developing a chat page, the developer wants the user to keep a smooth trans
 
 * Figure 11: Support 1.1.2 version dynamic switch sliding mode
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switich_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
 
 ##### Implementation
 Get the keyboard's height by listening to the window's changes and dynamically adjust the layout to achieve a smooth transition switch panel.
@@ -246,7 +246,6 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.3'
 
 3. The framework provides a variety of APIs to solve special situations, and you need to learn to use it flexibly (for ultra-complex requirements)
 
-```
 **The specific method is visible in the source code**
 
 * PanelSwitchHelper, Provide hidden input method or panel and display input method
