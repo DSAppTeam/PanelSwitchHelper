@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -26,6 +26,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* Added content sliding mode, the content area can dynamically slide to the outside of the interface, adjustPan
 	* Added content fixed mode, content area dynamically adjusts drawing area, class adjustResize
 	* Solve the problem of being slid outside due to too little content in IM scenarios, support dynamic switching mode, optimize experience
+* 1.1.3 (2020-04-27) Compatible with the use requirements of Google channel non-public SDK-API, optimize the fixed mode drawing implementation
 
 #### What to do
 
@@ -214,7 +215,7 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.2'
+implementation 'com.effective.android:panelSwitchHelper:1.1.3'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
