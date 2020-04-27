@@ -1,7 +1,7 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -26,6 +26,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* 新增内容滑动模式，内容区域可动态滑动到界面外部，类 adjustPan，默认开启
 	* 新增内容固定模式，内容区域动态调整绘制区域，类 adjustResize 
 	* 解决 IM 场景下可能因为内容过少而被滑动外部的问题，支持动态切换模式，优化体验
+* 1.1.3(2020-04-27) 兼容谷歌渠道非公开SDK-API的使用要求，优化固定模式的绘制实现
 
 #### 用于做什么
 
@@ -211,7 +212,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.2'
+implementation 'com.effective.android:panelSwitchHelper:1.1.3'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  
