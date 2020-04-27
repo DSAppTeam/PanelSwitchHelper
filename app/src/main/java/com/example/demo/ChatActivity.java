@@ -115,7 +115,7 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 mAdapter.insertInfo(ChatInfo.CREATE(content));
-                //如果超过某些条目，可开启滑动外部，使得更为流畅
+//                如果超过某些条目，可开启滑动外部，使得更为流畅
                 if(mAdapter.getItemCount() > 10){
                     mHelper.scrollOutsideEnable(true);
                 }
@@ -126,7 +126,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void scrollToBottom() {
-        mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
+        mBinding.getRoot().post(new Runnable() {
+            @Override
+            public void run() {
+                mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
+            }
+        }) ;
     }
 
     @Override
@@ -173,6 +178,7 @@ public class ChatActivity extends AppCompatActivity {
                         public void onKeyboard() {
                             Log.d(TAG, "唤起系统输入法");
                             mBinding.emotionBtn.setSelected(false);
+                            scrollToBottom();
                         }
 
                         @Override
@@ -185,6 +191,7 @@ public class ChatActivity extends AppCompatActivity {
                         public void onPanel(PanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
                             mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
+                            scrollToBottom();
                         }
 
                         @Override
