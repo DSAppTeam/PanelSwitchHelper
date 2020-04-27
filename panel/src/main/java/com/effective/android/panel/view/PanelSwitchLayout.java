@@ -22,6 +22,7 @@ import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
+import com.effective.android.panel.utils.CusShortUtil;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
@@ -307,9 +308,16 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         this.panelContainer = (PanelContainer) secondView;
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    private int getContentContainerTop(int scrollOutsideHeight) {
+        if (scrollOutsideBorder.canLayoutOutsideBorder()) {
+            return (panelId == Constants.PANEL_NONE) ? 0 : -scrollOutsideHeight;
+        }
+        return 0;
+    }
+
+    private int getContentContainerHeight(int allHeight, int paddingTop, int scrollOutsideHeight) {
+        return allHeight - paddingTop -
+                (!scrollOutsideBorder.canLayoutOutsideBorder() && panelId != Constants.PANEL_NONE ? scrollOutsideHeight : 0);
     }
 
     /**
@@ -321,7 +329,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//        LogTracker.Log(TAG + "#onLayout", "onLayout");
+        LogTracker.Log(TAG + "#onLayout", "onLayout");
+
         int visibility = getVisibility();
         if (visibility != VISIBLE) {
             return;
@@ -330,7 +339,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window);
         int navigationBarHeight = DisplayUtil.getNavigationBarHeight(getContext());
         boolean navigationBarShow = DisplayUtil.isNavigationBarShow(getContext(), window);
-//
+
 //
 //        int screenWithoutSystemUIHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window);
 //        int screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(getContext());
@@ -369,11 +378,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         int[] localLocation = DisplayUtil.getLocationOnScreen(this);
         allHeight -= localLocation[1];
 
-        int contentContainerTop = (panelId == Constants.PANEL_NONE) ? 0 : -scrollOutsideHeight;
+        int contentContainerTop = getContentContainerTop(scrollOutsideHeight);
         contentContainerTop += paddingTop;
 
 
-        int contentContainerHeight = allHeight - paddingTop;
+        int contentContainerHeight = getContentContainerHeight(allHeight, paddingTop, scrollOutsideHeight);
         int panelContainerTop = contentContainerTop + contentContainerHeight;
         int panelContainerHeight = scrollOutsideHeight;
 
@@ -395,7 +404,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 //        Log.d(TAG, " switchLayout 绘制起点  ：（" + localLocation[0] + "，" + localLocation[1] + "）");
 //        Log.d(TAG, " toolbar高度  ：" + toolbarHeight);
 //        Log.d(TAG, " paddingTop  ：" + paddingTop);
-//        Log.d(TAG, " 输入法高度  ：" + keyboardHeight);
+//        Log.d(TAG, " 输入法高度  ：" + scrollOutsideHeight);
 //        Log.d(TAG, " 内容 top  ：" + contentContainerTop);
 //        Log.d(TAG, " 内容 高度 ：" + contentContainerHeight);
 //        Log.d(TAG, " 面板 top ：" + panelContainerTop);
@@ -403,7 +412,6 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         //处理第一个view contentContainer
         {
-            contentContainer.onScrollOutsideBorder = scrollOutsideBorder;
             contentContainer.layout(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : height - " + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight));

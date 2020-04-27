@@ -55,11 +55,6 @@ public final class PanelSwitchHelper {
             public int getOutsideHeight() {
                 return PanelUtil.getKeyBoardHeight(mPanelSwitchLayout.getContext());
             }
-
-            @Override
-            public int getCurrentPanedId() {
-                return mPanelSwitchLayout.getPanedId();
-            }
         });
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners);
         mPanelSwitchLayout.bindWindow(builder.window);

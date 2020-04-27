@@ -43,13 +43,11 @@
                 android:orientation="vertical"
                 app:edit_view="@id/edit_text">
 
-
                 <com.example.demo.chat.CusRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"

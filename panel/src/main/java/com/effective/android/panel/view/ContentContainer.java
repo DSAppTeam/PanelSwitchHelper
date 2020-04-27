@@ -3,23 +3,16 @@ package com.effective.android.panel.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.effective.android.panel.Constants;
-import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.R;
-import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
 import com.effective.android.panel.interfaces.ViewAssertion;
-import com.effective.android.panel.utils.PanelUtil;
-import com.effective.android.panel.utils.ReflectionUtils;
 
 
 /**
@@ -47,8 +40,6 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
     int editTextId;
     @IdRes
     int emptyViewId;
-    public OnScrollOutsideBorder onScrollOutsideBorder;
-    private boolean isModify = false;
 
     public ContentContainer(Context context) {
         this(context, null);
@@ -78,174 +69,6 @@ public class ContentContainer extends LinearLayout implements ViewAssertion {
         }
         setOrientation(VERTICAL);
     }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        layoutVertical(changed, l, t, r, b);
-    }
-
-    void layoutVertical(boolean changed, int left, int top, int right, int bottom) {
-        final int paddingLeft = getPaddingLeft();
-        final int paddingRight = getPaddingRight();
-        final int paddingTop = getPaddingTop();
-
-        int childTop;
-        int childLeft;
-
-        final int width = right - left;
-        int childRight = width - paddingRight;
-        int childSpace = width - paddingLeft - paddingRight;
-
-        final int count = getChildCount();
-
-        int mGravity = Gravity.TOP | Gravity.LEFT;
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            mGravity = (Integer) ReflectionUtils.getFieldValue(this, "mGravity");
-        } else {
-            mGravity = getGravity();
-        }
-
-        final int majorGravity = mGravity & Gravity.VERTICAL_GRAVITY_MASK;
-        final int minorGravity = mGravity & Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK;
-
-        switch (majorGravity) {
-            case Gravity.BOTTOM: {
-                int mTotalLength = (Integer) ReflectionUtils.getFieldValue(this, "mTotalLength");
-                childTop = paddingTop + bottom - top - mTotalLength;
-                break;
-            }
-            case Gravity.CENTER_VERTICAL: {
-                int mTotalLength = (Integer) ReflectionUtils.getFieldValue(this, "mTotalLength");
-                childTop = paddingTop + (bottom - top - mTotalLength) / 2;
-                break;
-            }
-            case Gravity.TOP:
-            default:
-                childTop = paddingTop;
-                break;
-        }
-
-        boolean isFirstVisibleChild = true;
-        for (int i = 0; i < count; i++) {
-            final View child = getChildAt(i);
-            if (child == null) {
-                childTop += 0;
-            } else if (child.getVisibility() != GONE) {
-                final int childWidth = child.getMeasuredWidth();
-                int childHeight = child.getMeasuredHeight();
-
-                final LinearLayout.LayoutParams lp =
-                        (LinearLayout.LayoutParams) child.getLayoutParams();
-
-                int gravity = lp.gravity;
-                if (gravity < 0) {
-                    gravity = minorGravity;
-                }
-                final int layoutDirection = getLayoutDirection();
-                final int absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection);
-                switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                    case Gravity.CENTER_HORIZONTAL:
-                        childLeft = paddingLeft + ((childSpace - childWidth) / 2)
-                                + lp.leftMargin - lp.rightMargin;
-                        break;
-
-                    case Gravity.RIGHT:
-                        childLeft = childRight - childWidth - lp.rightMargin;
-                        break;
-
-                    case Gravity.LEFT:
-                    default:
-                        childLeft = paddingLeft + lp.leftMargin;
-                        break;
-                }
-
-                try {
-                    Boolean hasDividerBeforeChildAt = (Boolean) ReflectionUtils.invokeMethod(
-                            this, "hasDividerBeforeChildAt", new Class[]{Integer.class}, new Object[]{i});
-                    if (hasDividerBeforeChildAt != null && hasDividerBeforeChildAt) {
-                        int mDividerHeight = (Integer) ReflectionUtils.getFieldValue(this, "mDividerHeight");
-                        childTop += mDividerHeight;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                int outsideHeight = getOutsideHeight();
-                int panelId = getPanedId();
-                if (!canScrollOutsideBorder()) {
-                    if (isFirstVisibleChild) {
-                        if (panelId != Constants.PANEL_NONE && !isModify) {
-                            childTop += outsideHeight;
-                            childHeight -= outsideHeight;
-                        } else if (panelId == Constants.PANEL_NONE && isModify) {
-                            isModify = false;
-                        }
-                        isFirstVisibleChild = false;
-                    }
-                }
-
-                childTop += lp.topMargin;
-
-                int locationOffset = 0;
-                int nextLocationOffset = 0;
-                try {
-                    Integer location = (Integer) ReflectionUtils.invokeMethod(
-                            this, "getLocationOffset", new Class[]{View.class}, new Object[]{child});
-                    if (location != null) {
-                        locationOffset = location;
-                    }
-                    Integer nextLocation = (Integer) ReflectionUtils.invokeMethod(
-                            this, "getNextLocationOffset", new Class[]{View.class}, new Object[]{child});
-                    if (nextLocation != null) {
-                        nextLocationOffset = nextLocation;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                setChildFrame(child, childLeft, childTop + locationOffset, childWidth, childHeight);
-
-                childTop += childHeight + lp.bottomMargin + nextLocationOffset;
-
-
-                try {
-                    Integer skipCount = (Integer) ReflectionUtils.invokeMethod(
-                            this, "getChildrenSkipCount", new Class[]{View.class, Integer.class}, new Object[]{child, i});
-                    if (skipCount != null) {
-                        i += skipCount;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private boolean canScrollOutsideBorder(){
-        if(onScrollOutsideBorder != null){
-            return onScrollOutsideBorder.canLayoutOutsideBorder();
-        }
-        return true;
-    }
-
-    private int getPanedId(){
-        if(onScrollOutsideBorder != null){
-            return onScrollOutsideBorder.getCurrentPanedId();
-        }
-        return Constants.PANEL_NONE;
-    }
-
-    private int getOutsideHeight() {
-        if (onScrollOutsideBorder != null) {
-            return onScrollOutsideBorder.getOutsideHeight();
-        }
-        return PanelUtil.getKeyBoardHeight(getContext());
-    }
-
-    private void setChildFrame(View child, int left, int top, int width, int height) {
-        child.layout(left, top, left + width, top + height);
-    }
-
 
     @Override
     protected void onFinishInflate() {
