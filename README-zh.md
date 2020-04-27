@@ -54,7 +54,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
 * 图十一：支持 1.1.2 版本动态切换滑动模式
 
-<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/panel_switch_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
+<img src="https://raw.githubusercontent.com/YummyLau/PanelSwitchHelper/master/source/panel_switich_1.1.2.jpg" width = "795" height = "532" alt="activity layout" />
 
 ##### 实现方法
 通过监听 Window 窗口变化来获取输入法高度并动态调整布局来达到平滑过渡切换面板。
