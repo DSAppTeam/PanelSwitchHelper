@@ -31,6 +31,7 @@ import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
+import com.effective.android.panel.view.content.IContentContainer;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     private List<OnKeyboardStateListener> keyboardStatusListeners;
     private List<OnEditFocusChangeListener> editFocusChangeListeners;
 
-    private ContentContainer contentContainer;
+    private IContentContainer contentContainer;
     private PanelContainer panelContainer;
 
     private Window window;
@@ -155,7 +156,7 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         SparseArray<PanelView> array = panelContainer.getPanelSparseArray();
         for (int i = 0; i < array.size(); i++) {
             final PanelView panelView = array.get(array.keyAt(i));
-            final View keyView = contentContainer.findViewById(panelView.getTriggerViewId());
+            final View keyView = contentContainer.findTriggerView(panelView.getTriggerViewId());
             if (keyView != null) {
                 keyView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -297,13 +298,13 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
         View firstView = getChildAt(0);
         View secondView = getChildAt(1);
 
-        if (!(firstView instanceof ContentContainer)) {
-            throw new RuntimeException("PanelSwitchLayout -- the first view is ContentContainer,the other is ContentContainer！");
+        if (!(firstView instanceof IContentContainer)) {
+            throw new RuntimeException("PanelSwitchLayout -- the first view isn't a IContentContainer");
         }
-        this.contentContainer = (ContentContainer) firstView;
+        this.contentContainer = (IContentContainer) firstView;
 
         if (!(secondView instanceof PanelContainer)) {
-            throw new RuntimeException("PanelSwitchLayout -- the second view is ContentContainer,the other is PanelContainer！");
+            throw new RuntimeException("PanelSwitchLayout -- the second view is a ContentContainer, but the other isn't a PanelContainer！");
         }
         this.panelContainer = (PanelContainer) secondView;
     }
@@ -412,14 +413,10 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
         //处理第一个view contentContainer
         {
-            contentContainer.layout(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
+            contentContainer.layoutGroup(l, contentContainerTop, r, contentContainerTop + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : height - " + contentContainerHeight);
             Log.d(TAG, " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight));
-            ViewGroup.LayoutParams layoutParams = contentContainer.getLayoutParams();
-            if (layoutParams.height != contentContainerHeight) {
-                layoutParams.height = contentContainerHeight;
-                contentContainer.setLayoutParams(layoutParams);
-            }
+            contentContainer.adjustHeight(contentContainerHeight);
         }
 
         //处理第二个view panelContainer
@@ -467,7 +464,11 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
     }
 
     public void toKeyboardState() {
-        contentContainer.toKeyboardState();
+        if (contentContainer.editTextHasFocus()) {
+            contentContainer.preformClickForEditText();
+        } else {
+            contentContainer.requestFocusByEditText();
+        }
     }
 
     /**
