@@ -1,4 +1,4 @@
-package com.effective.android.panel.view;
+package com.effective.android.panel.view.content;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.R;
 import com.effective.android.panel.interfaces.ViewAssertion;
-import com.effective.android.panel.view.content.ContentContainerImpl;
-import com.effective.android.panel.view.content.IContentContainer;
 
 
 /**
@@ -29,13 +27,11 @@ import com.effective.android.panel.view.content.IContentContainer;
  * | | PanelContainer | |
  * |  ----------------  |
  * --------------------
- * Created by yummyLau on 18-7-10
+ * Created by yummyLau on 2020/05/07
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
- * update by yummylau on 2020/05/07 请使用 {@link com.effective.android.panel.view.content.ContentLinearContainer} 后续该类将被遗弃
  */
-@Deprecated
-public class ContentContainer extends LinearLayout implements IContentContainer {
+public class ContentLinearContainer extends LinearLayout implements IContentContainer {
 
     @IdRes
     int editTextId;
@@ -44,33 +40,32 @@ public class ContentContainer extends LinearLayout implements IContentContainer 
 
     private ContentContainerImpl contentContainer;
 
-    public ContentContainer(Context context) {
+    public ContentLinearContainer(Context context) {
         this(context, null);
     }
 
-    public ContentContainer(Context context, @Nullable AttributeSet attrs) {
+    public ContentLinearContainer(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ContentContainer(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ContentLinearContainer(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(attrs, defStyleAttr, 0);
     }
 
     @TargetApi(21)
-    public ContentContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ContentLinearContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(attrs, defStyleAttr, defStyleRes);
     }
 
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ContentContainer, defStyleAttr, 0);
+        final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ContentLinearContainer, defStyleAttr, 0);
         if (typedArray != null) {
-            editTextId = typedArray.getResourceId(R.styleable.ContentContainer_edit_view, -1);
-            emptyViewId = typedArray.getResourceId(R.styleable.ContentContainer_empty_view, -1);
+            editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_edit_view, -1);
+            emptyViewId = typedArray.getResourceId(R.styleable.ContentLinearContainer_empty_view, -1);
             typedArray.recycle();
         }
-        setOrientation(VERTICAL);
     }
 
     @Override
@@ -92,6 +87,7 @@ public class ContentContainer extends LinearLayout implements IContentContainer 
     public void adjustHeight(int targetHeight) {
         contentContainer.adjustHeight(targetHeight);
     }
+
 
     @Override
     public void emptyViewVisible(boolean visible) {

@@ -20,4 +20,20 @@
         <attr name="empty_view" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="ContentLinearContainer">
+        <attr name="edit_view" format="reference"/>
+        <attr name="empty_view" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentFrameContainer">
+        <attr name="edit_view" format="reference"/>
+        <attr name="empty_view" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentRelativeContainer">
+        <attr name="edit_view" format="reference"/>
+        <attr name="empty_view" format="reference"/>
+    </declare-styleable>
+
+
 </resources>
