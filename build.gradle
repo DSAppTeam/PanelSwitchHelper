@@ -14,7 +14,7 @@ buildscript {
     dependencies {
         classpath deps.android_gradle_plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath 'com.novoda:bintray-release:0.9'
+        classpath 'com.novoda:bintray-release:0.9'
     }
 }
 
@@ -22,7 +22,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-//        maven { url 'https://dl.bintray.com/yummylau/maven' }
     }
 //    gradle.projectsEvaluated {
 //        tasks.withType(JavaCompile) {

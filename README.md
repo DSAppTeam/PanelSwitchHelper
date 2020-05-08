@@ -1,7 +1,8 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)
+![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -27,6 +28,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* Added content fixed mode, content area dynamically adjusts drawing area, class adjustResize
 	* Solve the problem of being slid outside due to too little content in IM scenarios, support dynamic switching mode, optimize experience
 * 1.1.3 (2020-04-27) Compatible with the use requirements of Google channel non-public SDK-API, optimize the fixed mode drawing implementation
+* **1.2.0 (2020-05-08) kotlin version / new content area container that supports multiple layout types**
+	* kotlin-PanelSwtichHelper is adjusted to kotlin language implementation, fully compatible with existing functions and Java, and supports DSL
+	* Added content area container, default provides linear / relative / frame layout, supports custom content area container
+	* Demo adds kotlin to implement custom containers using constrained layout, and adds 4 different layout container scenarios
 
 #### What to do
 
@@ -65,7 +70,7 @@ Get the keyboard's height by listening to the window's changes and dynamically a
 The core classes ：
 
 * *PanelSwitchLayout* ，including the yellow area, can only contain *PanelContainer* and *PanelSwitchLayout* and implement some auxiliary functions. 1.1.0 Core implementation framework functions，Support to configure animation speed.
-* *ContentContainer* ，including the blue area, can store display content such as list content. And store the layout that triggers the switch, such as input box emoticons, etc.
+* *ContentContainer* ，including the blue area, can store display content such as list content. And store the layout that triggers the switch, such as input box emoticons, etc. Version 1.2.0 uses the *IContentContainer* extended implementation, which can be customized to implement containers of different layout types.
 * *PanelContainer* ， including the green area, only for the switchable panel (*PanelView*), the developer customizes the *PanelView* panel.
 * *EmptyView* ， Optional configuration, support 1.0.2 update function, complex scene can refer to Activity complex scene.
 
@@ -88,13 +93,15 @@ Take Demo as an example
         <!-- edit_view, specify an EditText for input, required-->
         <!-- empty_view, specify the panel or keyboard to hide when the user clicks the View corresponding to the ID. -->
         <!-- 1.1.0 and later versions no longer need to set weight -->
-        <com.effective.android.panel.view.ContentContainer
+        <!-- 1.2.0 is no longer recommended to use ContentContainer -->
+        <!-- New in 1.2.0 ContentLinearContainer / ContentFrameContainer / ContentRelativeContainer and other layouts, use as needed, or refer to the ContentCusContainer customized in the demo -->
+        <com.effective.android.panel.view.content.ContentLinearContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:edit_view="@id/edit_text"
-            app:empty_view="@id/empty_view">
+            app:linear_edit_view="@id/edit_text"
+            app:linear_empty_view="@id/empty_view">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -179,7 +186,7 @@ Take Demo as an example
 
             </LinearLayout>
 
-        </com.effective.android.panel.view.ContentContainer>
+        </com.effective.android.panel.view.content.ContentLinearContainer>
 
 
         <!-- Panel area, can only contain PanelView-->
@@ -215,10 +222,11 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.3'
+implementation 'com.effective.android:panelSwitchHelper:1.2.0'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
+
 ```
    private PanelSwitchHelper mHelper;
 
@@ -227,9 +235,38 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.3'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-            			// Optional mode, default true, scrollOutsideEnable() can be set dynamically         
-            			.contentCanScrollOutside(false)            
-            			.build();
+                   .addKeyboardStateListener {
+                        onKeyboardChange {
+                            //Optional implementation, monitor input method changes
+                        }
+                    }
+                    .addEditTextFocusChangeListener {
+                        onFocusChange { _ , hasFocus ->
+								 //Optional implementation, monitor input box focus changes
+                        }
+                    }
+                    .addViewClickListener {
+                        onClickBefore {
+ 								//Optional implementation, listen for trigger clicks
+                        }
+                    }
+                    .addPanelChangeListener {
+                        onKeyboard {
+ 								//Optional implementation, input method display callback
+                        }
+                        onNone {
+ 								//Optional implementation, default state callback
+                        }
+                        onPanel {
+ 								//Optional implementation, Panel display callback
+                        }
+                        onPanelSizeChange { panelView, _ , _ , _ , width, height ->
+ 								//Optional implementation,Dynamic callback of panel height change caused by dynamic adjustment of input method
+                        }
+                    }
+                    .contentCanScrollOutside(false)   //Optional, default true, scrollOutsideEnable () can be set dynamically
+                    .logTrack(true)                   //Optional, default false, whether to enable log information output
+                    .build(true)			              //Optional, default false, whether to open the input method by default
         }
     }
 

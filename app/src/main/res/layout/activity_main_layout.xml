@@ -197,7 +197,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
-                android:text="内容区域-桢布局"
+                android:text="内容区域-帧布局"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
