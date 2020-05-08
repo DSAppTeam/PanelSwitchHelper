@@ -23,6 +23,7 @@ import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.interfaces.PopContentSupport;
 import com.example.demo.systemui.StatusbarHelper;
+import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
 /**
@@ -136,7 +137,7 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(VideoSampleActivity.this, 30f);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(VideoSampleActivity.this, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,

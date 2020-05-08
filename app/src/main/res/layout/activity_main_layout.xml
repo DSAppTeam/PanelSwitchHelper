@@ -169,6 +169,50 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/linear_content"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_content_btn"
+                android:padding="10dp"
+                android:text="内容区域-线性布局"
+                android:textColor="@color/btn_content_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/relative_content"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_content_btn"
+                android:padding="10dp"
+                android:text="内容区域-相对布局"
+                android:textColor="@color/btn_content_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/frame_content"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_content_btn"
+                android:padding="10dp"
+                android:text="内容区域-桢布局"
+                android:textColor="@color/btn_content_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cus_content"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_content_btn"
+                android:padding="10dp"
+                android:text="内容区域-自定义布局"
+                android:textColor="@color/btn_content_text"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/tip"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"

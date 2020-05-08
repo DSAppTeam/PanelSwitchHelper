@@ -62,10 +62,11 @@ public class ContentLinearContainer extends LinearLayout implements IContentCont
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ContentLinearContainer, defStyleAttr, 0);
         if (typedArray != null) {
-            editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_edit_view, -1);
-            emptyViewId = typedArray.getResourceId(R.styleable.ContentLinearContainer_empty_view, -1);
+            editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1);
+            emptyViewId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1);
             typedArray.recycle();
         }
+        setOrientation(VERTICAL);
     }
 
     @Override

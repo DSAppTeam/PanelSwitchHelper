@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
+import com.example.demo.anno.ContentType;
 import com.example.demo.anno.PageType;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //综合场景
         mBinding.video.setOnClickListener(this);
+
+        //扩展内容区域布局结构
+        mBinding.linearContent.setOnClickListener(this);
+        mBinding.relativeContent.setOnClickListener(this);
+        mBinding.frameContent.setOnClickListener(this);
+        mBinding.cusContent.setOnClickListener(this);
     }
 
     @Override
@@ -107,6 +114,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.video: {
                 startActivity(new Intent(MainActivity.this, VideoSampleActivity.class));
+                break;
+            }
+
+            case R.id.linear_content: {
+                ContentActivity.start(MainActivity.this, ContentType.Linear);
+                break;
+            }
+
+            case R.id.frame_content: {
+                ContentActivity.start(MainActivity.this, ContentType.Frame);
+                break;
+            }
+
+            case R.id.relative_content: {
+                ContentActivity.start(MainActivity.this, ContentType.Relative);
+                break;
+            }
+
+            case R.id.cus_content: {
+                ContentActivity.start(MainActivity.this, ContentType.CUS);
                 break;
             }
         }

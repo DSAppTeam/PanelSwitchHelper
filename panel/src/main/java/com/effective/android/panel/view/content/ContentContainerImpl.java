@@ -34,12 +34,12 @@ public class ContentContainerImpl implements IContentContainer, ViewAssertion {
 
     public ContentContainerImpl(ViewGroup realViewGroup, @IdRes int editTextId, @IdRes int emptyId) {
         this.mViewGroup = realViewGroup;
-        this.mEditText = realViewGroup.findViewById(emptyId);
+        this.mEditText = realViewGroup.findViewById(editTextId);
         this.mEmptyView = realViewGroup.findViewById(emptyId);
+        assertView();
         int imeOptions = mEditText.getImeOptions();
         imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;        //Prohibited all screens
         mEditText.setImeOptions(imeOptions);
-        assertView();
     }
 
     @Override

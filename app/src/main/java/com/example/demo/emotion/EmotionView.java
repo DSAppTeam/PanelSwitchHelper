@@ -13,7 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.effective.R;
-import com.example.demo.Utils;
+import com.example.demo.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,8 @@ public class EmotionView extends GridView {
     private EditText mEditText;
 
     public static int calSizeForContainEmotion(Context context, int width, int height) {
-        sPadding = Utils.dip2px(context, 5f);
-        sEmotionSize = Utils.dip2px(context, 50f);
+        sPadding = DisplayUtils.dip2px(context, 5f);
+        sEmotionSize = DisplayUtils.dip2px(context, 50f);
         sNumColumns = width / sEmotionSize;
         sNumRows = height / sEmotionSize;
         return sNumColumns * sNumRows;
