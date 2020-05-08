@@ -31,6 +31,7 @@ import com.example.demo.chat.CusRecyclerView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
+import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
@@ -81,12 +82,7 @@ public class ChatFragment extends Fragment {
     private void initView() {
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
-        ((SimpleItemAnimator) mBinding.recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        List<ChatInfo> chatInfos = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            chatInfos.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
-        }
-        mAdapter = new ChatAdapter(getContext(), chatInfos);
+        mAdapter = new ChatAdapter(getContext(), 50);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +166,7 @@ public class ChatFragment extends Fragment {
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(getContext(), 30f);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(getContext(), 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                             mBinding.editText,

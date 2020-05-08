@@ -21,6 +21,7 @@
     <color name="btn_fragment_text">#009688</color>
     <color name="btn_special_page_text">#FFC107</color>
     <color name="btn_video_text">#FF5722</color>
+    <color name="btn_content_text">#673AB7</color>
     <color name="btn_tip_text">#212121</color>
 
     <color name="video_input_text_hint">#5FFFFFFF</color>

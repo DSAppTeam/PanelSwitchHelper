@@ -7,13 +7,10 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.effective.android.panel.R;
-import com.effective.android.panel.interfaces.ViewAssertion;
 
 
 /**
@@ -63,8 +60,8 @@ public class ContentFrameContainer extends FrameLayout implements IContentContai
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ContentFrameContainer, defStyleAttr, 0);
         if (typedArray != null) {
-            editTextId = typedArray.getResourceId(R.styleable.ContentFrameContainer_edit_view, -1);
-            emptyViewId = typedArray.getResourceId(R.styleable.ContentFrameContainer_empty_view, -1);
+            editTextId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_edit_view, -1);
+            emptyViewId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_empty_view, -1);
             typedArray.recycle();
         }
     }

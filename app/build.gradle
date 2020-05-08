@@ -43,7 +43,8 @@ dependencies {
     "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
     "$implementation" deps.support.v7
     "$implementation" deps.support.recyclerview
+    "$implementation" deps.support.constraint
     "$implementation" deps.pageindicator
-    "$implementation" deps.panelSwitchHelper
-//    implementation project(":panel")
+//    "$implementation" deps.panelSwitchHelper
+    implementation project(":panel")
 }

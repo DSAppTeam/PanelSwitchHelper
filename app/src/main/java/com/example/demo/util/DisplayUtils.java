@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.util;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import android.content.Context;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class Utils {
+public class DisplayUtils {
 
     public static int dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;

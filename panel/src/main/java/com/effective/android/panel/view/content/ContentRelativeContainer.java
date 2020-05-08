@@ -62,8 +62,8 @@ public class ContentRelativeContainer extends RelativeLayout implements IContent
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ContentRelativeContainer, defStyleAttr, 0);
         if (typedArray != null) {
-            editTextId = typedArray.getResourceId(R.styleable.ContentRelativeContainer_edit_view, -1);
-            emptyViewId = typedArray.getResourceId(R.styleable.ContentRelativeContainer_empty_view, -1);
+            editTextId = typedArray.getResourceId(R.styleable.ContentRelativeContainer_relative_edit_view, -1);
+            emptyViewId = typedArray.getResourceId(R.styleable.ContentRelativeContainer_relative_empty_view, -1);
             typedArray.recycle();
         }
     }

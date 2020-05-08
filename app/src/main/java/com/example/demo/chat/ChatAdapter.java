@@ -29,11 +29,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatBaseVH> {
         mContext = context;
     }
 
-    public ChatAdapter(Context context,List<ChatInfo> data) {
-        if(data != null){
+    public ChatAdapter(Context context, List<ChatInfo> data) {
+        if (data != null) {
             mData = data;
-        }else{
+        } else {
             mData = new ArrayList<>();
+        }
+        mContext = context;
+    }
+
+    public ChatAdapter(Context context,int count) {
+        mData = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            mData.add(ChatInfo.CREATE("模拟数据第" + (i + 1) + "条"));
         }
         mContext = context;
     }

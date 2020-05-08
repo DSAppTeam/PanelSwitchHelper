@@ -18,6 +18,7 @@ import com.effective.android.panel.view.PanelView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.interfaces.PopContentSupport;
+import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
 public class VideoPopWindow extends PopupWindow{
@@ -83,7 +84,7 @@ public class VideoPopWindow extends PopupWindow{
                             switch (panelView.getId()) {
                                 case R.id.panel_emotion: {
                                     EmotionPagerView pagerView = view.findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - Utils.dip2px(activity, 30f);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(activity, 30f);
                                     pagerView.buildEmotionViews(
                                             (PageIndicatorView) view.findViewById(R.id.pageIndicatorView),
                                             editText,
