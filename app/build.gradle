@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion config.compile_sdk_version
@@ -34,17 +36,28 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     lintOptions {
         abortOnError false
+    }
+
+    // 配置一个路径专门存放kotlin文件
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
 dependencies {
     "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
+    "$implementation" "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     "$implementation" deps.support.v7
     "$implementation" deps.support.recyclerview
     "$implementation" deps.support.constraint
     "$implementation" deps.pageindicator
 //    "$implementation" deps.panelSwitchHelper
-    implementation project(":panel")
+    implementation project(":panel-kotlin")
 }

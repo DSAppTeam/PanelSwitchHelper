@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +17,9 @@ import android.widget.Toast;
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListenerBuilder;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListenerBuilder;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
 import com.effective.android.panel.view.PanelView;
@@ -33,8 +34,8 @@ import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
-import java.util.ArrayList;
-import java.util.List;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by yummyLau on 18-7-11
@@ -136,36 +137,25 @@ public class ChatActivity extends AppCompatActivity {
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
                     //可选
-                    .addKeyboardStateListener(new OnKeyboardStateListener() {
-                        @Override
-                        public void onKeyboardChange(boolean visible) {
-                            Log.d(TAG, "系统键盘是否可见 : " + visible);
-
+                    .addKeyboardStateListener(visible -> {
+                        Log.d(TAG, "系统键盘是否可见 : " + visible);
+                    })
+                    .addEditTextFocusChangeListener((view, hasFocus) -> {
+                        Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
+                        if(hasFocus){
+                            scrollToBottom();
                         }
                     })
                     //可选
-                    .addEditTextFocusChangeListener(new OnEditFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View view, boolean hasFocus) {
-                            Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
-                            if(hasFocus){
+                    .addViewClickListener(view -> {
+                        switch (view.getId()){
+                            case R.id.edit_text:
+                            case R.id.add_btn:
+                            case R.id.emotion_btn:{
                                 scrollToBottom();
                             }
                         }
-                    })
-                    //可选
-                    .addViewClickListener(new OnViewClickListener() {
-                        @Override
-                        public void onClickBefore(View view) {
-                            switch (view.getId()){
-                                case R.id.edit_text:
-                                case R.id.add_btn:
-                                case R.id.emotion_btn:{
-                                    scrollToBottom();
-                                }
-                            }
-                            Log.d(TAG, "点击了View : " + view);
-                        }
+                        Log.d(TAG, "点击了View : " + view);
                     })
                     //可选
                     .addPanelChangeListener(new OnPanelChangeListener() {

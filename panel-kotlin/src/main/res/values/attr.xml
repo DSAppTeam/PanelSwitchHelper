@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PanelSwitchLayout">
+        <attr name="animationSpeed" format="integer">
+            <enum name="slow" value="400"/>
+            <enum name="mid" value="300"/>
+            <enum name="standard" value="200"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="PanelView">
+        <attr name="panel_trigger" format="reference"/>
+        <attr name="panel_toggle" format="boolean"/>
+        <attr name="panel_layout" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentContainer">
+        <attr name="edit_view" format="reference"/>
+        <attr name="empty_view" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentLinearContainer">
+        <attr name="linear_edit_view" format="reference"/>
+        <attr name="linear_empty_view" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentFrameContainer">
+        <attr name="frame_edit_view" format="reference"/>
+        <attr name="frame_empty_view" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ContentRelativeContainer">
+        <attr name="relative_edit_view" format="reference"/>
+        <attr name="relative_empty_view" format="reference"/>
+    </declare-styleable>
+
+
+</resources>

@@ -18,7 +18,7 @@ import java.util.List;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class SamsungCutShort implements DeviceCutShort {
+public class SamSungCutShort implements DeviceCutShort {
 
     public static final String VENDOR = "Samsung";
 
