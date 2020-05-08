@@ -20,9 +20,7 @@ import android.widget.LinearLayout;
 
 import com.effective.android.panel.Constants;
 import com.effective.android.panel.LogTracker;
-import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.OnScrollOutsideBorder;
-import com.effective.android.panel.utils.CusShortUtil;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.R;
@@ -95,10 +93,8 @@ public class PanelSwitchLayout extends LinearLayout implements ViewAssertion {
 
     private void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.PanelSwitchLayout, defStyleAttr, 0);
-        if (typedArray != null) {
-            animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed);
-            typedArray.recycle();
-        }
+        animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed);
+        typedArray.recycle();
     }
 
     private void initListener() {

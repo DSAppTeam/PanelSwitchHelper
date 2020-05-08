@@ -8,7 +8,7 @@ import com.effective.android.panel.utils.cutShort.DeviceCutShort;
 import com.effective.android.panel.utils.cutShort.HuaweiCutShort;
 import com.effective.android.panel.utils.cutShort.OfficialCutShort;
 import com.effective.android.panel.utils.cutShort.OppoCutShort;
-import com.effective.android.panel.utils.cutShort.SamsungCutShort;
+import com.effective.android.panel.utils.cutShort.SamSungCutShort;
 import com.effective.android.panel.utils.cutShort.ViVoCutShort;
 import com.effective.android.panel.utils.cutShort.XiaoMiCutShort;
 
@@ -25,7 +25,7 @@ public class CusShortUtil {
     private static final DeviceCutShort OPPO = new OppoCutShort();
     private static final DeviceCutShort VIVO = new ViVoCutShort();
     private static final DeviceCutShort XIAOMI = new XiaoMiCutShort();
-    private static final DeviceCutShort SAMSUNG = new SamsungCutShort();
+    private static final DeviceCutShort SAMSUNG = new SamSungCutShort();
 
     private CusShortUtil() {
     }
