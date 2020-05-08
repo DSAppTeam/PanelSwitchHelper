@@ -1,7 +1,8 @@
 ### PanelSwitchHelper
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
-![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)
+![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -27,6 +28,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* 新增内容固定模式，内容区域动态调整绘制区域，类 adjustResize 
 	* 解决 IM 场景下可能因为内容过少而被滑动外部的问题，支持动态切换模式，优化体验
 * 1.1.3(2020-04-27) 兼容谷歌渠道非公开SDK-API的使用要求，优化固定模式的绘制实现
+* **1.2.0(2020-05-08) kotlin版本/新增支持多种布局类型的内容区域容器**
+	* kotlin-PanelSwtichHelper 调整为 kotlin 语言实现，完全兼容现有功能及 Java，支持 DSL
+	* 新增内容区域容器，默认提供线性/相对/帧布局，支持实现自定义内容区域容器
+	* Demo新增 kotlin 使用约束布局实现自定义容器，新增 4 种不同布局的容器场景
 
 #### 用于做什么
 
@@ -62,7 +67,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 涉及的核心类有：
 
 * *PanelSwitchLayout* ，即黄色区域 ，仅能包含 *PanelContainer*  和 *PanelSwitchLayout* 并实现一些辅助性功能，1.1.0   核心实现框架功能，支持配置动画速度。
-* *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。
+* *ContentContainer* ，即蓝色区域 ，用于存放显示内容 ，比如列表内容等 。 并存放可触发切换的布局，比如输入框表情按钮等 。1.2.0 版本使用 *IContentContainer* 扩展实现，可自定义实现不同布局类型的容器。
 * *PanelContainer* ， 即绿色区域 ， 仅用于存放可切换的面板 （*PanelView*），开发者自主定制 *PanelView* 面板。
 * *EmptyView* ， 可选配置，支持1.0.2更新的功能,复杂场景可参考 Activity 复杂场景。
 
@@ -85,13 +90,15 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
         <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
         <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
         <!-- 1.1.0及以后版本不再需要设置 weight -->
-        <com.effective.android.panel.view.ContentContainer
+        <!-- 1.2.0不再推荐使用 ContentContainer-->
+        <!-- 1.2.0新增ContentLinearContainer/ContentFrameContainer/ContentRelativeContainer等多种布局，按需使用，也可以参考demo中自定义实现的 ContentCusContainer>
+        <com.effective.android.panel.view.content.ContentLinearContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:edit_view="@id/edit_text"
-            app:empty_view="@id/empty_view">
+            app:linear_edit_view="@id/edit_text"
+            app:linear_empty_view="@id/empty_view">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -176,7 +183,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 
             </LinearLayout>
 
-        </com.effective.android.panel.view.ContentContainer>
+        </com.effective.android.panel.view.content.ContentLinearContainer>
 
 
         <!-- 面板区域，仅能包含PanelView-->
@@ -212,7 +219,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.1.3'
+implementation 'com.effective.android:panelSwitchHelper:1.2.0'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  
@@ -225,9 +232,38 @@ implementation 'com.effective.android:panelSwitchHelper:1.1.3'
         super.onStart();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
-            			//可选模式，默认true，scrollOutsideEnable() 可动态设置
-            			.contentCanScrollOutside(false) 
-                    .build();
+                   .addKeyboardStateListener {
+                        onKeyboardChange {
+                            //可选实现，监听输入法变化
+                        }
+                    }
+                    .addEditTextFocusChangeListener {
+                        onFocusChange { _, hasFocus ->
+								 //可选实现，监听输入框焦点变化
+                        }
+                    }
+                    .addViewClickListener {
+                        onClickBefore {
+ 								//可选实现，监听触发器的点击
+                        }
+                    }
+                    .addPanelChangeListener {
+                        onKeyboard {
+ 								//可选实现，输入法显示回调
+                        }
+                        onNone {
+ 								//可选实现，默认状态回调
+                        }
+                        onPanel {
+ 								//可选实现，面板显示回调
+                        }
+                        onPanelSizeChange { panelView, _, _, _, width, height ->
+ 								//可选实现，输入法动态调整时引起的面板高度变化动态回调
+                        }
+                    }
+                    .contentCanScrollOutside(false)   //可选模式，默认true，scrollOutsideEnable() 可动态设置
+                    .logTrack(true)                   //可选，默认false，是否开启log信息输出
+                    .build(true)			              //可选，默认false，是否默认打开输入法
         }
     }
     
