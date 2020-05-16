@@ -45,7 +45,7 @@ class ContentLinearContainer : LinearLayout, IContentContainer {
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentLinearContainer, defStyleAttr, 0)
         editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1)
-        emptyViewId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1)
+        emptyViewId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_empty_view, -1)
         typedArray.recycle()
         orientation = VERTICAL
     }
