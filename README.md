@@ -2,7 +2,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -31,7 +31,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * **1.2.0 (2020-05-08) kotlin version / new content area container that supports multiple layout types**
 	* kotlin-PanelSwtichHelper is adjusted to kotlin language implementation, fully compatible with existing functions and Java, and supports DSL
 	* Added content area container, default provides linear / relative / frame layout, supports custom content area container
-	* Demo adds kotlin to implement custom containers using constrained layout, and adds 4 different layout container scenarios
+	* Demo adds kotlin to implement custom containers using constrained layout, and adds 4 different layout container scenario
+* 1.2.2 (2020-05-17) Fix known defects and optimize
+    * Merged pr to fix emptyView reference error
+    * Optimize the smoothness of switching in fixed mode
 
 #### What to do
 
@@ -222,7 +225,7 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.2.0'
+implementation 'com.effective.android:panelSwitchHelper:1.2.2'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。

@@ -60,7 +60,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, @IdRes editTextId:
         mEmptyView?.setOnClickListener(l)
     }
 
-    override fun getEditText(): EditText = mEditText!!
+    override fun getInputText(): EditText = mEditText!!
 
     override fun setEditTextClickListener(l: View.OnClickListener) {
         mEditText!!.setOnClickListener(l)

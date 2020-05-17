@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import com.effective.android.panel.LogTracker.Companion.instance
 import com.effective.android.panel.interfaces.OnScrollOutsideBorder
 import com.effective.android.panel.interfaces.listener.*
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
@@ -32,10 +31,10 @@ class PanelSwitchHelper private constructor(builder: Builder) {
         Constants.DEBUG = builder.logTrack
         canScrollOutside = builder.contentCanScrollOutside
         if (builder.logTrack) {
-            builder.viewClickListeners.add(instance)
-            builder.panelChangeListeners.add(instance)
-            builder.keyboardStatusListeners.add(instance)
-            builder.editFocusChangeListeners.add(instance)
+            builder.viewClickListeners.add(LogTracker)
+            builder.panelChangeListeners.add(LogTracker)
+            builder.keyboardStatusListeners.add(LogTracker)
+            builder.editFocusChangeListeners.add(LogTracker)
         }
         mPanelSwitchLayout = builder.panelSwitchLayout!!
         mPanelSwitchLayout.setScrollOutsideBorder(object : OnScrollOutsideBorder {

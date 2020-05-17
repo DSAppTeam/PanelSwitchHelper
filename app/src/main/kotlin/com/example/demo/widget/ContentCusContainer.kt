@@ -56,8 +56,8 @@ class ContentCusContainer @JvmOverloads constructor(context: Context?, attrs: At
         contentContainer!!.setEmptyViewClickListener(l)
     }
 
-    override fun getEditText(): EditText {
-        return contentContainer!!.getEditText()
+    override fun getInputText(): EditText {
+        return contentContainer!!.getInputText()
     }
 
     override fun setEditTextClickListener(l: OnClickListener) {

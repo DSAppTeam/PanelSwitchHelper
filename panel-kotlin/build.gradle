@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion config.compile_sdk_version
@@ -31,11 +31,12 @@ dependencies {
     "$implementation" deps.support.v7
 }
 
-//publish {
-//    userOrg = 'yummylau'
-//    groupId = 'com.effective.android'
-//    artifactId = 'panelSwitchHelper'
-//    publishVersion = '1.2.0'
-//    desc = 'the helper that is used to checkout panel when we are chatting'
-//    website = 'https://github.com/YummyLau/Anchors'
-//}
+publish {
+    userOrg = 'yummylau'
+    groupId = 'com.effective.android'
+    artifactId = 'panelSwitchHelper'
+    publishVersion = '1.2.2'+
+    ''
+    desc = 'the helper that is used to checkout panel when we are chatting'
+    website = 'https://github.com/YummyLau/Anchors'
+}

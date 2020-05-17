@@ -23,17 +23,17 @@ allprojects {
         google()
         jcenter()
     }
-//    gradle.projectsEvaluated {
-//        tasks.withType(JavaCompile) {
-//            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//        }
-//    }
-//
-//    tasks.withType(Javadoc) {
-//        options.addStringOption('Xdoclint:none', '-quiet')
-//        options.addStringOption('encoding', 'UTF-8')
-//        options.addStringOption('charSet', 'UTF-8')
-//    }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
+    }
 }
 
 task clean(type: Delete) {

@@ -75,7 +75,7 @@ class ContentLinearContainer : LinearLayout, IContentContainer {
         contentContainer!!.setEmptyViewClickListener(l)
     }
 
-    override fun getEditText(): EditText = contentContainer!!.getEditText()
+    override fun getInputText(): EditText = contentContainer!!.getInputText()
 
     override fun setEditTextClickListener(l: OnClickListener) {
         contentContainer!!.setEditTextClickListener(l)

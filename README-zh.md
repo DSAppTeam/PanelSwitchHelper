@@ -2,7 +2,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -32,6 +32,10 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 	* kotlin-PanelSwtichHelper 调整为 kotlin 语言实现，完全兼容现有功能及 Java，支持 DSL
 	* 新增内容区域容器，默认提供线性/相对/帧布局，支持实现自定义内容区域容器
 	* Demo新增 kotlin 使用约束布局实现自定义容器，新增 4 种不同布局的容器场景
+* 1.2.2(2020-05-17) 修复已知缺陷及优化
+    * 合并 pr 修复 emptyView 引用错误问题
+    * 优化固定模式下切换的流畅性
+
 
 #### 用于做什么
 
@@ -219,7 +223,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 #### 如何引用
 1. 在对应模块下 `build.gradle` 添加依赖。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.2.0'
+implementation 'com.effective.android:panelSwitchHelper:1.2.2'
 ```
 
 2. 在 activity#onStart 方法中初始化 PanelSwitchHelper 对象，在 activity#onBackPressed hook 返回键 。  

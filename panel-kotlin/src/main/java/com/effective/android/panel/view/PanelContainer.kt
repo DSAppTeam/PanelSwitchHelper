@@ -68,7 +68,9 @@ class PanelContainer : FrameLayout, ViewAssertion {
     fun hidePanels() {
         for (i in 0 until panelSparseArray.size()) {
             val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
-            panelView.visibility = View.GONE
+            if(panelView.visibility != View.GONE){
+                panelView.visibility = View.GONE
+            }
         }
     }
 

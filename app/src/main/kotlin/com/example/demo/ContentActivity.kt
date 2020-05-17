@@ -2,9 +2,12 @@ package com.example.demo
 
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SimpleItemAnimator
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -13,11 +16,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
-import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
-import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
-import com.effective.android.panel.interfaces.listener.OnViewClickListener
-import com.effective.android.panel.view.PanelView
+import com.effective.databinding.ChatContentLinearLayoutBinding
 import com.example.demo.anno.ContentType
 import com.example.demo.chat.ChatAdapter
 import com.example.demo.chat.ChatInfo
@@ -35,11 +34,11 @@ import com.rd.PageIndicatorView
  */
 class ContentActivity : AppCompatActivity() {
     private var mHelper: PanelSwitchHelper? = null
-    private var mAdapter: ChatAdapter? = null
+    private lateinit var mAdapter: ChatAdapter
     private var mLinearLayoutManager: LinearLayoutManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         when (intent.getIntExtra(Constants.KEY_PAGE_TYPE, ContentType.CUS)) {
             ContentType.Linear -> {
                 setContentView(R.layout.chat_content_linear_layout)
@@ -66,8 +65,7 @@ class ContentActivity : AppCompatActivity() {
     private val editView: EditText
         get() = findViewById(R.id.edit_text)
 
-    private val root: View
-        get() = window.decorView
+    private fun getRoot(): View = window.decorView.findViewById<View>(Window.ID_ANDROID_CONTENT).findViewById(R.id.root_view);
 
     private val emotionView: View
         get() = findViewById(R.id.emotion_btn)
@@ -83,10 +81,10 @@ class ContentActivity : AppCompatActivity() {
                 Toast.makeText(this@ContentActivity, "当前没有输入", Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
-            mAdapter!!.insertInfo(ChatInfo.CREATE(content))
+            mAdapter.insertInfo(ChatInfo.CREATE(content))
             //                如果超过某些条目，可开启滑动外部，使得更为流畅
-            if (mAdapter!!.itemCount > 10) {
-                mHelper!!.scrollOutsideEnable(true)
+            if (mAdapter.itemCount > 10) {
+                mHelper?.scrollOutsideEnable(true)
             }
             editView.text = null
             scrollToBottom()
@@ -94,7 +92,7 @@ class ContentActivity : AppCompatActivity() {
     }
 
     private fun scrollToBottom() {
-        root.post { mLinearLayoutManager!!.scrollToPosition(mAdapter!!.itemCount - 1) }
+        editView.post { mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) }
     }
 
     override fun onStart() {
@@ -142,10 +140,10 @@ class ContentActivity : AppCompatActivity() {
                         onPanelSizeChange { panelView, _, _, _, width, height ->
                             when (panelView!!.id) {
                                 R.id.panel_emotion -> {
-                                    val pagerView: EmotionPagerView = root.findViewById(R.id.view_pager)
+                                    val pagerView: EmotionPagerView = getRoot().findViewById(R.id.view_pager)
                                     val viewPagerSize = height - DisplayUtils.dip2px(this@ContentActivity, 30f)
                                     pagerView.buildEmotionViews(
-                                            root.findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
+                                            getRoot().findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
                                             editView,
                                             Emotions.getEmotions(), width, viewPagerSize)
                                 }
@@ -157,7 +155,7 @@ class ContentActivity : AppCompatActivity() {
                     .contentCanScrollOutside(false)
                     .logTrack(true) //output log
                     .build()
-            recyclerView.setResetPanel { mHelper!!.hookSystemBackByPanelSwitcher() }
+            recyclerView.setResetPanel { mHelper?.hookSystemBackByPanelSwitcher() }
         }
     }
 
