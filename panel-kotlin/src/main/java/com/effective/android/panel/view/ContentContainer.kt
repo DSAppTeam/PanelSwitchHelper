@@ -48,11 +48,9 @@ class ContentContainer : LinearLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentContainer, defStyleAttr, 0)
-        if (typedArray != null) {
-            editTextId = typedArray.getResourceId(R.styleable.ContentContainer_edit_view, -1)
-            emptyViewId = typedArray.getResourceId(R.styleable.ContentContainer_empty_view, -1)
-            typedArray.recycle()
-        }
+        editTextId = typedArray.getResourceId(R.styleable.ContentContainer_edit_view, -1)
+        emptyViewId = typedArray.getResourceId(R.styleable.ContentContainer_empty_view, -1)
+        typedArray.recycle()
         orientation = VERTICAL
     }
 
@@ -81,8 +79,8 @@ class ContentContainer : LinearLayout, IContentContainer {
         contentContainer!!.setEmptyViewClickListener(l)
     }
 
-    override fun getEditText(): EditText {
-        return contentContainer!!.getEditText()
+    override fun getInputText(): EditText {
+        return contentContainer!!.getInputText()
     }
 
     override fun setEditTextClickListener(l: OnClickListener) {

@@ -17,7 +17,7 @@ interface IContentContainer {
     fun setEmptyViewClickListener(l: View.OnClickListener)
 
     //editText相关
-    fun getEditText():EditText
+    fun getInputText():EditText
     fun setEditTextClickListener(l: View.OnClickListener)
     fun setEditTextFocusChangeListener(l: OnFocusChangeListener)
     fun clearFocusByEditText()

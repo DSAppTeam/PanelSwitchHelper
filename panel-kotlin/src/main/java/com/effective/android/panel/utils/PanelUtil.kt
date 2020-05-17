@@ -48,7 +48,7 @@ object PanelUtil {
         if (!isPortrait) {
             val portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(context, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P))
             if (height >= portraitHeight) {
-                LogTracker.instance.log("$TAG#setKeyBoardHeight", "filter wrong data : $portraitHeight -> $height")
+                LogTracker.log("$TAG#setKeyBoardHeight", "filter wrong data : $portraitHeight -> $height")
                 return false
             }
         }
