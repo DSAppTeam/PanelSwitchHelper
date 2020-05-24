@@ -2,7 +2,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.2.3-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md) | [中文](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -35,6 +35,7 @@ README: [English](https://github.com/YummyLau/PanelSwitchHelper/blob/master/READ
 * 1.2.2 (2020-05-17) Fix known defects and optimize
     * Merged pr to fix emptyView reference error
     * Optimize the smoothness of switching in fixed mode
+* 1.2.3(2020-05-24) Compatible with android pad
 
 #### What to do
 
@@ -225,7 +226,7 @@ Take Demo as an example
 #### How to quote
 1. Add dependencies in module build.gradle file。
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.2.2'
+implementation 'com.effective.android:panelSwitchHelper:1.2.3'
 ```
 
 2. Initialize the PanelSwitchHelper object in the activity#onStart method, in the activity#onBackPressed hook return。
