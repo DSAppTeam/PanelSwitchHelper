@@ -7,6 +7,7 @@ import com.effective.android.panel.Constants
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.utils.DisplayUtil.dip2px
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
+import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
  * panel helper
@@ -15,7 +16,6 @@ import com.effective.android.panel.utils.DisplayUtil.isPortrait
  * blog: yummylau.com
  */
 object PanelUtil {
-    private val TAG = PanelUtil::class.java.simpleName
 
     @JvmStatic
     fun showKeyboard(context: Context, view: View) {
@@ -42,16 +42,6 @@ object PanelUtil {
     @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
-        val isPortrait = isPortrait(context)
-        //filter wrong data
-        //mActivity.getWindow().getDecorView().getHeight() may be right when onGlobalLayout listener
-        if (!isPortrait) {
-            val portraitHeight = sp.getInt(Constants.KEYBOARD_HEIGHT_FOR_P, dip2px(context, Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P))
-            if (height >= portraitHeight) {
-                LogTracker.log("$TAG#setKeyBoardHeight", "filter wrong data : $portraitHeight -> $height")
-                return false
-            }
-        }
         val key = if (isPortrait(context)) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
         return sp.edit().putInt(key, height).commit()
     }

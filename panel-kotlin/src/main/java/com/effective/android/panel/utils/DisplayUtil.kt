@@ -73,27 +73,6 @@ object DisplayUtil {
         return r.bottom - r.top
     }
 
-    /**
-     * 获取当前界面系统UI：包含状态栏+盗汗栏
-     *
-     * @param context
-     * @param window
-     * @return
-     */
-    @JvmStatic
-    fun getSystemUI(context: Context, window: Window): Int {
-        var systemUIHeight = 0
-        if (!isFullScreen(window)) { //get statusBar 和 navigationBar height
-            val statusBarHeight = getStatusBarHeight(context)
-            val navigationBatHeight = getNavigationBarHeight(context)
-            systemUIHeight = if (isPortrait(context)) {
-                if (isNavigationBarShow(context, window)) statusBarHeight + navigationBatHeight else statusBarHeight
-            } else {
-                statusBarHeight
-            }
-        }
-        return systemUIHeight
-    }
 
     @JvmStatic
     fun isFullScreen(activity: Activity): Boolean {
