@@ -42,8 +42,7 @@ class PanelSwitchHelper private constructor(builder: Builder) {
                 return canScrollOutside
             }
 
-            override val outsideHeight: Int
-                get() = getKeyBoardHeight(mPanelSwitchLayout.context)
+            override fun getOutsideHeight(): Int = getKeyBoardHeight(mPanelSwitchLayout.context)
         })
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners)
         mPanelSwitchLayout.bindWindow(builder.window)
@@ -86,7 +85,7 @@ class PanelSwitchHelper private constructor(builder: Builder) {
         constructor(fragment: Fragment) : this(fragment.activity?.window, fragment.view)
         constructor(dialogFragment: DialogFragment) : this(dialogFragment.activity?.window, dialogFragment.view)
 
-        init{
+        init {
             requireNotNull(window) { "PanelSwitchHelper\$Builder#build : window can't be null!please set value by call #Builder" }
             this.window = window
             requireNotNull(root) { "PanelSwitchHelper\$Builder#build : rootView can't be null!please set value by call #Builder" }

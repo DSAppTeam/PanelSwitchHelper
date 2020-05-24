@@ -13,24 +13,20 @@ import android.widget.LinearLayout
 import com.effective.android.panel.Constants
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.R
+import com.effective.android.panel.device.DeviceRuntime
 import com.effective.android.panel.interfaces.OnScrollOutsideBorder
 import com.effective.android.panel.interfaces.ViewAssertion
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
 import com.effective.android.panel.interfaces.listener.OnViewClickListener
-import com.effective.android.panel.utils.CusShortUtil
-import com.effective.android.panel.utils.DisplayUtil
 import com.effective.android.panel.utils.DisplayUtil.getLocationOnScreen
-import com.effective.android.panel.utils.DisplayUtil.getNavigationBarHeight
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithSystemUI
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithoutSystemUI
-import com.effective.android.panel.utils.DisplayUtil.getSystemUI
-import com.effective.android.panel.utils.DisplayUtil.isNavigationBarShow
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
+import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
 import com.effective.android.panel.utils.PanelUtil.hideKeyboard
-import com.effective.android.panel.utils.PanelUtil.setKeyBoardHeight
 import com.effective.android.panel.utils.PanelUtil.showKeyboard
 import com.effective.android.panel.view.content.IContentContainer
 
@@ -72,6 +68,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         private set
     private var animationSpeed = 200 //standard
 
+    lateinit var deviceRuntime: DeviceRuntime
 
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -167,12 +164,18 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     fun bindWindow(window: Window) {
         this.window = window
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        deviceRuntime = DeviceRuntime(context, window);
         window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener {
             val contentHeight = getScreenHeightWithoutSystemUI(window)
             val screenHeight = getScreenHeightWithSystemUI(window)
-            val systemUIHeight = getSystemUI(context, window)
+            val systemUIHeight = if (deviceRuntime.isFullScreen) {
+                0
+            } else {
+                val info = deviceRuntime.getDeviceInfoByOrientation(true)
+                info.statusBarH + (if (deviceRuntime.isNavigationBarShow) info.getCurrentNavigationBarHeightWhenVisible(deviceRuntime.isPortrait, deviceRuntime.isPad) else 0)
+            }
             val keyboardHeight = screenHeight - contentHeight - systemUIHeight
-            LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight")
+            LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             if (isKeyboardShowing) {
                 if (keyboardHeight <= 0) {
                     isKeyboardShowing = false
@@ -186,7 +189,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 } else {
                     if (getKeyBoardHeight(context) != keyboardHeight) {
                         requestLayout()
-                        setKeyBoardHeight(context, keyboardHeight)
+                        PanelUtil.setKeyBoardHeight(context, keyboardHeight)
                         LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
                     }
                 }
@@ -194,7 +197,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (keyboardHeight > 0) {
                     if (getKeyBoardHeight(context) != keyboardHeight) {
                         requestLayout()
-                        setKeyBoardHeight(context, keyboardHeight)
+                        PanelUtil.setKeyBoardHeight(context, keyboardHeight)
                         LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
                     }
                     isKeyboardShowing = true
@@ -289,15 +292,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (visibility != View.VISIBLE) {
             return
         }
-        val screenHeight = getScreenHeightWithSystemUI(window)
-        val navigationBarHeight = getNavigationBarHeight(context)
-        val navigationBarShow = isNavigationBarShow(context, window)
 
-        val contentViewHeight = DisplayUtil.getContentViewHeight(window)
-        val scrollOutsideHeight = scrollOutsideBorder.outsideHeight
+        val deviceInfo = deviceRuntime.getDeviceInfoByOrientation()
+        val scrollOutsideHeight = scrollOutsideBorder.getOutsideHeight()
         val paddingTop = paddingTop
-        var allHeight = screenHeight
-        if (isPortrait(context) && navigationBarShow) {
+        var allHeight = deviceInfo.screenH
+        if (deviceRuntime.isNavigationBarShow) {
             /**
              * 1.1.0 使用 screenWithoutNavigationHeight + navigationBarHeight ，结合 navigationBarShow 来动态计算高度，但是部分特殊机型
              * 比如水滴屏，刘海屏，等存在刘海区域，甚至华为，小米支持动态切换刘海模式（不隐藏刘海，隐藏后状态栏在刘海内，隐藏后状态栏在刘海外）
@@ -310,8 +310,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
              * 如果状态栏与刘海重叠，则 screenHeight 包含刘海
              * 这样抽象逻辑变得更加简单。
              */
-            allHeight -= navigationBarHeight
+            allHeight -= deviceInfo.getCurrentNavigationBarHeightWhenVisible(deviceRuntime.isPortrait, deviceRuntime.isPad)
         }
+
         val localLocation = getLocationOnScreen(this)
         allHeight -= localLocation[1]
         var contentContainerTop = getContentContainerTop(scrollOutsideHeight)
@@ -322,15 +323,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
         if (Constants.DEBUG) {
             LogTracker.log("$TAG#onLayout", " onLayout(changed : $changed , l : $l  , t : $t , r : $r , b : $b")
-            val screenWithoutSystemUIHeight = getScreenHeightWithoutSystemUI(window)
-            val screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(context)
-            val systemUIHeight = getSystemUI(context, window)
-            val statusBarHeight = DisplayUtil.getStatusBarHeight(context)
-//        以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
-            var toolbarH = DisplayUtil.getToolbarHeight(window)
-            if (toolbarH == statusBarHeight) {
-                toolbarH = 0
-            }
             val state = when (panelId) {
                 Constants.PANEL_NONE -> "收起所有输入源"
                 Constants.PANEL_KEYBOARD -> "显示键盘输入"
@@ -339,16 +331,17 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             val mode = if (scrollOutsideBorder.canLayoutOutsideBorder()) "滑动模式" else "固定模式"
             LogTracker.log("$TAG#onLayout", " 切换模式  :$mode")
             LogTracker.log("$TAG#onLayout", " 当前状态  :$state")
-            LogTracker.log("$TAG#onLayout", " 界面高度（包含系统UI）  ：$screenHeight");
-            LogTracker.log("$TAG#onLayout", " 界面高度（不包含导航栏）  ：$screenWithoutNavigationHeight");
-            LogTracker.log("$TAG#onLayout", " 内容高度（不包含系统UI）  ：$screenWithoutSystemUIHeight");
-            LogTracker.log("$TAG#onLayout", " 刘海高度  ：" + CusShortUtil.getDeviceCutShortHeight(window.decorView));
-            LogTracker.log("$TAG#onLayout", " ContentView高度  ：$contentViewHeight");
-            LogTracker.log("$TAG#onLayout", " toolbar高度  ：$toolbarH");
-            LogTracker.log("$TAG#onLayout", " SystemUI高度  ：$systemUIHeight");
-            LogTracker.log("$TAG#onLayout", " StatusBar高度  ：$statusBarHeight");
-            LogTracker.log("$TAG#onLayout", " NavigationBar高度  ：$navigationBarHeight");
-            LogTracker.log("$TAG#onLayout", " NavigationBar是否显示  ：$navigationBarShow");
+            LogTracker.log("$TAG#onLayout", " 是否是全屏  ：${deviceRuntime.isFullScreen}");
+            LogTracker.log("$TAG#onLayout", " 是否是pad机型  ：${deviceRuntime.isPad}");
+            LogTracker.log("$TAG#onLayout", " 是否显示导航栏  ：${deviceRuntime.isNavigationBarShow}");
+            LogTracker.log("$TAG#onLayout", " 是否是竖屏  ：${deviceRuntime.isPortrait}");
+            LogTracker.log("$TAG#onLayout", " 界面高度（包含系统UI）  ：${deviceInfo.screenH}");
+            LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，无论导航栏显示与否）  ：${deviceInfo.screenWithoutNavigationH}");
+            LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，动态计算）  ：${deviceInfo.screenWithoutSystemUiH}");
+            LogTracker.log("$TAG#onLayout", " 刘海高度  ： + ${deviceInfo.cutShortH}");
+            LogTracker.log("$TAG#onLayout", " toolbar高度  ：${deviceInfo.toolbarH}");
+            LogTracker.log("$TAG#onLayout", " StatusBar高度  ：${deviceInfo.statusBarH}");
+            LogTracker.log("$TAG#onLayout", " NavigationBar高度  ：${deviceInfo.navigationBarH}");
             LogTracker.log("$TAG#onLayout", " PanelSwitchLayout 绘制起点  ：（" + localLocation[0] + "，" + localLocation[1] + "）")
             LogTracker.log("$TAG#onLayout", " PanelSwitchLayout paddingTop  ：$paddingTop");
             LogTracker.log("$TAG#onLayout", " 输入法高度  ：$scrollOutsideHeight");
@@ -422,7 +415,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @return
      */
     fun checkoutPanel(panelId: Int): Boolean {
-        if(panelId == this.panelId){
+        if (panelId == this.panelId) {
             return false
         }
         panelContainer.hidePanels()
