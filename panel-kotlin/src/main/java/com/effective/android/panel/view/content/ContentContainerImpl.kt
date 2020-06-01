@@ -1,6 +1,8 @@
 package com.effective.android.panel.view.content
 
+import android.graphics.Rect
 import android.support.annotation.IdRes
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
@@ -15,9 +17,11 @@ import com.effective.android.panel.interfaces.ViewAssertion
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentContainerImpl(private val mViewGroup: ViewGroup, @IdRes editTextId: Int, @IdRes emptyId: Int) : IContentContainer, ViewAssertion {
+class ContentContainerImpl(private val mViewGroup: ViewGroup, private val canAutoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
-    private val mEmptyView: View? = mViewGroup.findViewById(emptyId)
+    private val mResetView: View? = mViewGroup.findViewById(resetId)
+    private val mInputAction: IInputAction
+    private val mResetAction: IResetAction
 
     init {
         assertView()
@@ -26,17 +30,86 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, @IdRes editTextId:
             imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_EXTRACT_UI
             mEditText?.imeOptions = imeOptions
         }
+        mResetAction = object : IResetAction {
+
+            private var canReset: Boolean = false
+            private var action: Runnable? = null
+
+            override fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean) {
+                if (canAutoReset && canReset && mResetView != null && eventInViewArea(mResetView, ev) && !consume) {
+                    action?.run()
+                }
+            }
+
+            override fun hookOnTouchEvent(ev: MotionEvent?) {
+                if (canAutoReset && canReset && mResetView == null) {
+                    action?.run()
+                }
+            }
+
+            override fun enableReset(enable: Boolean) {
+                canReset = enable
+            }
+
+            override fun setResetCallback(runnable: Runnable) {
+                action = runnable
+            }
+
+            fun eventInViewArea(view: View, ev: MotionEvent?): Boolean {
+                ev?.let {
+                    val x: Float = ev.rawX
+                    val y: Float = ev.rawY
+                    val rect = Rect()
+                    view.getGlobalVisibleRect(rect)
+                    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+                }
+                return false
+            }
+        }
+        mInputAction = object : IInputAction {
+
+            override fun getInputText(): EditText = mEditText!!
+
+            override fun setEditTextClickListener(l: View.OnClickListener) {
+                mEditText!!.setOnClickListener(l)
+            }
+
+            override fun setEditTextFocusChangeListener(l: OnFocusChangeListener) {
+                mEditText!!.onFocusChangeListener = l
+            }
+
+            override fun clearFocusByEditText() {
+                mEditText!!.clearFocus()
+            }
+
+            override fun requestFocusByEditText() {
+                mEditText!!.requestFocus()
+            }
+
+            override fun editTextHasFocus(): Boolean {
+                return mEditText!!.hasFocus()
+            }
+
+            override fun preformClickForEditText() {
+                mEditText!!.performClick()
+            }
+        }
     }
+
+
+    override fun getInputActionImpl(): IInputAction = mInputAction
+
+    override fun getResetActionImpl(): IResetAction = mResetAction
 
     override fun findTriggerView(id: Int): View? {
         return mViewGroup.findViewById(id)
     }
 
-    override fun layoutGroup(l: Int, t: Int, r: Int, b: Int) {
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int) {
         mViewGroup.layout(l, t, r, b)
     }
 
-    override fun adjustHeight(targetHeight: Int) {
+    override fun changeContainerHeight(targetHeight: Int) {
         val layoutParams = mViewGroup.layoutParams
         if (layoutParams != null && layoutParams.height != targetHeight) {
             layoutParams.height = targetHeight
@@ -48,41 +121,5 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, @IdRes editTextId:
         if (mEditText == null) {
             throw RuntimeException("ContentContainer should set edit_view to get the editText!")
         }
-    }
-
-    override fun emptyViewVisible(visible: Boolean) {
-        if (mEmptyView != null) {
-            mEmptyView.visibility = if (visible) View.VISIBLE else View.GONE
-        }
-    }
-
-    override fun setEmptyViewClickListener(l: View.OnClickListener) {
-        mEmptyView?.setOnClickListener(l)
-    }
-
-    override fun getInputText(): EditText = mEditText!!
-
-    override fun setEditTextClickListener(l: View.OnClickListener) {
-        mEditText!!.setOnClickListener(l)
-    }
-
-    override fun setEditTextFocusChangeListener(l: OnFocusChangeListener) {
-        mEditText!!.onFocusChangeListener = l
-    }
-
-    override fun clearFocusByEditText() {
-        mEditText!!.clearFocus()
-    }
-
-    override fun requestFocusByEditText() {
-        mEditText!!.requestFocus()
-    }
-
-    override fun editTextHasFocus(): Boolean {
-        return mEditText!!.hasFocus()
-    }
-
-    override fun preformClickForEditText() {
-        mEditText!!.performClick()
     }
 }

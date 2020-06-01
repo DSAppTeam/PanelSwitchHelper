@@ -92,7 +92,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
             public void onClick(View v) {
                 if (isPortrait) {
                     mBinding.inputLayout.setVisibility(View.VISIBLE);
-                    mBinding.emptyView.setVisibility(View.VISIBLE);
                     mHelper.toKeyboardState();
                 } else {
                     if (videoPopWindow == null) {
@@ -104,7 +103,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
             }
         });
         mBinding.inputLayout.setVisibility(View.GONE);
-        mBinding.emptyView.setVisibility(View.GONE);
     }
 
     @Override
@@ -117,7 +115,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
                         @Override
                         public void onKeyboard() {
                             mBinding.inputLayout.setVisibility(View.VISIBLE);
-                            mBinding.emptyView.setVisibility(View.VISIBLE);
                             mBinding.emotionBtn.setSelected(false);
                         }
 
@@ -125,7 +122,6 @@ public class VideoSampleActivity extends AppCompatActivity implements PopContent
                         public void onNone() {
                             mBinding.emotionBtn.setSelected(false);
                             mBinding.inputLayout.setVisibility(View.GONE);
-                            mBinding.emptyView.setVisibility(View.GONE);
                         }
 
                         @Override

@@ -5,10 +5,11 @@ import android.support.annotation.IdRes
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.View
-import android.widget.EditText
 import com.effective.R
 import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
+import com.effective.android.panel.view.content.IInputAction
+import com.effective.android.panel.view.content.IResetAction
 
 /**
  * 实现IContentContainer接口，可参考
@@ -21,68 +22,39 @@ import com.effective.android.panel.view.content.IContentContainer
 class ContentCusContainer @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayout(context, attrs, defStyleAttr), IContentContainer {
     @IdRes
     var editTextId = 0
+
     @IdRes
-    var emptyViewId = 0
-    private var contentContainer: ContentContainerImpl? = null
+    var resetViewId = 0
+    var autoResetByOnTouch: Boolean = true
+    private lateinit var contentContainer: ContentContainerImpl
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentCusContainer, defStyleAttr, 0)
         editTextId = typedArray.getResourceId(R.styleable.ContentCusContainer_cus_edit_view, -1)
-        emptyViewId = typedArray.getResourceId(R.styleable.ContentCusContainer_cus_empty_view, -1)
+        resetViewId = typedArray.getResourceId(R.styleable.ContentCusContainer_cus_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentCusContainer_cus_auto_reset, autoResetByOnTouch)
         typedArray.recycle()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        contentContainer = ContentContainerImpl(this, editTextId, emptyViewId)
+        contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, resetViewId)
     }
 
-    override fun layoutGroup(l: Int, t: Int, r: Int, b: Int) {
-        contentContainer!!.layoutGroup(l, t, r, b)
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int) {
+        contentContainer.layoutContainer(l, t, r, b)
     }
 
     override fun findTriggerView(id: Int): View? {
-        return contentContainer!!.findTriggerView(id)
+        return contentContainer.findTriggerView(id)
     }
 
-    override fun adjustHeight(targetHeight: Int) {
-        contentContainer!!.adjustHeight(targetHeight)
+    override fun changeContainerHeight(targetHeight: Int) {
+        contentContainer.changeContainerHeight(targetHeight)
     }
 
-    override fun emptyViewVisible(visible: Boolean) {
-        contentContainer!!.emptyViewVisible(visible)
-    }
+    override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()
 
-    override fun setEmptyViewClickListener(l: OnClickListener) {
-        contentContainer!!.setEmptyViewClickListener(l)
-    }
-
-    override fun getInputText(): EditText {
-        return contentContainer!!.getInputText()
-    }
-
-    override fun setEditTextClickListener(l: OnClickListener) {
-        contentContainer!!.setEditTextClickListener(l)
-    }
-
-    override fun setEditTextFocusChangeListener(l: OnFocusChangeListener) {
-        contentContainer!!.setEditTextFocusChangeListener(l)
-    }
-
-    override fun clearFocusByEditText() {
-        contentContainer!!.clearFocusByEditText()
-    }
-
-    override fun requestFocusByEditText() {
-        contentContainer!!.requestFocusByEditText()
-    }
-
-    override fun editTextHasFocus(): Boolean {
-        return contentContainer!!.editTextHasFocus()
-    }
-
-    override fun preformClickForEditText() {
-        contentContainer!!.preformClickForEditText()
-    }
+    override fun getResetActionImpl(): IResetAction = contentContainer.getResetActionImpl()
 
     init {
         initView(attrs, defStyleAttr, 0)
