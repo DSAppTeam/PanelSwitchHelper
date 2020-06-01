@@ -20,5 +20,6 @@ public abstract class ChatBaseVH<dataBinding extends ViewDataBinding, data> exte
         this.binding = binding;
     }
 
+    @SuppressWarnings("unchecked")
     public abstract void bindData(data data, int position);
 }

@@ -29,6 +29,9 @@ import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
 import com.effective.android.panel.utils.PanelUtil.hideKeyboard
 import com.effective.android.panel.utils.PanelUtil.showKeyboard
 import com.effective.android.panel.view.content.IContentContainer
+import com.effective.android.panel.view.panel.IPanelView
+import com.effective.android.panel.view.panel.PanelContainer
+import com.effective.android.panel.view.panel.PanelView
 
 /**
  * --------------------
@@ -128,7 +131,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         val array = panelContainer.panelSparseArray
         for (i in 0 until array.size()) {
             val panelView = array[array.keyAt(i)]
-            val keyView = contentContainer.findTriggerView(panelView.triggerViewId)
+            val keyView = contentContainer.findTriggerView(panelView.getBindingTriggerViewId())
             keyView?.setOnClickListener(object : OnClickListener {
                 override fun onClick(v: View) {
                     val currentTime = System.currentTimeMillis()
@@ -138,7 +141,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     }
                     notifyViewClick(v)
                     val targetId = panelContainer.getPanelId(panelView)
-                    if (panelId == targetId && panelView.isToggle && panelView.isShown) {
+                    if (panelId == targetId && panelView.isTriggerViewCanToggle() && panelView.isShowing()) {
                         checkoutPanel(Constants.PANEL_KEYBOARD)
                     } else {
                         checkoutPanel(targetId)
@@ -215,7 +218,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun notifyKeyboardState(visible: Boolean) {
         for (listener in keyboardStatusListeners) {
-            listener.onKeyboardChange(visible)
+            listener.onKeyboardChange(visible,if(visible) getKeyBoardHeight(context) else 0)
         }
     }
 
@@ -241,7 +244,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
-    private fun notifyPanelSizeChange(panelView: PanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
+    private fun notifyPanelSizeChange(panelView: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
         for (listener in panelChangeListeners) {
             listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height)
         }

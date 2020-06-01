@@ -1,12 +1,14 @@
-package com.effective.android.panel.view
+package com.effective.android.panel.view.panel
 
 import android.annotation.TargetApi
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.effective.android.panel.R
-import com.effective.android.panel.interfaces.ViewAssertion
+import com.effective.android.panel.view.panel.IPanelView
 
 /**
  * interface, everyPanel should implements
@@ -14,10 +16,12 @@ import com.effective.android.panel.interfaces.ViewAssertion
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class PanelView : FrameLayout, ViewAssertion {
+class PanelView : FrameLayout, IPanelView {
     private var panelLayoutId = 0
+
     var triggerViewId = 0
         private set
+
     var isToggle = false
         private set
 
@@ -39,12 +43,22 @@ class PanelView : FrameLayout, ViewAssertion {
         typedArray.recycle()
     }
 
+    override fun getBindingTriggerViewId(): Int = triggerViewId
+
+    override fun isTriggerViewCanToggle(): Boolean = isToggle
+
+    override fun isShowing(): Boolean = isShown
+
     override fun assertView() {
         if (panelLayoutId == -1 || triggerViewId == -1) {
             throw RuntimeException("PanelView -- you must set 'panel_layout' and panel_trigger by Integer id")
         }
         if (childCount > 0) {
             throw RuntimeException("PanelView -- you can't have any child!")
+        }
+        //默认实现 FrameLayout 恒为false，这里只是强调申明而已，可以不写。
+        if (this !is View) {
+            throw RuntimeException("PanelView -- should be a view!")
         }
         LayoutInflater.from(context).inflate(panelLayoutId, this, true)
     }

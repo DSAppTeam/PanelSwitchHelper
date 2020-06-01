@@ -119,7 +119,7 @@
 
 
             <!-- 面板区域，仅能包含PanelView-->
-            <com.effective.android.panel.view.PanelContainer
+            <com.effective.android.panel.view.panel.PanelContainer
                 android:id="@+id/panel_container"
                 android:layout_width="match_parent"
                 android:background="@color/common_page_bg_color"
@@ -129,21 +129,21 @@
                 <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
                 <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
                 <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-                <com.effective.android.panel.view.PanelView
+                <com.effective.android.panel.view.panel.PanelView
                     android:id="@+id/panel_emotion"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:panel_layout="@layout/panel_emotion_layout"
                     app:panel_trigger="@id/emotion_btn" />
 
-                <com.effective.android.panel.view.PanelView
+                <com.effective.android.panel.view.panel.PanelView
                     android:id="@+id/panel_addition"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:panel_layout="@layout/panel_add_layout"
                     app:panel_trigger="@id/add_btn" />
 
-            </com.effective.android.panel.view.PanelContainer>
+            </com.effective.android.panel.view.panel.PanelContainer>
         </com.effective.android.panel.view.PanelSwitchLayout>
 
     </LinearLayout>

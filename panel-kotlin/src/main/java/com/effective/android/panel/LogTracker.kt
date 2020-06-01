@@ -7,7 +7,7 @@ import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
 import com.effective.android.panel.interfaces.listener.OnViewClickListener
-import com.effective.android.panel.view.PanelView
+import com.effective.android.panel.view.panel.IPanelView
 
 /**
  * single logTracker
@@ -33,8 +33,8 @@ object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelC
         log("OnEditFocusChangeListener#onFocusChange", "EditText has focus ( $hasFocus )")
     }
 
-    override fun onKeyboardChange(show: Boolean) {
-        log("OnKeyboardStateListener#onKeyboardChange", "Keyboard is showing ( $show )")
+    override fun onKeyboardChange(show: Boolean,height: Int) {
+        log("OnKeyboardStateListener#onKeyboardChange", "Keyboard is showing ( $show ),height is $height")
     }
 
     override fun onKeyboard() {
@@ -45,12 +45,12 @@ object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelC
         log("OnPanelChangeListener#onNone", "panel： none")
     }
 
-    override fun onPanel(view: PanelView?) {
-        log("OnPanelChangeListener#onPanel", "panel：" + (view?.toString() ?: "null"))
+    override fun onPanel(panel: IPanelView?) {
+        log("OnPanelChangeListener#onPanel", "panel：" + (panel?.toString() ?: "null"))
     }
 
-    override fun onPanelSizeChange(panelView: PanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
-        log("OnPanelChangeListener#onPanelSizeChange", "panelView is " + (panelView?.toString()
+    override fun onPanelSizeChange(panel: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
+        log("OnPanelChangeListener#onPanelSizeChange", "panelView is " + (panel?.toString()
                 ?: "null" +
                 " portrait : " + portrait +
                 " oldWidth : " + oldWidth + " oldHeight : " + oldHeight +

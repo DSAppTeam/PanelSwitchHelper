@@ -310,25 +310,6 @@ public class QMUIDisplayHelper {
 
 
     /**
-     * 判断是否为中文环境
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isZhCN(Context context) {
-        Configuration config = context.getResources().getConfiguration();
-        Locale sysLocale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            sysLocale = config.getLocales().get(0);
-        } else {
-            //noinspection deprecation
-            sysLocale = config.locale;
-        }
-        String lang = sysLocale.getCountry();
-        return lang.equalsIgnoreCase("CN");
-    }
-
-    /**
      * 设置全屏
      *
      * @param context

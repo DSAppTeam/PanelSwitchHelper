@@ -1,4 +1,4 @@
-package com.effective.android.panel.view
+package com.effective.android.panel.view.panel
 
 import android.annotation.TargetApi
 import android.content.Context
@@ -27,7 +27,7 @@ import com.effective.android.panel.interfaces.ViewAssertion
  * blog: yummylau.com
  */
 class PanelContainer : FrameLayout, ViewAssertion {
-    var panelSparseArray = SparseArray<PanelView>()
+    var panelSparseArray = SparseArray<IPanelView>()
         private set
 
     @JvmOverloads
@@ -50,40 +50,39 @@ class PanelContainer : FrameLayout, ViewAssertion {
     override fun assertView() {
         panelSparseArray = SparseArray()
         for (i in 0 until childCount) {
-            val view = getChildAt(i) as? PanelView
-                    ?: throw RuntimeException("PanelContainer -- PanelContainer's child should be PanelView")
-            panelSparseArray.put(view.triggerViewId, view)
-            view.visibility = View.GONE
+            val panel = getChildAt(i) as? IPanelView
+                    ?: throw RuntimeException("PanelContainer -- PanelContainer's child should be IPanelView")
+            panelSparseArray.put(panel.getBindingTriggerViewId(), panel)
+            (panel as View).visibility = View.GONE
         }
     }
 
-    fun getPanelView(panelId: Int): PanelView? {
+    fun getPanelView(panelId: Int): IPanelView? {
         return panelSparseArray[panelId]
     }
 
-    fun getPanelId(view: PanelView?): Int {
-        return view?.triggerViewId ?: Constants.PANEL_KEYBOARD
+    fun getPanelId(panel: IPanelView?): Int {
+        return panel?.getBindingTriggerViewId() ?: Constants.PANEL_KEYBOARD
     }
 
     fun hidePanels() {
         for (i in 0 until panelSparseArray.size()) {
             val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
-            if(panelView.visibility != View.GONE){
+            if (panelView is View && panelView.visibility != View.GONE)
                 panelView.visibility = View.GONE
-            }
         }
     }
 
     fun showPanel(panelId: Int, size: Pair<Int, Int>): Pair<Int, Int> {
-        val panelView = panelSparseArray[panelId]
-        val layoutParams = panelView.layoutParams
+        val panel = panelSparseArray[panelId]
+        val layoutParams = (panel as View).layoutParams
         val curSize = Pair(layoutParams.width, layoutParams.height)
         if (curSize.first != size.first || curSize.second != size.second) {
             layoutParams.width = size.first
             layoutParams.height = size.second
-            panelView.layoutParams = layoutParams
+            (panel as View).layoutParams = layoutParams
         }
-        panelView.visibility = View.VISIBLE
+        (panel as View).visibility = View.VISIBLE
         return curSize
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.scene.video;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -14,7 +14,8 @@ import android.widget.Toast;
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
-import com.effective.android.panel.view.PanelView;
+import com.effective.android.panel.view.panel.IPanelView;
+import com.effective.android.panel.view.panel.PanelView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.interfaces.PopContentSupport;
@@ -75,25 +76,29 @@ public class VideoPopWindow extends PopupWindow{
                         }
 
                         @Override
-                        public void onPanel(PanelView view) {
-                            emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
+                        public void onPanel(IPanelView view) {
+                            if(view instanceof PanelView) {
+                                emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                            }
                         }
 
                         @Override
-                        public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            switch (panelView.getId()) {
-                                case R.id.panel_emotion: {
-                                    EmotionPagerView pagerView = view.findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - DisplayUtils.dip2px(activity, 30f);
-                                    pagerView.buildEmotionViews(
-                                            (PageIndicatorView) view.findViewById(R.id.pageIndicatorView),
-                                            editText,
-                                            Emotions.getEmotions(), width, viewPagerSize);
-                                    break;
-                                }
-                                case R.id.panel_addition: {
-                                    //auto center,nothing to do
-                                    break;
+                        public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if(panelView instanceof PanelView) {
+                                switch (((PanelView) panelView).getId()) {
+                                    case R.id.panel_emotion: {
+                                        EmotionPagerView pagerView = view.findViewById(R.id.view_pager);
+                                        int viewPagerSize = height - DisplayUtils.dip2px(activity, 30f);
+                                        pagerView.buildEmotionViews(
+                                                (PageIndicatorView) view.findViewById(R.id.pageIndicatorView),
+                                                editText,
+                                                Emotions.getEmotions(), width, viewPagerSize);
+                                        break;
+                                    }
+                                    case R.id.panel_addition: {
+                                        //auto center,nothing to do
+                                        break;
+                                    }
                                 }
                             }
                         }

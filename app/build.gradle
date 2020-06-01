@@ -52,12 +52,12 @@ android {
 }
 
 dependencies {
-    "$implementation" fileTree(include: ['*.jar'], dir: 'libs')
-    "$implementation" "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    "$implementation" deps.support.v7
-    "$implementation" deps.support.recyclerview
-    "$implementation" deps.support.constraint
-    "$implementation" deps.pageindicator
-    "$implementation" deps.panelSwitchHelper
-//    implementation project(":panel-kotlin")
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation deps.support.v7
+    implementation deps.support.recyclerview
+    implementation deps.support.constraint
+    implementation deps.pageindicator
+//    implementation deps.panelSwitchHelper
+    implementation project(":panel-kotlin")
 }

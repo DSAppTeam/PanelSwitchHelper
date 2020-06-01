@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.scene.chat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,14 +16,11 @@ import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
-import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener;
-import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListenerBuilder;
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListenerBuilder;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
-import com.effective.android.panel.interfaces.listener.OnViewClickListener;
-import com.effective.android.panel.view.PanelView;
+import com.effective.android.panel.view.panel.IPanelView;
+import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatLayoutBinding;
+import com.example.demo.Constants;
 import com.example.demo.anno.PageType;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
@@ -33,9 +30,6 @@ import com.example.demo.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * Created by yummyLau on 18-7-11
@@ -103,32 +97,24 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new ChatAdapter(this, 4);
         mBinding.recyclerView.setAdapter(mAdapter);
-        mBinding.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String content = mBinding.editText.getText().toString();
-                if (TextUtils.isEmpty(content)) {
-                    Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mAdapter.insertInfo(ChatInfo.CREATE(content));
-//                如果超过某些条目，可开启滑动外部，使得更为流畅
-                if(mAdapter.getItemCount() > 10){
-                    mHelper.scrollOutsideEnable(true);
-                }
-                mBinding.editText.setText(null);
-                scrollToBottom();
+        mBinding.send.setOnClickListener(v -> {
+            String content = mBinding.editText.getText().toString();
+            if (TextUtils.isEmpty(content)) {
+                Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                return;
             }
+            mAdapter.insertInfo(ChatInfo.CREATE(content));
+//                如果超过某些条目，可开启滑动外部，使得更为流畅
+            if(mAdapter.getItemCount() > 10){
+                mHelper.scrollOutsideEnable(true);
+            }
+            mBinding.editText.setText(null);
+            scrollToBottom();
         });
     }
 
     private void scrollToBottom() {
-        mBinding.getRoot().post(new Runnable() {
-            @Override
-            public void run() {
-                mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
-            }
-        }) ;
+        mBinding.getRoot().post(() -> mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1)) ;
     }
 
     @Override
@@ -137,9 +123,7 @@ public class ChatActivity extends AppCompatActivity {
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
                     //可选
-                    .addKeyboardStateListener(visible -> {
-                        Log.d(TAG, "系统键盘是否可见 : " + visible);
-                    })
+                    .addKeyboardStateListener((visible, height) -> Log.d(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
                         if(hasFocus){
@@ -174,27 +158,31 @@ public class ChatActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onPanel(PanelView view) {
+                        public void onPanel(IPanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
-                            scrollToBottom();
+                            if(view instanceof PanelView){
+                                mBinding.emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                                scrollToBottom();
+                            }
                         }
 
                         @Override
-                        public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            switch (panelView.getId()) {
-                                case R.id.panel_emotion: {
-                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - DisplayUtils.dip2px(ChatActivity.this, 30f);
-                                    pagerView.buildEmotionViews(
-                                            (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                            mBinding.editText,
-                                            Emotions.getEmotions(), width, viewPagerSize);
-                                    break;
-                                }
-                                case R.id.panel_addition: {
-                                    //auto center,nothing to do
-                                    break;
+                        public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if(panelView instanceof PanelView){
+                                switch (((PanelView)panelView).getId()) {
+                                    case R.id.panel_emotion: {
+                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                        int viewPagerSize = height - DisplayUtils.dip2px(ChatActivity.this, 30f);
+                                        pagerView.buildEmotionViews(
+                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                                mBinding.editText,
+                                                Emotions.getEmotions(), width, viewPagerSize);
+                                        break;
+                                    }
+                                    case R.id.panel_addition: {
+                                        //auto center,nothing to do
+                                        break;
+                                    }
                                 }
                             }
                         }

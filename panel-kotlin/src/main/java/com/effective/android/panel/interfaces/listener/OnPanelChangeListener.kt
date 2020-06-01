@@ -1,24 +1,24 @@
 package com.effective.android.panel.interfaces.listener
-
-import com.effective.android.panel.view.PanelView
+import com.effective.android.panel.view.panel.IPanelView
 
 /**
  * Created by yummyLau on 18-7-07
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  * update 2020/05/08 支持 dsl
+ * update 2020/06/01 不再直接回调可空的panelView，IPanelView 提供更开放的能力
  */
 interface OnPanelChangeListener {
     fun onKeyboard()
     fun onNone()
-    fun onPanel(view: PanelView?)
-    fun onPanelSizeChange(panelView: PanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int)
+    fun onPanel(panel: IPanelView?)
+    fun onPanelSizeChange(panel: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int)
 }
 
 private typealias OnKeyboard = () -> Unit
 private typealias OnNone = () -> Unit
-private typealias OnPanel = (view: PanelView?) -> Unit
-private typealias OnPanelSizeChange = (panelView: PanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) -> Unit
+private typealias OnPanel = (view: IPanelView?) -> Unit
+private typealias OnPanelSizeChange = (panelView: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) -> Unit
 
 class OnPanelChangeListenerBuilder : OnPanelChangeListener {
 
@@ -35,12 +35,12 @@ class OnPanelChangeListenerBuilder : OnPanelChangeListener {
         onNone?.invoke()
     }
 
-    override fun onPanel(view: PanelView?) {
-        onPanel?.invoke(view)
+    override fun onPanel(panel: IPanelView?) {
+        onPanel?.invoke(panel)
     }
 
-    override fun onPanelSizeChange(panelView: PanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
-        onPanelSizeChange?.invoke(panelView, portrait, oldWidth, oldHeight, width, height)
+    override fun onPanelSizeChange(panel: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
+        onPanelSizeChange?.invoke(panel, portrait, oldWidth, oldHeight, width, height)
     }
 
     fun onKeyboard(onKeyboard: OnKeyboard) {
