@@ -2,6 +2,8 @@ package com.example.demo.chat;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -62,8 +64,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatBaseVH> {
         }
     }
 
+    @NonNull
     @Override
-    public ChatBaseVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatBaseVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == 0) {
             VhChatRightLayoutBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.vh_chat_right_layout, parent, false);
             return new ChatRightVH(binding);
@@ -74,8 +77,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatBaseVH> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onBindViewHolder(ChatBaseVH holder, int position) {
-        holder.bindData(mData.get(position), position);
+        holder.bindData((mData.get(position)), position);
     }
 
     @Override

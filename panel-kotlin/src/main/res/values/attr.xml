@@ -15,11 +15,6 @@
         <attr name="panel_layout" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="ContentContainer">
-        <attr name="edit_view" format="reference"/>
-        <attr name="empty_view" format="reference"/>
-    </declare-styleable>
-
     <declare-styleable name="ContentLinearContainer">
         <attr name="linear_edit_view" format="reference"/>
         <attr name="linear_empty_view" format="reference"/>

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.scene.chat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.effective.R;
 import com.effective.databinding.ActivityChatFragmentLayoutBinding;
+import com.example.demo.Constants;
 import com.example.demo.anno.PageType;
 
 public class ChatFragmentActivity extends FragmentActivity {

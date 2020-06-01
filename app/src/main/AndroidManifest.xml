@@ -18,7 +18,7 @@
         </activity>
 
         <activity
-            android:name="com.example.demo.ChatActivity"
+            android:name="com.example.demo.scene.chat.ChatActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name="com.example.demo.ChatFragmentActivity"
+            android:name="com.example.demo.scene.chat.ChatFragmentActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -42,7 +42,7 @@
         </activity>
 
         <activity
-            android:name="com.example.demo.VideoSampleActivity"
+            android:name="com.example.demo.scene.video.VideoSampleActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/VideoActivityTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">

@@ -15,6 +15,12 @@ import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
 import com.example.demo.anno.ContentType;
 import com.example.demo.anno.PageType;
+import com.example.demo.scene.chat.ChatActivity;
+import com.example.demo.scene.chat.ChatDialog;
+import com.example.demo.scene.chat.ChatDialogFragment;
+import com.example.demo.scene.chat.ChatFragmentActivity;
+import com.example.demo.scene.chat.ChatPopupWindow;
+import com.example.demo.scene.video.VideoSampleActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

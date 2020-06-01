@@ -17,6 +17,9 @@ import com.effective.android.panel.view.PanelSwitchLayout
  */
 object PanelUtil {
 
+    private var pHeight: Int = -1
+    private var hHeight: Int = -1
+
     @JvmStatic
     fun showKeyboard(context: Context, view: View) {
         view.requestFocus()
@@ -32,17 +35,44 @@ object PanelUtil {
 
     @JvmStatic
     fun getKeyBoardHeight(context: Context): Int {
-        val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
         val isPortrait = isPortrait(context)
+        if (isPortrait && pHeight != -1) {
+            return pHeight
+        }
+        if (!isPortrait && hHeight != -1) {
+            return hHeight
+        }
+        val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
         val key = if (isPortrait) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
         val defaultHeight = if (isPortrait) Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_P else Constants.DEFAULT_KEYBOARD_HEIGHT_FOR_L
-        return sp.getInt(key, dip2px(context, defaultHeight))
+        val result = sp.getInt(key, dip2px(context, defaultHeight))
+        if (isPortrait) {
+            pHeight = result
+        } else {
+            hHeight = result
+        }
+        return result
     }
 
     @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
+        val isPortrait = isPortrait(context)
+        if (isPortrait && pHeight == height) {
+            return true
+        }
+        if (!isPortrait && hHeight == height) {
+            return true
+        }
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
-        val key = if (isPortrait(context)) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
-        return sp.edit().putInt(key, height).commit()
+        val key = if (isPortrait) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
+        val result = sp.edit().putInt(key, height).commit()
+        if (result) {
+            if (isPortrait) {
+                pHeight = height
+            } else {
+                hHeight = height
+            }
+        }
+        return result
     }
 }

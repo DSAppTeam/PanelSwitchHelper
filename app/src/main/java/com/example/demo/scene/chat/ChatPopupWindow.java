@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.scene.chat;
 
 import android.app.Activity;
 import android.databinding.DataBindingUtil;
@@ -20,7 +20,8 @@ import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener;
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListenerBuilder;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.interfaces.listener.OnViewClickListener;
-import com.effective.android.panel.view.PanelView;
+import com.effective.android.panel.view.panel.IPanelView;
+import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
@@ -101,36 +102,24 @@ public class ChatPopupWindow extends PopupWindow {
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(mActivity.getWindow(), this.getContentView())
                     //可选
-                    .addKeyboardStateListener(new OnKeyboardStateListener() {
-                        @Override
-                        public void onKeyboardChange(boolean visible) {
-                            Log.d(TAG, "系统键盘是否可见 : " + visible);
-
+                    .addKeyboardStateListener((visible, height) -> Log.d(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
+                    //可选
+                    .addEditTextFocusChangeListener((view, hasFocus) -> {
+                        Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
+                        if(hasFocus){
+                            scrollToBottom();
                         }
                     })
                     //可选
-                    .addEditTextFocusChangeListener(new OnEditFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View view, boolean hasFocus) {
-                            Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
-                            if(hasFocus){
+                    .addViewClickListener(view -> {
+                        switch (view.getId()){
+                            case R.id.edit_text:
+                            case R.id.add_btn:
+                            case R.id.emotion_btn:{
                                 scrollToBottom();
                             }
                         }
-                    })
-                    //可选
-                    .addViewClickListener(new OnViewClickListener() {
-                        @Override
-                        public void onClickBefore(View view) {
-                            switch (view.getId()){
-                                case R.id.edit_text:
-                                case R.id.add_btn:
-                                case R.id.emotion_btn:{
-                                    scrollToBottom();
-                                }
-                            }
-                            Log.d(TAG, "点击了View : " + view);
-                        }
+                        Log.d(TAG, "点击了View : " + view);
                     })
                     //可选
                     .addPanelChangeListener(new OnPanelChangeListener() {
@@ -148,26 +137,30 @@ public class ChatPopupWindow extends PopupWindow {
                         }
 
                         @Override
-                        public void onPanel(PanelView view) {
+                        public void onPanel(IPanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            mBinding.emotionBtn.setSelected(view.getId() == R.id.panel_emotion ? true : false);
+                            if(view instanceof PanelView){
+                                mBinding.emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                            }
                         }
 
                         @Override
-                        public void onPanelSizeChange(PanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            switch (panelView.getId()) {
-                                case R.id.panel_emotion: {
-                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                    int viewPagerSize = height - DisplayUtils.dip2px(mActivity, 30f);
-                                    pagerView.buildEmotionViews(
-                                            (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                            mBinding.editText,
-                                            Emotions.getEmotions(), width, viewPagerSize);
-                                    break;
-                                }
-                                case R.id.panel_addition: {
-                                    //auto center,nothing to do
-                                    break;
+                        public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if(panelView instanceof PanelView) {
+                                switch (((PanelView)panelView).getId()) {
+                                    case R.id.panel_emotion: {
+                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                        int viewPagerSize = height - DisplayUtils.dip2px(mActivity, 30f);
+                                        pagerView.buildEmotionViews(
+                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                                mBinding.editText,
+                                                Emotions.getEmotions(), width, viewPagerSize);
+                                        break;
+                                    }
+                                    case R.id.panel_addition: {
+                                        //auto center,nothing to do
+                                        break;
+                                    }
                                 }
                             }
                         }

@@ -1,9 +1,9 @@
 package com.example.demo.chat;
 
+import android.databinding.ViewDataBinding;
 import android.view.View;
 import android.widget.Toast;
 
-import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.databinding.VhChatRightLayoutBinding;
 import com.example.demo.emotion.EmojiSpanBuilder;
 

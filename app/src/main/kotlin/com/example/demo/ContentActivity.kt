@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.view.panel.PanelView
 import com.effective.databinding.ChatContentLinearLayoutBinding
 import com.example.demo.anno.ContentType
 import com.example.demo.chat.ChatAdapter
@@ -100,8 +101,8 @@ class ContentActivity : AppCompatActivity() {
         if (mHelper == null) {
             mHelper = PanelSwitchHelper.Builder(this) //可选
                     .addKeyboardStateListener {
-                        onKeyboardChange {
-                            Log.d(TAG, "系统键盘是否可见 : $it")
+                        onKeyboardChange { visible, height ->
+                            Log.d(TAG, "系统键盘是否可见 : $visible ,高度为：$height")
                         }
                     }
                     .addEditTextFocusChangeListener {
@@ -134,20 +135,24 @@ class ContentActivity : AppCompatActivity() {
                         }
                         onPanel {
                             Log.d(TAG, "唤起面板 : $it")
-                            emotionView.isSelected = it!!.id == R.id.panel_emotion
-                            scrollToBottom()
+                            if (it is PanelView) {
+                                emotionView.isSelected = it.id == R.id.panel_emotion
+                                scrollToBottom()
+                            }
                         }
                         onPanelSizeChange { panelView, _, _, _, width, height ->
-                            when (panelView!!.id) {
-                                R.id.panel_emotion -> {
-                                    val pagerView: EmotionPagerView = getRoot().findViewById(R.id.view_pager)
-                                    val viewPagerSize = height - DisplayUtils.dip2px(this@ContentActivity, 30f)
-                                    pagerView.buildEmotionViews(
-                                            getRoot().findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
-                                            editView,
-                                            Emotions.getEmotions(), width, viewPagerSize)
-                                }
-                                R.id.panel_addition -> {
+                            if (panelView is PanelView) {
+                                when (panelView.id) {
+                                    R.id.panel_emotion -> {
+                                        val pagerView: EmotionPagerView = getRoot().findViewById(R.id.view_pager)
+                                        val viewPagerSize = height - DisplayUtils.dip2px(this@ContentActivity, 30f)
+                                        pagerView.buildEmotionViews(
+                                                getRoot().findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
+                                                editView,
+                                                Emotions.getEmotions(), width, viewPagerSize)
+                                    }
+                                    R.id.panel_addition -> {
+                                    }
                                 }
                             }
                         }

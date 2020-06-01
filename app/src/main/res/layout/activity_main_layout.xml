@@ -156,7 +156,6 @@
                 android:textColor="@color/btn_special_page_text"
                 android:textStyle="bold" />
 
-
             <TextView
                 android:id="@+id/video"
                 android:layout_width="300dp"
@@ -164,7 +163,29 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="视频场景-综合场景"
+                android:text="视频场景-视频播放"
+                android:textColor="@color/btn_video_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/live_pc"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_video_btn"
+                android:padding="10dp"
+                android:text="直播场景-电脑直播"
+                android:textColor="@color/btn_video_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/live_phone"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_video_btn"
+                android:padding="10dp"
+                android:text="直播场景-手机直播"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -209,6 +230,17 @@
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
                 android:text="内容区域-自定义布局"
+                android:textColor="@color/btn_content_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cus_panel"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_content_btn"
+                android:padding="10dp"
+                android:text="面板区域-自定义面板"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
