@@ -36,7 +36,6 @@ public class VideoPopWindow extends PopupWindow{
         emotionBtn = view.findViewById(R.id.emotion_btn);
         editText = view.findViewById(R.id.edit_text);
         inputLayout = view.findViewById(R.id.input_layout);
-        emptyView = view.findViewById(R.id.empty_view);
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

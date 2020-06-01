@@ -14,19 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:linear_edit_view="@id/edit_text"
-            app:linear_empty_view="@id/empty_view">
+            app:linear_edit_view="@id/edit_text">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <com.effective.android.panel.view.EmptyView
-                    android:id="@+id/empty_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/input_layout"

@@ -31,7 +31,6 @@ import com.effective.android.panel.utils.PanelUtil.showKeyboard
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.panel.IPanelView
 import com.effective.android.panel.view.panel.PanelContainer
-import com.effective.android.panel.view.panel.PanelView
 
 /**
  * --------------------
@@ -94,7 +93,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
          * 1. if current currentPanelId is None,should show keyboard
          * 2. current currentPanelId is not None or KeyBoard that means some panel is showing,hide it and show keyboard
          */
-        contentContainer.setEditTextClickListener(OnClickListener { v ->
+        contentContainer.getInputActionImpl().setEditTextClickListener(OnClickListener { v ->
             notifyViewClick(v)
             //checkout currentFlag to keyboard
             val result = checkoutPanel(Constants.PANEL_KEYBOARD)
@@ -104,7 +103,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 hideKeyboard(context, v)
             }
         })
-        contentContainer.setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
+        contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
             if (hasFocus) { // checkout currentFlag to keyboard
                 val result = checkoutPanel(Constants.PANEL_KEYBOARD)
@@ -115,16 +114,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 }
             }
         })
-        contentContainer.setEmptyViewClickListener(OnClickListener { v ->
+        contentContainer.getResetActionImpl().setResetCallback(Runnable {
             if (panelId != Constants.PANEL_NONE) {
-                notifyViewClick(v)
                 if (panelId == Constants.PANEL_KEYBOARD) {
-                    hideKeyboard(context, contentContainer.getInputText())
+                    hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 } else {
                     checkoutPanel(Constants.PANEL_NONE)
                 }
             }
         })
+
         /**
          * save panel that you want to use these to checkout
          */
@@ -184,8 +183,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     isKeyboardShowing = false
                     if (panelId == Constants.PANEL_KEYBOARD) {
                         panelId = Constants.PANEL_NONE
-                        contentContainer.clearFocusByEditText()
-                        contentContainer.emptyViewVisible(false)
+                        contentContainer.getInputActionImpl().clearFocusByEditText()
+                        contentContainer.getResetActionImpl().enableReset(false)
                         requestLayout()
                     }
                     notifyKeyboardState(false)
@@ -356,10 +355,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
         //处理第一个view contentContainer
         run {
-            contentContainer.layoutGroup(l, contentContainerTop, r, contentContainerTop + contentContainerHeight)
+            contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight)
             LogTracker.log("$TAG#onLayout", " layout参数 contentContainer : height - $contentContainerHeight")
             LogTracker.log("$TAG#onLayout", " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight))
-            contentContainer.adjustHeight(contentContainerHeight)
+            contentContainer.changeContainerHeight(contentContainerHeight)
         }
         //处理第二个view panelContainer
         run {
@@ -396,7 +395,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     fun hookSystemBackByPanelSwitcher(): Boolean {
         if (panelId != Constants.PANEL_NONE) {
             if (panelId == Constants.PANEL_KEYBOARD) {
-                hideKeyboard(context, contentContainer.getInputText())
+                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
             } else {
                 checkoutPanel(Constants.PANEL_NONE)
             }
@@ -406,10 +405,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
     fun toKeyboardState() {
-        if (contentContainer.editTextHasFocus()) {
-            contentContainer.preformClickForEditText()
+        if (contentContainer.getInputActionImpl().editTextHasFocus()) {
+            contentContainer.getInputActionImpl().preformClickForEditText()
         } else {
-            contentContainer.requestFocusByEditText()
+            contentContainer.getInputActionImpl().requestFocusByEditText()
         }
     }
 
@@ -424,22 +423,22 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         panelContainer.hidePanels()
         when (panelId) {
             Constants.PANEL_NONE -> {
-                hideKeyboard(context, contentContainer.getInputText())
-                contentContainer.clearFocusByEditText()
-                contentContainer.emptyViewVisible(false)
+                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                contentContainer.getInputActionImpl().clearFocusByEditText()
+                contentContainer.getResetActionImpl().enableReset(false)
             }
             Constants.PANEL_KEYBOARD -> {
-                showKeyboard(context, contentContainer.getInputText())
-                contentContainer.emptyViewVisible(true)
+                showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                contentContainer.getResetActionImpl().enableReset(true)
             }
             else -> {
-                hideKeyboard(context, contentContainer.getInputText())
+                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 val size = Pair(measuredWidth - paddingLeft - paddingRight, getKeyBoardHeight(context))
                 val oldSize = panelContainer.showPanel(panelId, size)
                 if (size.first != oldSize.first || size.second != oldSize.second) {
                     notifyPanelSizeChange(panelContainer.getPanelView(panelId), isPortrait(context), oldSize.first, oldSize.second, size.first, size.second)
                 }
-                contentContainer.emptyViewVisible(true)
+                contentContainer.getResetActionImpl().enableReset(true)
             }
         }
         this.lastPanelId = this.panelId

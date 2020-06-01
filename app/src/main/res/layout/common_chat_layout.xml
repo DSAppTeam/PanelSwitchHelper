@@ -41,15 +41,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text">
+                app:linear_edit_view="@id/edit_text"
+                app:linear_auto_reset_area="@id/recycler_view">
 
                 <com.example.demo.chat.CusRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"/>
 
                 <LinearLayout
+                    android:id="@+id/bottom_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_input_layout"
