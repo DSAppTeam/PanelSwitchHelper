@@ -163,7 +163,18 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="视频场景-视频播放"
+                android:text="视频场景-视频播放(bilibili效果)"
+                android:textColor="@color/btn_video_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/feed"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_video_btn"
+                android:padding="10dp"
+                android:text="视频场景-信息流评论(朋友圈/微信效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -174,7 +185,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="直播场景-电脑直播"
+                android:text="直播场景-电脑直播(虎牙/斗鱼效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -185,7 +196,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="直播场景-手机直播"
+                android:text="直播场景-手机直播(淘宝直播/抖音效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 

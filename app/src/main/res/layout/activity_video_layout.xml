@@ -2,169 +2,132 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/video_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <!-- 模仿视频 -->
-            <TextView
+            <VideoView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_200"
-                android:background="@android:color/black"
-                android:padding="@dimen/dp_10"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_14" />
+                android:layout_height="@dimen/dp_200" />
 
-            <TextView
-                android:id="@+id/checkout"
-                android:layout_width="@dimen/dp_50"
-                android:layout_height="@dimen/dp_30"
-                android:layout_alignRight="@+id/video_view"
-                android:layout_alignBottom="@+id/video_view"
-                android:layout_marginRight="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_10"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:text="全屏"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/sp_14" />
-
-            <TextView
-                android:id="@+id/input"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_30"
-                android:layout_alignTop="@+id/checkout"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:layout_toLeftOf="@+id/checkout"
-                android:background="@drawable/shape_video_input_text"
-                android:gravity="center_vertical"
-                android:hint="发个弹幕呗"
-                android:paddingLeft="@dimen/dp_10"
-                android:textColorHint="@color/video_input_text_hint"
-                android:textSize="@dimen/sp_14" />
-
-        </RelativeLayout>
-
-        <com.effective.android.panel.view.PanelSwitchLayout
-            android:id="@+id/panel_switch_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!-- 内容区域  -->
-            <com.effective.android.panel.view.content.ContentLinearContainer
-                android:id="@+id/content_view"
+            <RelativeLayout
+                android:id="@+id/cover_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text">
+                android:layout_alignTop="@+id/video_view"
+                android:layout_alignBottom="@+id/video_view"
+                tools:background="@android:color/black">
 
-                <LinearLayout
-                    android:id="@+id/input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_input_layout"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:gravity="bottom"
-                    android:minHeight="@dimen/dp_50"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dp_10"
-                    android:paddingRight="@dimen/dp_10"
-                    android:paddingBottom="@dimen/dp_7.5">
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_bilibili_video_back" />
 
-                    <!-- 更多入口 -->
-                    <ImageView
-                        android:id="@+id/add_btn"
-                        android:layout_width="@dimen/dp_35"
-                        android:layout_height="@dimen/dp_35"
-                        android:layout_marginRight="@dimen/dp_10"
-                        android:src="@drawable/icon_add" />
+                <TextView
+                    android:id="@+id/input_h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/sh_bilibili_input_l"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="45dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:paddingBottom="3dp"
+                    android:text="发个友善的弹幕见证当下"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
-                    <!-- 输入入口 -->
-                    <EditText
-                        android:id="@+id/edit_text"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dp_10"
-                        android:layout_marginRight="@dimen/dp_10"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_edit_focus"
-                        android:imeOptions="actionSearch"
-                        android:maxLines="5"
-                        android:minHeight="@dimen/dp_35"
-                        android:paddingLeft="@dimen/dp_3"
-                        android:paddingTop="@dimen/dp_7.5"
-                        android:paddingRight="@dimen/dp_3"
-                        android:paddingBottom="@dimen/dp_3"
-                        android:textCursorDrawable="@drawable/shape_edit_cursor"
-                        android:textSize="@dimen/sp_16" />
+                <ImageView
+                    android:id="@+id/checkout"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_bilibili_video_checkout" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dp_35"
-                        android:orientation="horizontal">
+            </RelativeLayout>
 
-                        <!-- 表情入口 -->
-                        <ImageView
-                            android:id="@+id/emotion_btn"
-                            android:layout_width="@dimen/dp_35"
-                            android:layout_height="@dimen/dp_35"
-                            android:layout_marginEnd="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:src="@drawable/selector_emotion_btn" />
-
-                        <TextView
-                            android:id="@+id/send"
-                            android:layout_width="@dimen/dp_50"
-                            android:layout_height="@dimen/dp_35"
-                            android:background="@drawable/selector_send_btn"
-                            android:gravity="center"
-                            android:text="@string/send"
-                            android:textColor="@color/color_send_btn"
-                            android:textSize="@dimen/sp_15" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </com.effective.android.panel.view.content.ContentLinearContainer>
-
-            <!-- 面板区域，仅能包含PanelView-->
-            <com.effective.android.panel.view.panel.PanelContainer
-                android:id="@+id/panel_container"
+            <RelativeLayout
+                android:id="@+id/action_layout"
                 android:layout_width="match_parent"
-                android:background="@color/common_page_bg_color"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp"
+                android:layout_below="@+id/video_view"
+                android:background="@android:color/white">
 
-                <!-- 每一项面板 -->
-                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
-                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
-                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-                <com.effective.android.panel.view.panel.PanelView
-                    android:id="@+id/panel_emotion"
+                <TextView
+                    android:id="@+id/intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="简介"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@+id/intro"
+                    android:text="评论"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/sh_bilibili_input_p"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="45dp"
+                    android:paddingBottom="3dp"
+                    android:text="弹幕输入中"
+                    android:textColor="#999999"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignRight="@+id/input"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_bilibili_input_tip" />
+
+                <View
+                    android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:panel_layout="@layout/panel_emotion_layout"
-                    app:panel_trigger="@id/emotion_btn" />
-
-                <com.effective.android.panel.view.panel.PanelView
-                    android:id="@+id/panel_addition"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:panel_layout="@layout/panel_add_layout"
-                    app:panel_trigger="@id/add_btn" />
-
-            </com.effective.android.panel.view.panel.PanelContainer>
-
-        </com.effective.android.panel.view.PanelSwitchLayout>
-
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="#999999" />
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-
 </layout>

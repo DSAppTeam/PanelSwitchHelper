@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.support.annotation.IdRes
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
 import com.effective.android.panel.R
@@ -66,6 +67,19 @@ class ContentRelativeContainer : RelativeLayout, IContentContainer {
 
     override fun changeContainerHeight(targetHeight: Int) {
         contentContainer.changeContainerHeight(targetHeight)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val sonResume = super.dispatchTouchEvent(ev)
+        getResetActionImpl().hookDispatchTouchEvent(ev, sonResume)
+        return sonResume
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val onTouch = super.onTouchEvent(event)
+        getResetActionImpl().hookOnTouchEvent(event)
+        return onTouch
     }
 
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()

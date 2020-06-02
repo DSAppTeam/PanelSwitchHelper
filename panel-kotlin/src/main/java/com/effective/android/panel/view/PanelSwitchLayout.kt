@@ -116,11 +116,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         })
         contentContainer.getResetActionImpl().setResetCallback(Runnable {
             if (panelId != Constants.PANEL_NONE) {
-                if (panelId == Constants.PANEL_KEYBOARD) {
-                    hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
-                } else {
-                    checkoutPanel(Constants.PANEL_NONE)
-                }
+                checkoutPanel(Constants.PANEL_NONE)
             }
         })
 
@@ -168,15 +164,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         deviceRuntime = DeviceRuntime(context, window);
         window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            val contentHeight = getScreenHeightWithoutSystemUI(window)
             val screenHeight = getScreenHeightWithSystemUI(window)
+            val contentHeight = getScreenHeightWithoutSystemUI(window)
+            val info = deviceRuntime.getDeviceInfoByOrientation(true)
             val systemUIHeight = if (deviceRuntime.isFullScreen) {
                 0
             } else {
-                val info = deviceRuntime.getDeviceInfoByOrientation(true)
                 info.statusBarH + (if (deviceRuntime.isNavigationBarShow) info.getCurrentNavigationBarHeightWhenVisible(deviceRuntime.isPortrait, deviceRuntime.isPad) else 0)
             }
             val keyboardHeight = screenHeight - contentHeight - systemUIHeight
+            LogTracker.log("$TAG#onGlobalLayout", "screenHeight : $screenHeight, contentHeight : $contentHeight，systemUIHeight : $systemUIHeight")
             LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             if (isKeyboardShowing) {
                 if (keyboardHeight <= 0) {

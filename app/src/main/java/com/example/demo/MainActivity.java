@@ -20,7 +20,10 @@ import com.example.demo.scene.chat.ChatDialog;
 import com.example.demo.scene.chat.ChatDialogFragment;
 import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.ChatPopupWindow;
-import com.example.demo.scene.video.VideoSampleActivity;
+import com.example.demo.scene.feed.FeedActivity;
+import com.example.demo.scene.live.PcLiveActivity;
+import com.example.demo.scene.live.PhoneLiveActivity;
+import com.example.demo.scene.video.BiliBiliSampleActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,7 +53,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.chatSpecialPagePopupwindow.setOnClickListener(this);
         mBinding.chatSpecialPageDialog.setOnClickListener(this);
 
-        //综合场景
+        //直播
+        mBinding.livePc.setOnClickListener(this);
+        mBinding.livePhone.setOnClickListener(this);
+
+        //信息流
+        mBinding.feed.setOnClickListener(this);
+
+        //视频
         mBinding.video.setOnClickListener(this);
 
         //扩展内容区域布局结构
@@ -119,10 +129,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.video: {
-                startActivity(new Intent(MainActivity.this, VideoSampleActivity.class));
+                startActivity(new Intent(MainActivity.this, BiliBiliSampleActivity.class));
                 break;
             }
-
+            case R.id.feed: {
+                startActivity(new Intent(MainActivity.this, FeedActivity.class));
+                break;
+            }
+            case R.id.live_pc: {
+                startActivity(new Intent(MainActivity.this, PcLiveActivity.class));
+                break;
+            }
+            case R.id.live_phone: {
+                startActivity(new Intent(MainActivity.this, PhoneLiveActivity.class));
+                break;
+            }
             case R.id.linear_content: {
                 ContentActivity.start(MainActivity.this, ContentType.Linear);
                 break;
