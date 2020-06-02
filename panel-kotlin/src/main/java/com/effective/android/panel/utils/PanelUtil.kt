@@ -4,10 +4,8 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.effective.android.panel.Constants
-import com.effective.android.panel.LogTracker
 import com.effective.android.panel.utils.DisplayUtil.dip2px
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
-import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
  * panel helper
@@ -18,7 +16,7 @@ import com.effective.android.panel.view.PanelSwitchLayout
 object PanelUtil {
 
     private var pHeight: Int = -1
-    private var hHeight: Int = -1
+    private var lHeight: Int = -1
 
     @JvmStatic
     fun showKeyboard(context: Context, view: View) {
@@ -39,8 +37,8 @@ object PanelUtil {
         if (isPortrait && pHeight != -1) {
             return pHeight
         }
-        if (!isPortrait && hHeight != -1) {
-            return hHeight
+        if (!isPortrait && lHeight != -1) {
+            return lHeight
         }
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
         val key = if (isPortrait) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
@@ -49,7 +47,7 @@ object PanelUtil {
         if (isPortrait) {
             pHeight = result
         } else {
-            hHeight = result
+            lHeight = result
         }
         return result
     }
@@ -60,7 +58,7 @@ object PanelUtil {
         if (isPortrait && pHeight == height) {
             return true
         }
-        if (!isPortrait && hHeight == height) {
+        if (!isPortrait && lHeight == height) {
             return true
         }
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -70,7 +68,7 @@ object PanelUtil {
             if (isPortrait) {
                 pHeight = height
             } else {
-                hHeight = height
+                lHeight = height
             }
         }
         return result
