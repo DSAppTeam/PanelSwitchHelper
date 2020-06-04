@@ -162,12 +162,6 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
                     })
                     .logTrack(true)             //output log
                     .build();
-            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
-                @Override
-                public void resetPanel() {
-                    mHelper.hookSystemBackByPanelSwitcher();
-                }
-            });
         }
     }
 

@@ -21,7 +21,7 @@ import com.example.demo.scene.chat.ChatDialogFragment;
 import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.ChatPopupWindow;
 import com.example.demo.scene.feed.FeedActivity;
-import com.example.demo.scene.live.PcLiveActivity;
+import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.scene.live.PhoneLiveActivity;
 import com.example.demo.scene.video.BiliBiliSampleActivity;
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.live_pc: {
-                startActivity(new Intent(MainActivity.this, PcLiveActivity.class));
+                startActivity(new Intent(MainActivity.this, PcHuyaLiveActivity.class));
                 break;
             }
             case R.id.live_phone: {
