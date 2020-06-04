@@ -1,12 +1,15 @@
 package com.effective.android.panel.device
 
+import android.view.Window
+
 /**
  * 保存当前设备信息不变的信息
  * Created by yummyLau on 2020-05-24
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-data class DeviceInfo(val isPortrait: Boolean,
+data class DeviceInfo(val window:Window,
+                      val isPortrait: Boolean,
                       val statusBarH: Int,
                       val navigationBarH: Int,
                       val toolbarH: Int,

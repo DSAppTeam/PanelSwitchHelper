@@ -22,7 +22,7 @@ import com.effective.android.panel.view.PanelSwitchLayout
  * updated by yummyLau on 20/03/18
  * 重构整个输入法切换框架，移除旧版使用 weight+Runnable延迟切换，使用新版 layout+动画无缝衔接！
  */
-class PanelSwitchHelper private constructor(builder: Builder) {
+class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boolean) {
 
     private val mPanelSwitchLayout: PanelSwitchLayout
     private var canScrollOutside: Boolean
@@ -46,6 +46,9 @@ class PanelSwitchHelper private constructor(builder: Builder) {
         })
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners)
         mPanelSwitchLayout.bindWindow(builder.window)
+        if(showKeyboard){
+            mPanelSwitchLayout.toKeyboardState()
+        }
     }
 
     fun hookSystemBackByPanelSwitcher(): Boolean {
@@ -160,11 +163,7 @@ class PanelSwitchHelper private constructor(builder: Builder) {
         fun build(showKeyboard: Boolean = false): PanelSwitchHelper {
             findSwitchLayout(rootView)
             requireNotNull(panelSwitchLayout) { "PanelSwitchHelper\$Builder#build : not found PanelSwitchLayout!" }
-            val panelSwitchHelper = PanelSwitchHelper(this)
-            if (showKeyboard) {
-                panelSwitchLayout!!.toKeyboardState()
-            }
-            return panelSwitchHelper
+            return PanelSwitchHelper(this, showKeyboard)
         }
 
         private fun findSwitchLayout(view: View) {

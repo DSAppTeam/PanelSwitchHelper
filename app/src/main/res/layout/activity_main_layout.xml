@@ -174,7 +174,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="视频场景-信息流评论(朋友圈/微信效果)"
+                android:text="视频场景-信息流评论(微信效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 

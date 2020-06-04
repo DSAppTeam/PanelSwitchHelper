@@ -15,4 +15,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="FeedActionPopup_anim_style">
+        <item name="android:windowEnterAnimation">@anim/anim_feed_pop_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_feed_pop_hide</item>
+    </style>
+
+    <style name="FeedCommentDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>

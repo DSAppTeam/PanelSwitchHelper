@@ -1,5 +1,6 @@
 package com.effective.android.panel.device
 
+import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.view.Window
@@ -52,12 +53,12 @@ class DeviceRuntime(val context: Context, val window: Window) {
         val screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(context)
 
         return if (isPortrait) {
-            deviceInfoP = DeviceInfo(true,
+            deviceInfoP = DeviceInfo(window,true,
                     statusBarHeight, navigationBarHeight, toolbarH, cusShortHeight,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoP!!
         } else {
-            deviceInfoL = DeviceInfo(false,
+            deviceInfoL = DeviceInfo(window,false,
                     statusBarHeight, navigationBarHeight, toolbarH, cusShortHeight,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoL!!

@@ -75,6 +75,12 @@ class PanelContainer : FrameLayout, ViewAssertion {
 
     fun showPanel(panelId: Int, size: Pair<Int, Int>): Pair<Int, Int> {
         val panel = panelSparseArray[panelId]
+
+        for (i in 0 until panelSparseArray.size()) {
+            val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
+            if (panelView is View && panelView.visibility != View.GONE && panelView != panel)
+                panelView.visibility = View.GONE
+        }
         val layoutParams = (panel as View).layoutParams
         val curSize = Pair(layoutParams.width, layoutParams.height)
         if (curSize.first != size.first || curSize.second != size.second) {
