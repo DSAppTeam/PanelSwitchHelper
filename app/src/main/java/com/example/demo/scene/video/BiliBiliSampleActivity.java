@@ -3,7 +3,6 @@ package com.example.demo.scene.video;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.effective.R;
-import com.effective.databinding.ActivityVideoLayoutBinding;
+import com.effective.databinding.ActivityBilibiliVideoLayoutBinding;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 
@@ -26,7 +25,7 @@ import com.example.demo.util.DisplayUtils;
  */
 public class BiliBiliSampleActivity extends AppCompatActivity {
 
-    private ActivityVideoLayoutBinding mBinding;
+    private ActivityBilibiliVideoLayoutBinding mBinding;
     private BiliBiliCommentPopWindow videoPopWindow;
     private Runnable runnable = new Runnable() {
         @Override
@@ -41,13 +40,12 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusbarHelper.setStatusBarColor(this, Color.BLACK);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_layout);
         initView();
     }
 
     private void initView() {
         Pair<Integer, Integer> size = DisplayUtils.getScreenSize(this);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_layout);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bilibili_video_layout);
         mBinding.videoView.getLayoutParams().width = size.first;
         mBinding.videoView.getLayoutParams().height = size.first * 9 / 16;
         mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.jz));

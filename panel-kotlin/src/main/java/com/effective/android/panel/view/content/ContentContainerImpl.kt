@@ -17,7 +17,7 @@ import com.effective.android.panel.interfaces.ViewAssertion
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentContainerImpl(private val mViewGroup: ViewGroup, private val canAutoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
+class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
     private val mResetView: View? = mViewGroup.findViewById(resetId)
     private val mInputAction: IInputAction
@@ -32,23 +32,25 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val canAut
         }
         mResetAction = object : IResetAction {
 
-            private var canReset: Boolean = false
+            private var enableReset: Boolean = false
             private var action: Runnable? = null
 
             override fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean) {
-                if (canAutoReset && canReset && mResetView != null && eventInViewArea(mResetView, ev) && !consume) {
-                    action?.run()
+                if (autoReset && enableReset && !consume && ev != null && ev.action == MotionEvent.ACTION_UP) {
+                    if (mResetView != null && eventInViewArea(mResetView, ev)) {
+                        action?.run()
+                    }
                 }
             }
 
             override fun hookOnTouchEvent(ev: MotionEvent?) {
-                if (canAutoReset && canReset && mResetView == null) {
+                if (autoReset && enableReset && ev != null && ev.action == MotionEvent.ACTION_UP) {
                     action?.run()
                 }
             }
 
             override fun enableReset(enable: Boolean) {
-                canReset = enable
+                enableReset = enable
             }
 
             override fun setResetCallback(runnable: Runnable) {

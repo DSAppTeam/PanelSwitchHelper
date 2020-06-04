@@ -53,8 +53,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.example.demo.scene.live.huya.PcHuyaLiveActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/VideoActivityTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
         <activity android:name="com.example.demo.scene.feed.FeedActivity" />
-        <activity android:name="com.example.demo.scene.live.PcLiveActivity" />
         <activity android:name="com.example.demo.scene.live.PhoneLiveActivity" />
 
     </application>

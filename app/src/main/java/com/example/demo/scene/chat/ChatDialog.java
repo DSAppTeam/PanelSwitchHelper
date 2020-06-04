@@ -131,12 +131,6 @@ public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyList
                     })
                     .logTrack(true)             //output log
                     .build();
-            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
-                @Override
-                public void resetPanel() {
-                    mHelper.hookSystemBackByPanelSwitcher();
-                }
-            });
         }
         super.show();
     }

@@ -160,7 +160,6 @@ class ContentActivity : AppCompatActivity() {
                     .contentCanScrollOutside(false)
                     .logTrack(true) //output log
                     .build()
-            recyclerView.setResetPanel { mHelper?.hookSystemBackByPanelSwitcher() }
         }
     }
 

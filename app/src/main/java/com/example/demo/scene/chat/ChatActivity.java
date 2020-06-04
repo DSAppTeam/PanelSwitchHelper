@@ -190,12 +190,6 @@ public class ChatActivity extends AppCompatActivity {
                     .contentCanScrollOutside(false)
                     .logTrack(true)             //output log
                     .build();
-            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
-                @Override
-                public void resetPanel() {
-                    mHelper.hookSystemBackByPanelSwitcher();
-                }
-            });
         }
     }
 

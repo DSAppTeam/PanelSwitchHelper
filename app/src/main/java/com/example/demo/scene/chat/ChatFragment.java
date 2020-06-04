@@ -173,12 +173,6 @@ public class ChatFragment extends Fragment {
                     })
                     .logTrack(true)             //output log
                     .build();
-            mBinding.recyclerView.setResetPanel(new CusRecyclerView.ResetPanel() {
-                @Override
-                public void resetPanel() {
-                    mHelper.hookSystemBackByPanelSwitcher();
-                }
-            });
         }
     }
 
