@@ -1,7 +1,9 @@
 package com.effective.android.panel.view
 
 import android.annotation.TargetApi
+import android.app.Dialog
 import android.content.Context
+import android.os.health.SystemHealthManager
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
@@ -97,20 +99,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             notifyViewClick(v)
             //checkout currentFlag to keyboard
             val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-            //when is checkout doing, unlockContentlength unfinished
-            //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
-            if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                hideKeyboard(context, v)
+            if (!result && panelId == Constants.PANEL_KEYBOARD) {
+                checkoutPanel(Constants.PANEL_KEYBOARD)
             }
         })
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
             if (hasFocus) { // checkout currentFlag to keyboard
                 val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-                //when is checkout doing, unlockContentlength unfinished
-                //editText click will make keyboard visible by system,so if checkoutPanel fail,should hide keyboard.
-                if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                    hideKeyboard(context, v)
+                if (!result && panelId == Constants.PANEL_KEYBOARD) {
+                    checkoutPanel(Constants.PANEL_KEYBOARD)
                 }
             }
         })
@@ -179,10 +177,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (keyboardHeight <= 0) {
                     isKeyboardShowing = false
                     if (panelId == Constants.PANEL_KEYBOARD) {
-                        panelId = Constants.PANEL_NONE
-                        contentContainer.getInputActionImpl().clearFocusByEditText()
-                        contentContainer.getResetActionImpl().enableReset(false)
-                        requestLayout()
+                        checkoutPanel(Constants.PANEL_NONE)
                     }
                     notifyKeyboardState(false)
                 } else {
@@ -214,7 +209,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun notifyKeyboardState(visible: Boolean) {
         for (listener in keyboardStatusListeners) {
-            listener.onKeyboardChange(visible,if(visible) getKeyBoardHeight(context) else 0)
+            listener.onKeyboardChange(visible, if (visible) getKeyBoardHeight(context) else 0)
         }
     }
 
@@ -296,6 +291,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         val scrollOutsideHeight = scrollOutsideBorder.getOutsideHeight()
         val paddingTop = paddingTop
         var allHeight = deviceInfo.screenH
+
         if (deviceRuntime.isNavigationBarShow) {
             /**
              * 1.1.0 使用 screenWithoutNavigationHeight + navigationBarHeight ，结合 navigationBarShow 来动态计算高度，但是部分特殊机型

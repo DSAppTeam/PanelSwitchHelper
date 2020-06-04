@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
+import com.effective.android.panel.window.PanelDialog;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.chat.ChatAdapter;
 import com.example.demo.chat.ChatInfo;
@@ -31,7 +34,10 @@ import com.example.demo.emotion.Emotions;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
-public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyListener {
 
     private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
@@ -40,24 +46,16 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
     private static final String TAG = "ChatDialog";
     private Activity activity;
 
+    @Override
+    public int getDialogLayout() {
+        return R.layout.common_chat_with_titlebar_layout;
+    }
+
     public ChatDialog(Activity context) {
         super(context);
         this.activity = context;
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.common_chat_with_titlebar_layout, null, false);
-        setContentView(mBinding.getRoot());
-        mBinding.titleBar.setVisibility(View.VISIBLE);
-        mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        mBinding.title.setText(R.string.dialog_name);
-        Window window = getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.CENTER);
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            window.setAttributes(lp);
-            window.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(getContext(),R.color.common_page_bg_color)));
-        }
-        setCanceledOnTouchOutside(true);
+        mBinding = DataBindingUtil.bind(rootView);
+        getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, R.color.common_page_bg_color)));
         setOnKeyListener(this);
         initView();
     }
@@ -71,16 +69,16 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
                     //可选
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
-                        if(hasFocus){
+                        if (hasFocus) {
                             scrollToBottom();
                         }
                     })
                     //可选
                     .addViewClickListener(view -> {
-                        switch (view.getId()){
+                        switch (view.getId()) {
                             case R.id.edit_text:
                             case R.id.add_btn:
-                            case R.id.emotion_btn:{
+                            case R.id.emotion_btn: {
                                 scrollToBottom();
                             }
                         }
@@ -104,16 +102,16 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
                         @Override
                         public void onPanel(IPanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            if(view instanceof PanelView){
-                                mBinding.emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                            if (view instanceof PanelView) {
+                                mBinding.emotionBtn.setSelected(((PanelView) view).getId() == R.id.panel_emotion ? true : false);
                             }
                         }
 
 
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            if(panelView instanceof PanelView){
-                                switch (((PanelView)panelView).getId()) {
+                            if (panelView instanceof PanelView) {
+                                switch (((PanelView) panelView).getId()) {
                                     case R.id.panel_emotion: {
                                         EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
                                         int viewPagerSize = height - DisplayUtils.dip2px(getContext(), 30f);
@@ -145,6 +143,7 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
 
 
     private void initView() {
+        mBinding.title.setText("我是一个dialog");
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new ChatAdapter(getContext(), 50);
@@ -168,14 +167,10 @@ public class ChatDialog extends Dialog implements DialogInterface.OnKeyListener 
         mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-
     @Override
-    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+    public boolean onKey(@Nullable DialogInterface dialog, int keyCode, @NotNull KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
             if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
-                return true;
-            } else {
-                dismiss();
                 return true;
             }
         }
