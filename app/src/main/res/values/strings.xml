@@ -4,7 +4,7 @@
     <string name="pupupwindow_name">我是一个pupupwindow</string>
     <string name="dialog_fragment_name">我是一个dialogfragment</string>
     <string name="send">发送</string>
-    <string name="tip">提示信息：\n框架支持任何页面的沉浸，基本满足绝大部分 app 页面 UI 涉及。不建议完全全屏的页面接入（全屏下window resize的问题）。如果需要完全全屏请参考 "视频/直播" 下的横屏处理。如遇到疑惑请备注\n \"机型-版本-框架版本-场景简述\"  作为标题提交 issue 并附上伪代码或者代码进行详细描述。所有问题都会第一时间得到作者回应。</string>
+    <string name="tip">提示信息：\n框架支持任何页面的沉浸，基本满足绝大部分 app 页面 UI 涉及。完全全屏的页面接入请参考视频场景下的横屏处理。框架 Demo 提供 聊天/视频/信息流/直播 等主流场景方案，如遇到疑惑请备注\n \"机型-版本-框架版本-场景简述\"  作为标题提交 issue 并附上伪代码或者代码进行详细描述。所有问题都会第一时间得到作者回应。</string>
 
     <string name="album">相册</string>
     <string name="shooting">拍摄</string>

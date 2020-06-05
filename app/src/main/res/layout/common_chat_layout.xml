@@ -41,10 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text"
-                app:linear_auto_reset_area="@id/recycler_view">
+                app:linear_edit_view="@id/edit_text">
 
-                <com.example.demo.chat.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

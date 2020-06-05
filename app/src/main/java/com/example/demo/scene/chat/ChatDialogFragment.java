@@ -24,10 +24,10 @@ import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
-import com.example.demo.chat.ChatAdapter;
-import com.example.demo.chat.ChatInfo;
-import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.Emotions;
+import com.example.demo.scene.chat.Adapter.ChatAdapter;
+import com.example.demo.scene.chat.Adapter.ChatInfo;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 

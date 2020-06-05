@@ -22,10 +22,10 @@ import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatLayoutBinding;
 import com.example.demo.Constants;
 import com.example.demo.anno.PageType;
-import com.example.demo.chat.ChatAdapter;
-import com.example.demo.chat.ChatInfo;
-import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.Emotions;
+import com.example.demo.scene.chat.Adapter.ChatAdapter;
+import com.example.demo.scene.chat.Adapter.ChatInfo;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
@@ -47,45 +47,57 @@ public class ChatActivity extends AppCompatActivity {
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private static final String TAG = "ChatActivity";
+    private static final String TAG = ChatActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, PageType.DEFAULT);
-
-        //这里只是demo提前隐藏标题栏，如果应用自己实现了标题栏或者通过自定义view开发标题栏，根据业务隐藏或者设置透明色就可以了，随便扩展
-        if (type == PageType.TRANSPARENT_STATUS_BAR || type == PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER || type == PageType.DEFAULT || type == PageType.CUS_TOOLBAR) {
-            supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
-        mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
-
-        if (type == PageType.CUS_TOOLBAR) {
-            mBinding.cusTitleBar.setVisibility(View.VISIBLE);
-        }
-
         switch (type) {
+            case PageType.TITLE_BAR:{
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                getSupportActionBar().setTitle("Activity-有标题栏");
+                break;
+            }
             case PageType.COLOR_STATUS_BAR: {
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 StatusbarHelper.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-                //可以在代码设置，也可以在xml设置
+                getSupportActionBar().setTitle("Activity-有标题栏，状态栏着色");
                 mBinding.getRoot().setFitsSystemWindows(true);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
+            case PageType.DEFAULT:{
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                break;
+            }
+            case PageType.CUS_TITLE_BAR:{
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+                mBinding.cusTitleBar.setVisibility(View.VISIBLE);
+                mBinding.title.setText("Activity-自定义标题栏");
+                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+                mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
+                break;
+            }
             case PageType.TRANSPARENT_STATUS_BAR: {
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setFitsSystemWindows(true);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
             }
             case PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setFitsSystemWindows(false);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
-            }
-            default: {
-                mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
             }
         }
         initView();

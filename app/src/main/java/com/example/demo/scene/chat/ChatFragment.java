@@ -23,10 +23,10 @@ import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.Constants;
 import com.example.demo.anno.PageType;
-import com.example.demo.chat.ChatAdapter;
-import com.example.demo.chat.ChatInfo;
-import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.Emotions;
+import com.example.demo.scene.chat.Adapter.ChatAdapter;
+import com.example.demo.scene.chat.Adapter.ChatInfo;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
@@ -52,20 +52,20 @@ public class ChatFragment extends Fragment {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
                 mBinding.titleBar.setVisibility(View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-                mBinding.title.setText(R.string.app_name);
+                mBinding.title.setText("Fragment-自定义标题栏,状态栏着色");
                 break;
             }
             case PageType.TRANSPARENT_STATUS_BAR: {
                 StatusbarHelper.setStatusBarColor(getActivity(), Color.TRANSPARENT);
                 mBinding.titleBar.setVisibility(View.VISIBLE);
-                mBinding.title.setText(R.string.app_name);
+                mBinding.title.setText("Fragment-自定义标题栏，状态栏透明");
                 break;
             }
             default: {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
                 mBinding.titleBar.setVisibility(type == PageType.DEFAULT ? View.GONE : View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-                mBinding.title.setText(R.string.app_name);
+                mBinding.title.setText("Fragment-自定义标题栏");
             }
         }
         initView();

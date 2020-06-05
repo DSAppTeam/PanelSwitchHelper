@@ -18,7 +18,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无Toolbar"
+                android:text="聊天场景(Activity)：无标题栏"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -29,7 +29,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：包含Toolbar"
+                android:text="聊天场景(Activity)：有标题栏"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：自定义Toolbar"
+                android:text="聊天场景(Activity)：自定义标题栏"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：包含Toolbar，状态栏着色"
+                android:text="聊天场景(Activity)：有标题栏，状态栏着色"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -62,7 +62,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无Toolbar，状态栏透明，不绘制到顶"
+                android:text="聊天场景(Activity)：无标题栏，状态栏透明，不绘制到状态栏"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_activity_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Activity)：无Toolbar，状态栏透明，绘制到顶"
+                android:text="聊天场景(Activity)：无标题栏，状态栏透明，绘制到状态栏"
                 android:textColor="@color/btn_activity_text"
                 android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Fragment)：无Toolbar"
+                android:text="聊天场景(Fragment)：无标题栏"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Fragment)：包含Toolbar"
+                android:text="聊天场景(Fragment)：自定义标题栏"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Fragment)：包含Toolbar，状态栏着色"
+                android:text="聊天场景(Fragment)：自定义标题栏，状态栏着色"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -118,7 +118,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_fragment_btn"
                 android:padding="10dp"
-                android:text="聊天场景(Fragment)：包含Toolbar，状态栏透明"
+                android:text="聊天场景(Fragment)：自定义标题栏，状态栏透明"
                 android:textColor="@color/btn_fragment_text"
                 android:textStyle="bold" />
 
@@ -163,7 +163,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="视频场景-视频播放(优于bilibili)"
+                android:text="特殊场景-视频播放(优于bilibili)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -174,7 +174,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="视频场景-信息流评论(同微信朋友圈效果)"
+                android:text="特殊场景-信息流评论(同微信朋友圈效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -185,7 +185,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="直播场景-电脑直播(优于虎牙效果)"
+                android:text="特殊场景-电脑直播(优于虎牙效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -196,7 +196,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_video_btn"
                 android:padding="10dp"
-                android:text="直播场景-手机直播(优于淘宝直播/抖音效果)"
+                android:text="特殊场景-手机直播(优于抖音效果)"
                 android:textColor="@color/btn_video_text"
                 android:textStyle="bold" />
 
@@ -207,7 +207,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
-                android:text="内容区域-线性布局"
+                android:text="API-内容容器(线性布局)"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
@@ -218,7 +218,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
-                android:text="内容区域-相对布局"
+                android:text="API-内容容器(相对布局)"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
@@ -229,7 +229,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
-                android:text="内容区域-帧布局"
+                android:text="API-内容容器(帧布局)"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
@@ -240,19 +240,42 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_content_btn"
                 android:padding="10dp"
-                android:text="内容区域-自定义布局"
+                android:text="API-内容容器(自定义布局)"
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
+
             <TextView
-                android:id="@+id/cus_panel"
+                android:id="@+id/reset_by_default"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/sh_content_btn"
+                android:background="@drawable/sh_reset_btn"
                 android:padding="10dp"
-                android:text="面板区域-自定义面板"
-                android:textColor="@color/btn_content_text"
+                android:text="API-点击内容容器收起面板(默认处理)"
+                android:textColor="@color/btn_reset_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reset_by_empty"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_reset_btn"
+                android:padding="10dp"
+                android:text="API-点击内容容器收起面板(添加空白子 view)"
+                android:textColor="@color/btn_reset_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reset_by_hook_action_up"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_reset_btn"
+                android:padding="10dp"
+                android:text="API-点击内容容器收起面板(拦截子自 view ACTION_UP)"
+                android:textColor="@color/btn_reset_text"
                 android:textStyle="bold" />
 
             <TextView
