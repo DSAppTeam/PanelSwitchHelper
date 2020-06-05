@@ -1,26 +1,13 @@
 package com.example.demo.scene.feed;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
@@ -29,15 +16,9 @@ import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.android.panel.window.PanelDialog;
-import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
-import com.effective.databinding.DialogFeedCommentLayoutBinding;
-import com.example.demo.chat.ChatAdapter;
-import com.example.demo.chat.ChatInfo;
-import com.example.demo.chat.CusRecyclerView;
 import com.example.demo.emotion.EmotionPagerView;
 import com.example.demo.emotion.Emotions;
 import com.example.demo.util.DisplayUtils;
-import com.rd.PageIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

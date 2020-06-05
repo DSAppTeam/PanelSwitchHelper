@@ -2,12 +2,9 @@ package com.example.demo
 
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SimpleItemAnimator
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -17,11 +14,10 @@ import android.widget.Toast
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
-import com.effective.databinding.ChatContentLinearLayoutBinding
 import com.example.demo.anno.ContentType
 import com.example.demo.chat.ChatAdapter
 import com.example.demo.chat.ChatInfo
-import com.example.demo.chat.CusRecyclerView
+import com.example.demo.chat.HookActionUpRecyclerView
 import com.example.demo.emotion.EmotionPagerView
 import com.example.demo.emotion.Emotions
 import com.example.demo.util.DisplayUtils
@@ -57,8 +53,8 @@ class ContentActivity : AppCompatActivity() {
         initView()
     }
 
-    private val recyclerView: CusRecyclerView
-        get() = findViewById<View>(R.id.recycler_view) as CusRecyclerView
+    private val recyclerView: HookActionUpRecyclerView
+        get() = findViewById<View>(R.id.recycler_view) as HookActionUpRecyclerView
 
     private val sendView: View
         get() = findViewById(R.id.send)

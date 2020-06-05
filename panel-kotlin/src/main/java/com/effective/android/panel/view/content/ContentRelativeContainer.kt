@@ -70,16 +70,12 @@ class ContentRelativeContainer : RelativeLayout, IContentContainer {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val sonResume = super.dispatchTouchEvent(ev)
-        getResetActionImpl().hookDispatchTouchEvent(ev, sonResume)
-        return sonResume
+        val onTouchTrue = super.dispatchTouchEvent(ev)
+        return onTouchTrue or getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
     }
 
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val onTouch = super.onTouchEvent(event)
-        getResetActionImpl().hookOnTouchEvent(event)
-        return onTouch
+        return super.onTouchEvent(event) or getResetActionImpl().hookOnTouchEvent(event)
     }
 
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()

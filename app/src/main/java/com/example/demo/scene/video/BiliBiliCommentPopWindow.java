@@ -28,7 +28,7 @@ public class BiliBiliCommentPopWindow extends PopupWindow {
     public BiliBiliCommentPopWindow(final Activity activity) {
         super(activity);
         this.activity = activity;
-        final View view = LayoutInflater.from(activity).inflate(R.layout.pop_bilibili_video_layout, null, false);
+        final View view = LayoutInflater.from(activity).inflate(R.layout.pop_bilibili_video_comment_layout, null, false);
         setFocusable(true);
         setWidth(WindowManager.LayoutParams.MATCH_PARENT);
         setHeight(WindowManager.LayoutParams.MATCH_PARENT);
