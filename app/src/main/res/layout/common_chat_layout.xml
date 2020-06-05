@@ -44,7 +44,7 @@
                 app:linear_edit_view="@id/edit_text"
                 app:linear_auto_reset_area="@id/recycler_view">
 
-                <com.example.demo.chat.CusRecyclerView
+                <com.example.demo.chat.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

@@ -32,6 +32,6 @@ interface IInputAction {
 interface IResetAction {
     fun enableReset(enable: Boolean)
     fun setResetCallback(runnable: Runnable)
-    fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean)
-    fun hookOnTouchEvent(ev: MotionEvent?)
+    fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean): Boolean
+    fun hookOnTouchEvent(ev: MotionEvent?): Boolean
 }

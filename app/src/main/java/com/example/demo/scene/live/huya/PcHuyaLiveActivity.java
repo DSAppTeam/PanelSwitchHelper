@@ -51,7 +51,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
 
     private static final String TAG = "PcHuyaLiveActivity";
     private ActivityHuyaLiveLayoutBinding mBinding;
-    private BiliBiliCommentPopWindow videoPopWindow;
+    private PcHuyaCommentPopWindow videoPopWindow;
     private LinearLayoutManager mLinearLayoutManager;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
@@ -95,9 +95,9 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mBinding.checkout.setOnClickListener(v -> DisplayUtils.checkoutOrientation(PcHuyaLiveActivity.this));
         mBinding.back.setOnClickListener(v -> onBackPressed());
         View.OnClickListener inputClick = v -> {
-            //如果横竖屏复用同一个popupwindow，则需要处理好切换的时候panel动态变化，因为横竖屏的高度不一样。bilibili看起来是两个不同的布局。
-            //一个或两个都可以，如果采用一个，则需要处理popupwindow内布局的高度变化。
-            videoPopWindow = new BiliBiliCommentPopWindow(PcHuyaLiveActivity.this);
+            if(videoPopWindow == null){
+                videoPopWindow = new PcHuyaCommentPopWindow(PcHuyaLiveActivity.this);
+            }
             videoPopWindow.showAtLocation(mBinding.getRoot(), Gravity.NO_GRAVITY, 0, 0);
             mBinding.getRoot().postDelayed(showKeyboardRunnable, 200);
         };
@@ -251,6 +251,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
             layoutParams.width = size.first;
             layoutParams.height = size.first * 9 / 16;
             mBinding.inputH.setVisibility(View.GONE);
+            mBinding.panelRoot.setVisibility(View.VISIBLE);
             mBinding.checkout.setVisibility(View.VISIBLE);
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -258,6 +259,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
             layoutParams.width = size.first;
             layoutParams.height = size.second;
             mBinding.inputH.setVisibility(View.VISIBLE);
+            mBinding.panelRoot.setVisibility(View.GONE);
             mBinding.checkout.setVisibility(View.GONE);
         }
         mBinding.videoView.setLayoutParams(layoutParams);

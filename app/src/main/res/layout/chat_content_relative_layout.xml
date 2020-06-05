@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 app:relative_edit_view="@id/edit_text">
 
-                <com.example.demo.chat.CusRecyclerView
+                <com.example.demo.chat.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_above="@+id/bottom_action"

@@ -42,7 +42,7 @@
                 android:orientation="vertical"
                 app:linear_edit_view="@id/edit_text">
 
-                <com.example.demo.chat.CusRecyclerView
+                <com.example.demo.chat.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

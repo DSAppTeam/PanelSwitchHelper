@@ -127,6 +127,7 @@
             android:background="#999999" />
 
         <com.effective.android.panel.view.PanelSwitchLayout
+            android:id="@+id/panel_root"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -137,7 +138,7 @@
                 app:relative_edit_view="@id/input"
                 app:relative_auto_reset="true">
 
-                <com.example.demo.chat.CusRecyclerView
+                <com.example.demo.chat.HookActionUpRecyclerView
                     android:id="@+id/chat_list"
                     android:layout_above="@+id/action"
                     android:layout_width="match_parent"
