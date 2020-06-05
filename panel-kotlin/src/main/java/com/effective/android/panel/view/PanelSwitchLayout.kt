@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.health.SystemHealthManager
 import android.transition.ChangeBounds
+import android.transition.Fade
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Pair
@@ -370,22 +371,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun isResetState(panelId: Int) = panelId == Constants.PANEL_NONE
 
-    private var transtionKey: Pair<Int, Int>? = null
-
     @TargetApi(19)
     private fun setTransition(duration: Long, panelId: Int) {
-        if (scrollOutsideBorder.canLayoutOutsideBorder()) {
-            if(transtionKey == null || (transtionKey?.first == lastPanelId && transtionKey?.second == panelId)){
-                transtionKey = Pair(lastPanelId,panelId)
-                if ((isResetState(lastPanelId) && !isResetState(panelId))
-                        || !isResetState(lastPanelId) && isResetState(panelId)) {
-                    val changeBounds = ChangeBounds()
-                    changeBounds.duration = duration
-                    TransitionManager.beginDelayedTransition(this, changeBounds)
-                }
-            }
-            return
+        if ((isResetState(lastPanelId) && !isResetState(panelId))
+                || !isResetState(lastPanelId) && isResetState(panelId)) {
+            val changeBounds = ChangeBounds()
+            changeBounds.duration = duration
+            TransitionManager.beginDelayedTransition(this, changeBounds)
         }
+        return
     }
 
     /**
