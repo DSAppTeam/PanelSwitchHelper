@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:relative_auto_reset="true"
             app:relative_edit_view="@id/input">
 
             <RelativeLayout

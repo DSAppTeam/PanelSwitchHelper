@@ -3,12 +3,10 @@ package com.example.demo.scene.live.huya;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.PopupWindow;
@@ -17,14 +15,11 @@ import android.widget.TextView;
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
-import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
-import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.Emotions;
-import com.example.demo.scene.chat.ChatActivity;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.util.DisplayUtils;
-import com.rd.PageIndicatorView;
 
 public class PcHuyaCommentPopWindow extends PopupWindow {
 

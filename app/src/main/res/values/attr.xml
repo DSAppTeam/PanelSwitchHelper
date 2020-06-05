@@ -4,7 +4,7 @@
     <declare-styleable name="ContentCusContainer">
         <attr name="cus_edit_view" format="reference"/>
         <attr name="cus_auto_reset_area" format="reference"/>
-        <attr name="cus_auto_reset" format="boolean"/>
+        <attr name="cus_auto_reset_enable" format="boolean"/>
     </declare-styleable>
 
 

@@ -15,6 +15,7 @@ import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
 import com.example.demo.anno.ContentType;
 import com.example.demo.anno.PageType;
+import com.example.demo.scene.ContentActivity;
 import com.example.demo.scene.chat.ChatActivity;
 import com.example.demo.scene.chat.ChatDialog;
 import com.example.demo.scene.chat.ChatDialogFragment;
@@ -22,7 +23,7 @@ import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.ChatPopupWindow;
 import com.example.demo.scene.feed.FeedActivity;
 import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
-import com.example.demo.scene.live.PhoneLiveActivity;
+import com.example.demo.scene.live.douyin.PhoneDouyinLiveActivity;
 import com.example.demo.scene.video.BiliBiliSampleActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -78,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.chat_toolbar: {
-                ChatActivity.start(MainActivity.this, PageType.TOOLBAR);
+                ChatActivity.start(MainActivity.this, PageType.TITLE_BAR);
                 break;
             }
             case R.id.chat_cus_toolbar: {
-                ChatActivity.start(MainActivity.this, PageType.CUS_TOOLBAR);
+                ChatActivity.start(MainActivity.this, PageType.CUS_TITLE_BAR);
                 break;
             }
             case R.id.chat_color: {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.chat_fragment_toolbar: {
-                ChatFragmentActivity.startFragment(MainActivity.this, PageType.TOOLBAR);
+                ChatFragmentActivity.startFragment(MainActivity.this, PageType.TITLE_BAR);
                 break;
             }
             case R.id.chat_color_fragment: {
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.live_phone: {
-                startActivity(new Intent(MainActivity.this, PhoneLiveActivity.class));
+                startActivity(new Intent(MainActivity.this, PhoneDouyinLiveActivity.class));
                 break;
             }
             case R.id.linear_content: {

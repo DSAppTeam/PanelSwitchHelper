@@ -66,13 +66,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var scrollOutsideBorder: OnScrollOutsideBorder
 
     private var isKeyboardShowing = false
-    var panelId = Constants.PANEL_NONE
-        private set
-    var lastPanelId = Constants.PANEL_NONE
-        private set
+    private var panelId = Constants.PANEL_NONE
+    private var lastPanelId = Constants.PANEL_NONE
     private var animationSpeed = 200 //standard
 
-    lateinit var deviceRuntime: DeviceRuntime
+    private lateinit var deviceRuntime: DeviceRuntime
 
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -366,15 +364,27 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
+    private fun isUserPanel(panelId: Int) = panelId != Constants.PANEL_KEYBOARD && panelId != Constants.PANEL_NONE
+
+    private fun isKeyboardPanel(panelId: Int) = panelId == Constants.PANEL_KEYBOARD
+
+    private fun isResetState(panelId: Int) = panelId == Constants.PANEL_NONE
+
+    private var transtionKey: Pair<Int, Int>? = null
+
     @TargetApi(19)
-    private fun setTransition(duration: Long, panelId: Int) { //如果禁止了内容区域滑出边界且当当前是收起面板，则取消动画。
-        //因为禁止滑出边界使用动态更改高度，动画过程中界面已绘制内容会有极其短暂的重叠，故禁止动画。
-        if (scrollOutsideBorder.canLayoutOutsideBorder()
-                || (!scrollOutsideBorder.canLayoutOutsideBorder()
-                        && (lastPanelId == Constants.PANEL_NONE || (lastPanelId != Constants.PANEL_KEYBOARD && panelId == Constants.PANEL_NONE)))) {
-            val changeBounds = ChangeBounds()
-            changeBounds.duration = duration
-            TransitionManager.beginDelayedTransition(this, changeBounds)
+    private fun setTransition(duration: Long, panelId: Int) {
+        if (scrollOutsideBorder.canLayoutOutsideBorder()) {
+            if(transtionKey == null || (transtionKey?.first == lastPanelId && transtionKey?.second == panelId)){
+                transtionKey = Pair(lastPanelId,panelId)
+                if ((isResetState(lastPanelId) && !isResetState(panelId))
+                        || !isResetState(lastPanelId) && isResetState(panelId)) {
+                    val changeBounds = ChangeBounds()
+                    changeBounds.duration = duration
+                    TransitionManager.beginDelayedTransition(this, changeBounds)
+                }
+            }
+            return
         }
     }
 

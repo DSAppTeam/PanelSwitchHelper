@@ -27,12 +27,12 @@ import com.effective.android.panel.R
  */
 class ContentFrameContainer : FrameLayout, IContentContainer {
     @IdRes
-    var editTextId = 0
+    private var editTextId = 0
 
     @IdRes
-    var autoResetId = 0
+    private var autoResetId = 0
 
-    var autoResetByOnTouch :Boolean = true
+    private var autoResetByOnTouch :Boolean = true
     private lateinit var contentContainer: ContentContainerImpl
 
     @JvmOverloads
@@ -49,7 +49,7 @@ class ContentFrameContainer : FrameLayout, IContentContainer {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentFrameContainer, defStyleAttr, 0)
         editTextId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_edit_view, -1)
         autoResetId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentFrameContainer_frame_auto_reset, autoResetByOnTouch)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentFrameContainer_frame_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 
@@ -72,12 +72,14 @@ class ContentFrameContainer : FrameLayout, IContentContainer {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val onTouchTrue = super.dispatchTouchEvent(ev)
-        return onTouchTrue or getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
+        val hookResult = getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
+        return hookResult or onTouchTrue
     }
 
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event) or getResetActionImpl().hookOnTouchEvent(event)
+        val onTouchBySelf = super.onTouchEvent(event)
+        val hookResult = getResetActionImpl().hookOnTouchEvent(event)
+        return onTouchBySelf or hookResult
     }
 
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()

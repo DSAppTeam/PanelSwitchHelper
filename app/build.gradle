@@ -58,6 +58,7 @@ dependencies {
     implementation deps.support.recyclerview
     implementation deps.support.constraint
     implementation deps.pageindicator
+    implementation deps.circleimageview
 //    implementation deps.panelSwitchHelper
     implementation project(":panel-kotlin")
 }

@@ -27,11 +27,11 @@ import com.effective.android.panel.R
  */
 class ContentLinearContainer : LinearLayout, IContentContainer {
     @IdRes
-    var editTextId = 0
+    private var editTextId = 0
 
     @IdRes
-    var autoResetId = 0
-    var autoResetByOnTouch: Boolean = true
+    private var autoResetId = 0
+    private var autoResetByOnTouch: Boolean = true
     private lateinit var contentContainer: ContentContainerImpl
 
     @JvmOverloads
@@ -48,7 +48,7 @@ class ContentLinearContainer : LinearLayout, IContentContainer {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentLinearContainer, defStyleAttr, 0)
         editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1)
         autoResetId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentLinearContainer_linear_auto_reset, autoResetByOnTouch)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentLinearContainer_linear_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
         orientation = VERTICAL
     }
@@ -72,12 +72,14 @@ class ContentLinearContainer : LinearLayout, IContentContainer {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val onTouchTrue = super.dispatchTouchEvent(ev)
-        return onTouchTrue or getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
+        val hookResult = getResetActionImpl().hookDispatchTouchEvent(ev, onTouchTrue)
+        return hookResult or onTouchTrue
     }
 
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event) or getResetActionImpl().hookOnTouchEvent(event)
+        val onTouchBySelf = super.onTouchEvent(event)
+        val hookResult = getResetActionImpl().hookOnTouchEvent(event)
+        return onTouchBySelf or hookResult
     }
 
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()

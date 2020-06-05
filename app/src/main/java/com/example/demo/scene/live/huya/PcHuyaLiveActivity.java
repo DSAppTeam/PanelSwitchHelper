@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +31,8 @@ import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.ActivityHuyaLiveLayoutBinding;
-import com.example.demo.emotion.EmotionPagerView;
-import com.example.demo.emotion.Emotions;
-import com.example.demo.scene.video.BiliBiliCommentPopWindow;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
@@ -86,7 +83,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_huya_live_layout);
         mBinding.videoView.getLayoutParams().width = size.first;
         mBinding.videoView.getLayoutParams().height = size.first * 9 / 16;
-        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.jz));
+        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uzi));
         mBinding.videoView.setOnPreparedListener(mp -> {
             mp.start();
             mp.setLooping(true);
@@ -216,7 +213,6 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
                             }
                         }
                     })
-                    .contentCanScrollOutside(false)
                     .logTrack(true)             //output log
                     .build();
         }

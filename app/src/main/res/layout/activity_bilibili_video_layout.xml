@@ -27,6 +27,7 @@
                 android:layout_alignBottom="@+id/video_view"
                 tools:background="@android:color/black">
 
+
                 <ImageView
                     android:id="@+id/back"
                     android:layout_width="50dp"

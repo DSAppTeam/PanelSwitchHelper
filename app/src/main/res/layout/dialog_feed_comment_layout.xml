@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:linear_auto_reset="false"
+            app:linear_auto_reset_enable="false"
             app:linear_edit_view="@id/edit_text">
 
             <View

@@ -48,7 +48,7 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bilibili_video_layout);
         mBinding.videoView.getLayoutParams().width = size.first;
         mBinding.videoView.getLayoutParams().height = size.first * 9 / 16;
-        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.jz));
+        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uzi));
         mBinding.videoView.setOnPreparedListener(mp -> {
             mp.start();
             mp.setLooping(true);
