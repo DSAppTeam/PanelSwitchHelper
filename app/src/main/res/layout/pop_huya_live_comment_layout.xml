@@ -9,7 +9,7 @@
         android:orientation="vertical">
 
         <!-- 内容区域  -->
-        <com.effective.android.panel.view.content.ContentRelativeContainer
+        <com.effective.android.panel.view.content.RelativeContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/sp_15" />
             </RelativeLayout>
-        </com.effective.android.panel.view.content.ContentRelativeContainer>
+        </com.effective.android.panel.view.content.RelativeContentContainer>
 
         <com.effective.android.panel.view.panel.PanelContainer
             android:id="@+id/panel_container"

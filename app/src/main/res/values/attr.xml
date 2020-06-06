@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="ContentCusContainer">
+    <declare-styleable name="CusContentContainer">
         <attr name="cus_edit_view" format="reference"/>
         <attr name="cus_auto_reset_area" format="reference"/>
         <attr name="cus_auto_reset_enable" format="boolean"/>
     </declare-styleable>
 
-
+    <declare-styleable name="CusPanelView">
+        <attr name="cus_panel_trigger" format="reference" />
+        <attr name="cus_panel_toggle" format="boolean" />
+    </declare-styleable>
 </resources>

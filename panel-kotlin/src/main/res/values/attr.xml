@@ -15,19 +15,19 @@
         <attr name="panel_layout" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="ContentLinearContainer">
+    <declare-styleable name="LinearContentContainer">
         <attr name="linear_edit_view" format="reference" />
         <attr name="linear_auto_reset_enable" format="boolean" />
         <attr name="linear_auto_reset_area" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="ContentFrameContainer">
+    <declare-styleable name="FrameContentContainer">
         <attr name="frame_edit_view" format="reference" />
         <attr name="frame_auto_reset_enable" format="boolean" />
         <attr name="frame_auto_reset_area" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="ContentRelativeContainer">
+    <declare-styleable name="RelativeContentContainer">
         <attr name="relative_edit_view" format="reference" />
         <attr name="relative_auto_reset_enable" format="boolean" />
         <attr name="relative_auto_reset_area" format="reference" />

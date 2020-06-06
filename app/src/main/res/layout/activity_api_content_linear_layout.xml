@@ -12,8 +12,7 @@
             android:id="@+id/cus_title_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorPrimary"
-            android:visibility="gone">
+            android:background="@color/colorPrimary">
 
             <TextView
                 android:id="@+id/title"
@@ -37,21 +36,20 @@
             <!-- 内容区域 -->
             <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
             <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
-            <com.effective.android.panel.view.content.ContentFrameContainer
+            <com.effective.android.panel.view.content.LinearContentContainer
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:frame_edit_view="@id/edit_text">
+                app:linear_edit_view="@id/edit_text">
 
                 <com.example.demo.scene.chat.view.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="50dp" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_gravity="bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_input_layout"
@@ -116,7 +114,7 @@
 
                 </LinearLayout>
 
-            </com.effective.android.panel.view.content.ContentFrameContainer>
+            </com.effective.android.panel.view.content.LinearContentContainer>
 
 
             <!-- 面板区域，仅能包含PanelView-->
@@ -126,10 +124,6 @@
                 android:background="@color/common_page_bg_color"
                 android:layout_height="wrap_content">
 
-                <!-- 每一项面板 -->
-                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
-                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
-                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
                 <com.effective.android.panel.view.panel.PanelView
                     android:id="@+id/panel_emotion"
                     android:layout_width="match_parent"

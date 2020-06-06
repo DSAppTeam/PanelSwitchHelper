@@ -13,9 +13,12 @@ import android.widget.PopupWindow;
 
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
-import com.example.demo.anno.ContentType;
-import com.example.demo.anno.PageType;
-import com.example.demo.scene.ContentActivity;
+import com.example.demo.anno.ApiContentType;
+import com.example.demo.anno.ApiResetType;
+import com.example.demo.anno.ChatPageType;
+import com.example.demo.scene.api.ContentActivity;
+import com.example.demo.scene.api.PanelActivity;
+import com.example.demo.scene.api.ResetActivity;
 import com.example.demo.scene.chat.ChatActivity;
 import com.example.demo.scene.chat.ChatDialog;
 import com.example.demo.scene.chat.ChatDialogFragment;
@@ -64,54 +67,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //视频
         mBinding.video.setOnClickListener(this);
 
-        //扩展内容区域布局结构
+        //api - 扩展内容区域布局结构
         mBinding.linearContent.setOnClickListener(this);
         mBinding.relativeContent.setOnClickListener(this);
         mBinding.frameContent.setOnClickListener(this);
         mBinding.cusContent.setOnClickListener(this);
+
+        //api - 隐藏面板
+        mBinding.resetByDisable.setOnClickListener(this);
+        mBinding.resetByEnable.setOnClickListener(this);
+        mBinding.resetByEnableEmptyView.setOnClickListener(this);
+        mBinding.resetByEnableRecyclerView.setOnClickListener(this);
+        mBinding.resetByEnableCusRecyclerView.setOnClickListener(this);
+
+        //api - 自定义 PanelView
+        mBinding.cusPanel.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.chat: {
-                ChatActivity.start(MainActivity.this, PageType.DEFAULT);
+                ChatActivity.start(MainActivity.this, ChatPageType.DEFAULT);
                 break;
             }
             case R.id.chat_toolbar: {
-                ChatActivity.start(MainActivity.this, PageType.TITLE_BAR);
+                ChatActivity.start(MainActivity.this, ChatPageType.TITLE_BAR);
                 break;
             }
             case R.id.chat_cus_toolbar: {
-                ChatActivity.start(MainActivity.this, PageType.CUS_TITLE_BAR);
+                ChatActivity.start(MainActivity.this, ChatPageType.CUS_TITLE_BAR);
                 break;
             }
             case R.id.chat_color: {
-                ChatActivity.start(MainActivity.this, PageType.COLOR_STATUS_BAR);
+                ChatActivity.start(MainActivity.this, ChatPageType.COLOR_STATUS_BAR);
                 break;
             }
             case R.id.chat_transparent: {
-                ChatActivity.start(MainActivity.this, PageType.TRANSPARENT_STATUS_BAR);
+                ChatActivity.start(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR);
                 break;
             }
             case R.id.chat_transparent_under_status_bar: {
-                ChatActivity.start(MainActivity.this, PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER);
+                ChatActivity.start(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER);
                 break;
             }
             case R.id.chat_fragment: {
-                ChatFragmentActivity.startFragment(MainActivity.this, PageType.DEFAULT);
+                ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.DEFAULT);
                 break;
             }
             case R.id.chat_fragment_toolbar: {
-                ChatFragmentActivity.startFragment(MainActivity.this, PageType.TITLE_BAR);
+                ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.TITLE_BAR);
                 break;
             }
             case R.id.chat_color_fragment: {
-                ChatFragmentActivity.startFragment(MainActivity.this, PageType.COLOR_STATUS_BAR);
+                ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.COLOR_STATUS_BAR);
                 break;
             }
             case R.id.chat_transparent_fragment: {
-                ChatFragmentActivity.startFragment(MainActivity.this, PageType.TRANSPARENT_STATUS_BAR);
+                ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR);
                 break;
             }
             case R.id.chat_special_page_dialog_fragment: {
@@ -146,22 +159,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.linear_content: {
-                ContentActivity.start(MainActivity.this, ContentType.Linear);
+                ContentActivity.start(MainActivity.this, ApiContentType.Linear);
                 break;
             }
 
             case R.id.frame_content: {
-                ContentActivity.start(MainActivity.this, ContentType.Frame);
+                ContentActivity.start(MainActivity.this, ApiContentType.Frame);
                 break;
             }
 
             case R.id.relative_content: {
-                ContentActivity.start(MainActivity.this, ContentType.Relative);
+                ContentActivity.start(MainActivity.this, ApiContentType.Relative);
+                break;
+            }
+
+            case R.id.reset_by_enable: {
+                ResetActivity.start(MainActivity.this, ApiResetType.ENABLE);
+                break;
+            }
+
+            case R.id.reset_by_enable_empty_view: {
+                ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_EmptyView);
+                break;
+            }
+
+            case R.id.reset_by_enable_recycler_view: {
+                ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_RecyclerView);
+                break;
+            }
+
+            case R.id.reset_by_enable_cus_recycler_view: {
+                ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_HookActionUpRecyclerview);
+                break;
+            }
+
+            case R.id.reset_by_disable: {
+                ResetActivity.start(MainActivity.this, ApiResetType.DISABLE);
+                break;
+            }
+
+            case R.id.cus_panel: {
+                startActivity(new Intent(MainActivity.this, PanelActivity.class));
                 break;
             }
 
             case R.id.cus_content: {
-                ContentActivity.start(MainActivity.this, ContentType.CUS);
+                ContentActivity.start(MainActivity.this, ApiContentType.CUS);
                 break;
             }
         }

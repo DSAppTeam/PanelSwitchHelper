@@ -132,7 +132,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <com.effective.android.panel.view.content.ContentRelativeContainer
+            <com.effective.android.panel.view.content.RelativeContentContainer
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:relative_edit_view="@id/input">
@@ -192,7 +192,7 @@
 
                 </RelativeLayout>
 
-            </com.effective.android.panel.view.content.ContentRelativeContainer>
+            </com.effective.android.panel.view.content.RelativeContentContainer>
 
             <!-- 面板区域，仅能包含PanelView-->
             <com.effective.android.panel.view.panel.PanelContainer

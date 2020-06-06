@@ -244,9 +244,8 @@
                 android:textColor="@color/btn_content_text"
                 android:textStyle="bold" />
 
-
             <TextView
-                android:id="@+id/reset_by_default"
+                android:id="@+id/reset_by_enable"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -257,25 +256,58 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/reset_by_empty"
+                android:id="@+id/reset_by_enable_empty_view"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_reset_btn"
                 android:padding="10dp"
-                android:text="API-点击内容容器收起面板(添加空白子 view)"
+                android:text="API-点击空白 View 收起面板"
                 android:textColor="@color/btn_reset_text"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/reset_by_hook_action_up"
+                android:id="@+id/reset_by_enable_recycler_view"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/sh_reset_btn"
                 android:padding="10dp"
-                android:text="API-点击内容容器收起面板(拦截子自 view ACTION_UP)"
+                android:text="API-点击原生 RecyclerView 收起面板"
                 android:textColor="@color/btn_reset_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reset_by_enable_cus_recycler_view"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_reset_btn"
+                android:padding="10dp"
+                android:text="API-点击自定义 RecyclerView 收起面板"
+                android:textColor="@color/btn_reset_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reset_by_disable"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_reset_btn"
+                android:padding="10dp"
+                android:text="API-关闭点击内容容器收起面板"
+                android:textColor="@color/btn_reset_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cus_panel"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sh_panel_btn"
+                android:padding="10dp"
+                android:text="API-自定义PanelView"
+                android:textColor="@color/btn_panel_text"
                 android:textStyle="bold" />
 
             <TextView

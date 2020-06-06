@@ -21,7 +21,7 @@ import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatLayoutBinding;
 import com.example.demo.Constants;
-import com.example.demo.anno.PageType;
+import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.chat.Adapter.ChatAdapter;
 import com.example.demo.scene.chat.Adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
@@ -37,7 +37,7 @@ import com.rd.PageIndicatorView;
  */
 public class ChatActivity extends AppCompatActivity {
 
-    public static void start(Context context, @PageType int type) {
+    public static void start(Context context, @ChatPageType int type) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(Constants.KEY_PAGE_TYPE, type);
         context.startActivity(intent);
@@ -52,15 +52,15 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, PageType.DEFAULT);
+        int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, ChatPageType.DEFAULT);
         switch (type) {
-            case PageType.TITLE_BAR:{
+            case ChatPageType.TITLE_BAR:{
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 getSupportActionBar().setTitle("Activity-有标题栏");
                 break;
             }
-            case PageType.COLOR_STATUS_BAR: {
+            case ChatPageType.COLOR_STATUS_BAR: {
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 StatusbarHelper.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
                 getSupportActionBar().setTitle("Activity-有标题栏，状态栏着色");
@@ -68,13 +68,13 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
-            case PageType.DEFAULT:{
+            case ChatPageType.DEFAULT:{
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
-            case PageType.CUS_TITLE_BAR:{
+            case ChatPageType.CUS_TITLE_BAR:{
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.cusTitleBar.setVisibility(View.VISIBLE);
@@ -83,7 +83,7 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
             }
-            case PageType.TRANSPARENT_STATUS_BAR: {
+            case ChatPageType.TRANSPARENT_STATUS_BAR: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setFitsSystemWindows(true);
@@ -91,7 +91,7 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
             }
-            case PageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
+            case ChatPageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setFitsSystemWindows(false);

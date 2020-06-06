@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.effective.android.panel.view.content.ContentRelativeContainer
+            <com.effective.android.panel.view.content.RelativeContentContainer
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:relative_edit_view="@+id/input">
@@ -225,7 +225,7 @@
                 </RelativeLayout>
 
 
-            </com.effective.android.panel.view.content.ContentRelativeContainer>
+            </com.effective.android.panel.view.content.RelativeContentContainer>
 
             <com.effective.android.panel.view.panel.PanelContainer
                 android:id="@+id/panel_container"
