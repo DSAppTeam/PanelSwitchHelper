@@ -94,7 +94,7 @@ class ContentActivity : AppCompatActivity() {
     }
 
     private fun scrollToBottom() {
-        editView.post { mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) }
+        editView.postDelayed({ mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) },200)
     }
 
     override fun onStart() {

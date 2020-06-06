@@ -112,9 +112,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
         })
         contentContainer.getResetActionImpl().setResetCallback(Runnable {
-            if (panelId != Constants.PANEL_NONE) {
-                checkoutPanel(Constants.PANEL_NONE)
-            }
+            hookSystemBackByPanelSwitcher()
         })
 
         /**
@@ -316,7 +314,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         setTransition(animationSpeed.toLong(), panelId)
 
         if (Constants.DEBUG) {
-            LogTracker.log("$TAG#onLayout", " onLayout(changed : $changed , l : $l  , t : $t , r : $r , b : $b")
+            LogTracker.log("$TAG#onLayout", " onLayout(changed : $changed , l : $l  , t : $t , r : $r , b : $b） ===================&&&&=================")
             val state = when (panelId) {
                 Constants.PANEL_NONE -> "收起所有输入源"
                 Constants.PANEL_KEYBOARD -> "显示键盘输入"
@@ -382,6 +380,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         return
     }
 
+
     /**
      * This will be called when User press System Back Button.
      * 1. if keyboard is showing, should be hide;
@@ -391,6 +390,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      */
     fun hookSystemBackByPanelSwitcher(): Boolean {
         if (panelId != Constants.PANEL_NONE) {
+            //模仿系统输入法隐藏，如果直接掉  checkoutPanel(Constants.PANEL_NONE)，可能导致隐藏时上层 recyclerview 因为 layout 导致界面出现短暂卡顿。
             if (panelId == Constants.PANEL_KEYBOARD) {
                 hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
             } else {
@@ -417,14 +417,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (panelId == this.panelId) {
             return false
         }
-        panelContainer.hidePanels()
         when (panelId) {
             Constants.PANEL_NONE -> {
+                panelContainer.hidePanels()
                 hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 contentContainer.getInputActionImpl().clearFocusByEditText()
                 contentContainer.getResetActionImpl().enableReset(false)
             }
             Constants.PANEL_KEYBOARD -> {
+                panelContainer.hidePanels()
                 showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 contentContainer.getResetActionImpl().enableReset(true)
             }
