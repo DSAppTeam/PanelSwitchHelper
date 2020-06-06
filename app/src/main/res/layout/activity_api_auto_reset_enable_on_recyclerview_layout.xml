@@ -11,45 +11,50 @@
         <RelativeLayout
             android:id="@+id/cus_title_bar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="left|center_vertical"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="自定义标题栏"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
         <com.effective.android.panel.view.PanelSwitchLayout
             android:id="@+id/panel_switch_layout"
             android:layout_width="match_parent"
-            app:animationSpeed="standard"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:animationSpeed="standard">
 
             <!-- 内容区域 -->
             <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
             <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
-            <com.effective.android.panel.view.content.ContentLinearContainer
+            <com.effective.android.panel.view.content.RelativeContentContainer
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text">
+                app:relative_edit_view="@id/edit_text"
+                app:relative_auto_reset_area="@id/recycler_view">
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/bottom_action" />
 
                 <LinearLayout
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/bottom_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_input_layout"
@@ -114,16 +119,20 @@
 
                 </LinearLayout>
 
-            </com.effective.android.panel.view.content.ContentLinearContainer>
+            </com.effective.android.panel.view.content.RelativeContentContainer>
 
 
             <!-- 面板区域，仅能包含PanelView-->
             <com.effective.android.panel.view.panel.PanelContainer
                 android:id="@+id/panel_container"
                 android:layout_width="match_parent"
-                android:background="@color/common_page_bg_color"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/common_page_bg_color">
 
+                <!-- 每一项面板 -->
+                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
                 <com.effective.android.panel.view.panel.PanelView
                     android:id="@+id/panel_emotion"
                     android:layout_width="match_parent"

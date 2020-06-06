@@ -18,12 +18,8 @@ import com.effective.android.panel.view.panel.IPanelView
  */
 class PanelView : FrameLayout, IPanelView {
     private var panelLayoutId = 0
-
-    var triggerViewId = 0
-        private set
-
-    var isToggle = false
-        private set
+    private var triggerViewId = 0
+    private var isToggle = true
 
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context!!, attrs, defStyleAttr) {
@@ -39,7 +35,7 @@ class PanelView : FrameLayout, IPanelView {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PanelView, defStyleAttr, 0)
         panelLayoutId = typedArray.getResourceId(R.styleable.PanelView_panel_layout, -1)
         triggerViewId = typedArray.getResourceId(R.styleable.PanelView_panel_trigger, -1)
-        isToggle = typedArray.getBoolean(R.styleable.PanelView_panel_toggle, true)
+        isToggle = typedArray.getBoolean(R.styleable.PanelView_panel_toggle, isToggle)
         typedArray.recycle()
     }
 

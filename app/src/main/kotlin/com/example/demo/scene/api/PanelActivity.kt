@@ -1,10 +1,7 @@
-package com.example.demo.scene
+package com.example.demo.scene.api
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -15,53 +12,26 @@ import android.widget.Toast
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
-import com.example.demo.Constants
-import com.example.demo.anno.ContentType
-import com.example.demo.scene.chat.Adapter.ChatAdapter
-import com.example.demo.scene.chat.Adapter.ChatInfo
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
-import com.example.demo.scene.chat.view.HookActionUpRecyclerView
 import com.example.demo.util.DisplayUtils
 import com.rd.PageIndicatorView
 
 /**
- * 内容区域支持多种布局，不再限定为线性布局
- * Created by yummyLau on 2020/05/07
- * Email: yummyl.lau@gmail.com
- * blog: yummylau.com
+ * 处理可以使用默认的 PanelView，也可以通过继承 IPanelView 来实现自己的 PanelView。
+ * 使用自定义面板
+ * created by yummylau on 2020/06/06
  */
-class ContentActivity : AppCompatActivity() {
+class PanelActivity : AppCompatActivity() {
     private var mHelper: PanelSwitchHelper? = null
-    private lateinit var mAdapter: ChatAdapter
-    private var mLinearLayoutManager: LinearLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        when (intent.getIntExtra(Constants.KEY_PAGE_TYPE, ContentType.CUS)) {
-            ContentType.Linear -> {
-                setContentView(R.layout.chat_content_linear_layout)
-                findViewById<TextView>(R.id.title).text = "线性布局"
-            }
-            ContentType.Frame -> {
-                setContentView(R.layout.chat_content_frame_layout)
-                findViewById<TextView>(R.id.title).text = "桢布局"
-            }
-            ContentType.Relative -> {
-                setContentView(R.layout.chat_content_relative_layout)
-                findViewById<TextView>(R.id.title).text = "相对布局"
-            }
-            else -> {
-                setContentView(R.layout.chat_content_cus_layout)
-                findViewById<TextView>(R.id.title).text = "自定义布局"
-            }
-        }
+        setContentView(R.layout.activity_api_cus_panel_layout)
+        findViewById<TextView>(R.id.title).text = "继承 IPanelView 实现 PanelView，点击左下角 + 试试吧"
         initView()
     }
-
-    private val recyclerView: HookActionUpRecyclerView
-        get() = findViewById<View>(R.id.recycler_view) as HookActionUpRecyclerView
 
     private val sendView: View
         get() = findViewById(R.id.send)
@@ -73,28 +43,14 @@ class ContentActivity : AppCompatActivity() {
         get() = findViewById(R.id.emotion_btn)
 
     private fun initView() {
-        mLinearLayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = mLinearLayoutManager
-        mAdapter = ChatAdapter(this, 50)
-        recyclerView.adapter = mAdapter
         sendView.setOnClickListener(View.OnClickListener {
             val content = editView.text.toString()
             if (TextUtils.isEmpty(content)) {
-                Toast.makeText(this@ContentActivity, "当前没有输入", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PanelActivity, "当前没有输入", Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
-            mAdapter.insertInfo(ChatInfo.CREATE(content))
-            //                如果超过某些条目，可开启滑动外部，使得更为流畅
-            if (mAdapter.itemCount > 10) {
-                mHelper?.scrollOutsideEnable(true)
-            }
             editView.text = null
-            scrollToBottom()
         })
-    }
-
-    private fun scrollToBottom() {
-        editView.postDelayed({ mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) },200)
     }
 
     override fun onStart() {
@@ -109,18 +65,10 @@ class ContentActivity : AppCompatActivity() {
                     .addEditTextFocusChangeListener {
                         onFocusChange { _, hasFocus ->
                             Log.d(TAG, "输入框是否获得焦点 : $hasFocus")
-                            if (hasFocus) {
-                                scrollToBottom()
-                            }
                         }
                     }
                     .addViewClickListener {
                         onClickBefore {
-                            when (it!!.id) {
-                                R.id.edit_text, R.id.add_btn, R.id.emotion_btn -> {
-                                    scrollToBottom()
-                                }
-                            }
                             Log.d(TAG, "点击了View : $it")
                         }
                     }
@@ -128,7 +76,6 @@ class ContentActivity : AppCompatActivity() {
                         onKeyboard {
                             Log.d(TAG, "唤起系统输入法")
                             emotionView.isSelected = false
-                            scrollToBottom()
                         }
                         onNone {
                             Log.d(TAG, "隐藏所有面板")
@@ -138,7 +85,6 @@ class ContentActivity : AppCompatActivity() {
                             Log.d(TAG, "唤起面板 : $it")
                             if (it is PanelView) {
                                 emotionView.isSelected = it.id == R.id.panel_emotion
-                                scrollToBottom()
                             }
                         }
                         onPanelSizeChange { panelView, _, _, _, width, height ->
@@ -146,7 +92,7 @@ class ContentActivity : AppCompatActivity() {
                                 when (panelView.id) {
                                     R.id.panel_emotion -> {
                                         val pagerView: EmotionPagerView = findViewById(R.id.view_pager)
-                                        val viewPagerSize = height - DisplayUtils.dip2px(this@ContentActivity, 30f)
+                                        val viewPagerSize = height - DisplayUtils.dip2px(this@PanelActivity, 30f)
                                         pagerView.buildEmotionViews(
                                                 findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
                                                 editView,
@@ -171,13 +117,7 @@ class ContentActivity : AppCompatActivity() {
     }
 
     companion object {
-        @JvmStatic
-        fun start(context: Context, @ContentType type: Int) {
-            val intent = Intent(context, ContentActivity::class.java)
-            intent.putExtra(Constants.KEY_CONTENT_TYPE, type)
-            context.startActivity(intent)
-        }
-
-        private const val TAG = "ChatActivity"
+        private const val TAG = "PanelActivity"
     }
+
 }

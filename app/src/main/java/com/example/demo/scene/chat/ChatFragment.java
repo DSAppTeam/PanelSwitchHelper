@@ -22,7 +22,7 @@ import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
 import com.example.demo.Constants;
-import com.example.demo.anno.PageType;
+import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.chat.Adapter.ChatAdapter;
 import com.example.demo.scene.chat.Adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
@@ -47,7 +47,7 @@ public class ChatFragment extends Fragment {
         int type = getArguments().getInt(Constants.KEY_PAGE_TYPE);
 
         switch (type) {
-            case PageType.COLOR_STATUS_BAR: {
+            case ChatPageType.COLOR_STATUS_BAR: {
                 StatusbarHelper.setStatusBarColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
                 mBinding.titleBar.setVisibility(View.VISIBLE);
@@ -55,7 +55,7 @@ public class ChatFragment extends Fragment {
                 mBinding.title.setText("Fragment-自定义标题栏,状态栏着色");
                 break;
             }
-            case PageType.TRANSPARENT_STATUS_BAR: {
+            case ChatPageType.TRANSPARENT_STATUS_BAR: {
                 StatusbarHelper.setStatusBarColor(getActivity(), Color.TRANSPARENT);
                 mBinding.titleBar.setVisibility(View.VISIBLE);
                 mBinding.title.setText("Fragment-自定义标题栏，状态栏透明");
@@ -63,7 +63,7 @@ public class ChatFragment extends Fragment {
             }
             default: {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
-                mBinding.titleBar.setVisibility(type == PageType.DEFAULT ? View.GONE : View.VISIBLE);
+                mBinding.titleBar.setVisibility(type == ChatPageType.DEFAULT ? View.GONE : View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.title.setText("Fragment-自定义标题栏");
             }

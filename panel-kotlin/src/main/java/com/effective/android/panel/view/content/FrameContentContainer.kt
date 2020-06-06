@@ -25,7 +25,7 @@ import com.effective.android.panel.R
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentFrameContainer : FrameLayout, IContentContainer {
+class FrameContentContainer : FrameLayout, IContentContainer {
     @IdRes
     private var editTextId = 0
 
@@ -46,10 +46,10 @@ class ContentFrameContainer : FrameLayout, IContentContainer {
     }
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentFrameContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.ContentFrameContainer_frame_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentFrameContainer_frame_auto_reset_enable, autoResetByOnTouch)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FrameContentContainer, defStyleAttr, 0)
+        editTextId = typedArray.getResourceId(R.styleable.FrameContentContainer_frame_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.FrameContentContainer_frame_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.FrameContentContainer_frame_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 

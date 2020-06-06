@@ -25,7 +25,7 @@ import com.effective.android.panel.R
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-class ContentLinearContainer : LinearLayout, IContentContainer {
+class LinearContentContainer : LinearLayout, IContentContainer {
     @IdRes
     private var editTextId = 0
 
@@ -45,10 +45,10 @@ class ContentLinearContainer : LinearLayout, IContentContainer {
     }
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ContentLinearContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.ContentLinearContainer_linear_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.ContentLinearContainer_linear_auto_reset_enable, autoResetByOnTouch)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinearContentContainer, defStyleAttr, 0)
+        editTextId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.LinearContentContainer_linear_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
         orientation = VERTICAL
     }

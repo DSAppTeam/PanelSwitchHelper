@@ -10,11 +10,11 @@ import android.support.v4.app.FragmentActivity;
 import com.effective.R;
 import com.effective.databinding.ActivityChatFragmentLayoutBinding;
 import com.example.demo.Constants;
-import com.example.demo.anno.PageType;
+import com.example.demo.anno.ChatPageType;
 
 public class ChatFragmentActivity extends FragmentActivity {
 
-    public static void startFragment(Context context, @PageType int pageType) {
+    public static void startFragment(Context context, @ChatPageType int pageType) {
         Intent intent = new Intent(context, ChatFragmentActivity.class);
         intent.putExtra(Constants.KEY_PAGE_TYPE, pageType);
         context.startActivity(intent);

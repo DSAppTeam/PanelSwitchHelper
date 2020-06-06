@@ -11,7 +11,7 @@
         <!-- 内容区域 -->
         <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
         <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
-        <com.effective.android.panel.view.content.ContentLinearContainer
+        <com.effective.android.panel.view.content.LinearContentContainer
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -85,7 +85,7 @@
 
             </LinearLayout>
 
-        </com.effective.android.panel.view.content.ContentLinearContainer>
+        </com.effective.android.panel.view.content.LinearContentContainer>
 
         <!-- 面板区域，仅能包含PanelView-->
         <com.effective.android.panel.view.panel.PanelContainer
