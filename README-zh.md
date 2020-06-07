@@ -21,7 +21,7 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 更多细节可参考
 
- * [场景使用介绍](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SCREEN-zh.md)
+ * [场景使用介绍](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE-zh.md)
  * [API 使用指南](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API-zh.md)
 
 Demo 内容如下
@@ -260,7 +260,7 @@ implementation 'com.effective.android:panelSwitchHelper:1.3.0'
 * 1.0.3(2019-11-06) 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
 * 1.0.4(2019-11-18) 新增支持 Dialog/Fragment/DialogFragment
 * 1.0.5(2019-11-26) 支持适配华为/小米等支持动态导航栏隐藏的特殊机型
-* 1.1.0(2020-03-18) 追求极致的切换体验 [具体实现可参考](http://yummylau.com/2020/03/22/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE_20120-03-22_%E8%BE%93%E5%85%A5%E6%B3%95%E5%88%87%E6%8D%A2%E6%A1%86%E6%9E%B6(2)/)
+* 1.1.0(2020-03-18) 追求极致的切换体验
 	* 支持切换流程中动画加持，效果同步“微信聊天”场景，但支持的场景远远不止这些（见Demo），同时支持自定义动画速度
 	* 优化框架内部切换流程，摈弃旧逻辑实现，新实现通过自定义绘制切换界面，无需担心内存泄漏
 	* Demo新增自定义标题栏场景，优化视频场景体验
