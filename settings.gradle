@@ -1,2 +1,2 @@
 include ':app'
-include ':panel-kotlin'
+//include ':panel-kotlin'
