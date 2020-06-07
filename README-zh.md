@@ -26,7 +26,7 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 Demo 内容如下
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpg" width = "360" height = "790"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpg" width = "360" height = "790"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
 ### 使用方法
 
