@@ -26,7 +26,7 @@ For more details, please refer to
 
 Demo content is as follows
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpg" width = "360" height = "790"/> <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpg" width = "360" height = "790"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/> <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
 ### Instructions
 
@@ -288,9 +288,10 @@ implementation'com.effective.android:panelSwitchHelper:1.3.0'
     * Optimized animation in sliding mode
 
     `1.3.0` is an important version, it is recommended to upgrade, and pay attention to the following Api changes
-        * EmptyView removed, please refer to Demo How to realize hidden panel more elegantly
-        * Panel class specification naming, with native Linear/Relative/Frame as a prefix, it is easier to distinguish
-        * PanelView migrated to panel package
+    
+    * EmptyView removed, please refer to Demo How to realize hidden panel more elegantly
+    * Panel class specification naming, with native Linear/Relative/Frame as a prefix, it is easier to distinguish
+    * PanelView migrated to panel package
 
 
 ### Expectations
