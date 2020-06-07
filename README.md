@@ -21,7 +21,7 @@ When developing a chat/video/live/information interface, users are expected to m
 
 For more details, please refer to
 
- * [Introduction to scenario usage](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SCREEN.md)
+ * [Introduction to scenario usage](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE.md)
  * [API Usage Guide](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API.md)
 
 Demo content is as follows
@@ -260,7 +260,7 @@ implementation'com.effective.android:panelSwitchHelper:1.3.0'
 * 1.0.3(2019-11-06) Fix [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) scene issue
 * 1.0.4(2019-11-18) Added support for Dialog/Fragment/DialogFragment
 * 1.0.5(2019-11-26) Supports special models such as Huawei/Xiaomi that support dynamic navigation bar hiding
-* 1.1.0(2020-03-18) Pursuing the ultimate switching experience [specific implementation can refer to] (http://yummylau.com/2020/03/22/%E5%BC%80%E6%BA%90% E9%A1%B9%E7%9B%AE_20120-03-22_%E8%BE%93%E5%85%A5%E6%B3%95%E5%88%87%E6%8D%A2%E6%A1% 86%E6%9E%B6(2)/)
+* 1.1.0(2020-03-18) Pursuing the ultimate switching experience
     * Supports animation blessing in the switching process, the effect is synchronized with the "WeChat chat" scene, but the supported scenes are far more than these (see Demo), and support custom animation speed
     * Optimize the internal switching process of the framework, abandon the old logic implementation, and the new implementation uses custom drawing to switch the interface without worrying about memory leaks
     * Demo adds a custom title bar scene to optimize the video scene experience
