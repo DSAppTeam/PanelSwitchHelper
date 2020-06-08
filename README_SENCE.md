@@ -3,7 +3,7 @@
 2. Chat scene (like WeChat)
 3. Video playback scene (class BiliBili)
 4. Computer live broadcast scene (like Huya live broadcast)
-5. Mobile phone live broadcast scene (like vibrato-like live broadcast)
+5. Mobile phone live broadcast scene (like TikTok live broadcast)
 6. Information flow comment scene (like WeChat circle of friends)
 
 #### Support for dynamically changing the height of the input method/hiding the display of the navigation bar
