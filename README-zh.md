@@ -297,6 +297,10 @@ implementation 'com.effective.android:panelSwitchHelper:1.3.0'
 
 编写该项目只是希望能提高日常开发的效率，专注于处理业务。如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
 
+也可以添加微信，进反馈群讨论反馈。
+
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code.jpg" width = "385" height = "385"/>
+
 如果框架对你有帮助，可安利给身边的伙伴，每一个 star 都是对框架付出的肯定。
 
 

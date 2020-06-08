@@ -298,4 +298,8 @@ implementation'com.effective.android:panelSwitchHelper:1.3.0'
 
 The project was written only to improve the efficiency of daily development and focus on processing business. If you have better practices or suggestions, please write to yummyl.lau@gmail.com.
 
+You can also add WeChat and enter the feedback group to discuss feedback.
+
+<img src = "https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code.jpg" width = "385" height = "385" />
+
 If the framework is helpful to you, Amway can give the partners around you, and every star is an affirmation of the framework.
