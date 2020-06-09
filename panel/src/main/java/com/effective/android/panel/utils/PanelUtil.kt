@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.effective.android.panel.Constants
+import com.effective.android.panel.LogTracker
 import com.effective.android.panel.utils.DisplayUtil.dip2px
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
 
@@ -17,18 +18,19 @@ object PanelUtil {
 
     private var pHeight: Int = -1
     private var lHeight: Int = -1
+    private const val LIMIT_MIN = 40
 
     @JvmStatic
-    fun showKeyboard(context: Context, view: View) {
+    fun showKeyboard(context: Context, view: View):Boolean {
         view.requestFocus()
         val mInputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        mInputManager.showSoftInput(view, 0)
+        return mInputManager.showSoftInput(view, 0)
     }
 
     @JvmStatic
-    fun hideKeyboard(context: Context, view: View) {
+    fun hideKeyboard(context: Context, view: View):Boolean  {
         val mInputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        mInputManager.hideSoftInputFromWindow(view.windowToken, 0)
+        return mInputManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     @JvmStatic
@@ -54,6 +56,9 @@ object PanelUtil {
 
     @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
+        if(height < LIMIT_MIN){
+            LogTracker.log("PanelUtil#onGlobalLayout", "KeyBoardHeight is : $height, it may be a wrong value, just ignore!")
+        }
         val isPortrait = isPortrait(context)
         if (isPortrait && pHeight == height) {
             return true

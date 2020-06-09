@@ -1,11 +1,8 @@
 package com.effective.android.panel.view
 
 import android.annotation.TargetApi
-import android.app.Dialog
 import android.content.Context
-import android.os.health.SystemHealthManager
 import android.transition.ChangeBounds
-import android.transition.Fade
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Pair
@@ -420,22 +417,22 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
-    private var checkouting = false
+    private var doingCheckout = false
 
     /**
      * @param panelId
      * @return
      */
     fun checkoutPanel(panelId: Int): Boolean {
-        if (checkouting) {
+        if (doingCheckout) {
             LogTracker.log("$TAG#checkoutPanel", "is checkouting,just ignore!")
             return false
         }
-        checkouting = true
+        doingCheckout = true
 
         if (panelId == this.panelId) {
             LogTracker.log("$TAG#checkoutPanel", "current panelId is $panelId ,just ignore!")
-            checkouting = false
+            doingCheckout = false
             return false
         }
 
@@ -451,7 +448,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 val showKbResult = showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 if (!showKbResult) {
                     LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
-                    checkouting = false
+                    doingCheckout = false
                     return false
                 }
                 contentContainer.getResetActionImpl().enableReset(true)
@@ -471,7 +468,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         LogTracker.log("$TAG#checkoutPanel", "checkout success ! lastPanel's id : $lastPanelId , panel's id :$panelId")
         notifyPanelChange(this.panelId)
         requestLayout()
-        checkouting = false
+        doingCheckout = false
         return true
     }
 

@@ -89,6 +89,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         typedArray.recycle()
     }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        removeCallbacks(retryCheckoutKb)
+    }
+
+    private val retryCheckoutKb = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
+
     private fun initListener() {
         /**
          * 1. if current currentPanelId is None,should show keyboard
@@ -98,16 +105,20 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             notifyViewClick(v)
             //checkout currentFlag to keyboard
             val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-            if (!result && panelId == Constants.PANEL_KEYBOARD) {
-                checkoutPanel(Constants.PANEL_KEYBOARD)
+
+            //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
+            if (!result && panelId != Constants.PANEL_KEYBOARD) {
+                this@PanelSwitchLayout.post(retryCheckoutKb)
             }
         })
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
             if (hasFocus) { // checkout currentFlag to keyboard
                 val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-                if (!result && panelId == Constants.PANEL_KEYBOARD) {
-                    checkoutPanel(Constants.PANEL_KEYBOARD)
+
+                //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
+                if (!result && panelId != Constants.PANEL_KEYBOARD) {
+                    this@PanelSwitchLayout.post(retryCheckoutKb)
                 }
             }
         })
@@ -409,14 +420,25 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
+    private var doingCheckout = false
+
     /**
      * @param panelId
      * @return
      */
     fun checkoutPanel(panelId: Int): Boolean {
-        if (panelId == this.panelId) {
+        if (doingCheckout) {
+            LogTracker.log("$TAG#checkoutPanel", "is checkouting,just ignore!")
             return false
         }
+        doingCheckout = true
+
+        if (panelId == this.panelId) {
+            LogTracker.log("$TAG#checkoutPanel", "current panelId is $panelId ,just ignore!")
+            doingCheckout = false
+            return false
+        }
+
         when (panelId) {
             Constants.PANEL_NONE -> {
                 panelContainer.hidePanels()
@@ -426,7 +448,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
             Constants.PANEL_KEYBOARD -> {
                 panelContainer.hidePanels()
-                showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                val showKbResult = showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                if (!showKbResult) {
+                    LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
+                    doingCheckout = false
+                    return false
+                }
                 contentContainer.getResetActionImpl().enableReset(true)
             }
             else -> {
@@ -441,9 +468,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
         this.lastPanelId = this.panelId
         this.panelId = panelId
-        LogTracker.log("$TAG#checkoutPanel", "panel' id :$panelId")
+        LogTracker.log("$TAG#checkoutPanel", "checkout success ! lastPanel's id : $lastPanelId , panel's id :$panelId")
         notifyPanelChange(this.panelId)
         requestLayout()
+        doingCheckout = false
         return true
     }
 

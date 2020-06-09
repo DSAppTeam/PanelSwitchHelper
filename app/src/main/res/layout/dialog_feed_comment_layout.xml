@@ -32,6 +32,8 @@
                 android:background="@drawable/shape_input_layout"
                 android:gravity="bottom"
                 android:minHeight="@dimen/dp_50"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
