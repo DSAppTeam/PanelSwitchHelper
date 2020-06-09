@@ -33,7 +33,7 @@ dependencies {
 
 publish {
     userOrg = 'yummylau'
-    groupId = 'com.effective.android'
+    groupId = 'com.effective.androidx'
     artifactId = 'panelSwitchHelper'
     publishVersion = '1.3.0'
     desc = 'the helper that is used to checkout panel when we are chatting'
