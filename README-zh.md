@@ -28,12 +28,17 @@ Demo 内容如下
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
+默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
+
 ### 使用方法
 
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
 implementation 'com.effective.android:panelSwitchHelper:1.3.0'
+
+//or for androidx
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器

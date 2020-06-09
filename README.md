@@ -28,12 +28,17 @@ Demo content is as follows
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/> <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
+The Androidx version runs by default. If you need to open non-Androidx, open the app in `Settings.gradle` and close the Androidx configuration in `gradle.properties`.
+
 ### Instructions
 
 1. Add library dependencies in module script `build.gradle`
 
 ```
 implementation'com.effective.android:panelSwitchHelper:1.3.0'
+
+//or for androidx
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
