@@ -60,5 +60,5 @@ dependencies {
     implementation deps.pageindicator
     implementation deps.circleimageview
     implementation deps.panelSwitchHelper
-//    implementation project(":panel-kotlin")
+//    implementation project(":panel")
 }

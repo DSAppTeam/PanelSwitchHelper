@@ -275,7 +275,7 @@ implementation'com.effective.android:panelSwitchHelper:1.3.0'
     * Solve the problem of being slid outside due to too little content in IM scenarios, support dynamic switching mode, optimize experience
 * 1.1.3(2020-04-27) Compatible with the use requirements of Google channel non-public SDK-API, optimize the fixed mode drawing implementation
 * 1.2.0(2020-05-08) kotlin version/new content area container that supports multiple layout types
-    * Panel-kotlin is adjusted to kotlin language implementation, fully compatible with existing functions and Java, and supports DSL
+    * Panel is adjusted to kotlin language implementation, fully compatible with existing functions and Java, and supports DSL
     * Added content area container, default provides linear/relative/frame layout, supports custom content area container
     * Demo adds kotlin to use constraint layout to implement custom containers, and adds 4 different layout container scenarios
 * 1.2.2(2020-05-17) Fix known defects and optimize
