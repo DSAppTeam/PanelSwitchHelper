@@ -1,2 +1,5 @@
-include ':app'
-//include ':panel-kotlin'
+//include ':app'
+//include ':panel'
+
+include ':app-androidx'
+include ':panel-androidx'
