@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [中文文档](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -35,10 +35,10 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 1. Add library dependencies in module script `build.gradle`
 
 ```
-implementation'com.effective.android:panelSwitchHelper:1.3.0'
+implementation'com.effective.android:panelSwitchHelper:1.3.1'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.1'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
