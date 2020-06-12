@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -35,10 +35,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.0'
+implementation 'com.effective.android:panelSwitchHelper:1.3.1'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.1'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
