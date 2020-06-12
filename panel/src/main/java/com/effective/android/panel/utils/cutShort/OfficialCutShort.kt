@@ -3,6 +3,7 @@ package com.effective.android.panel.utils.cutShort
 import android.content.Context
 import android.os.Build
 import android.view.View
+import com.effective.android.panel.LogTracker
 
 /**
  * 官方刘海计算
@@ -33,11 +34,8 @@ class OfficialCutShort : DeviceCutShort {
             }
             displayCutoutHeight
         } catch (var3: Exception) {
+            LogTracker.log("cutShort#getCurrentCutShortHeight","try Android Devices,but fail")
             0
         }
-    }
-
-    companion object {
-        const val VENDOR = "Officail"
     }
 }

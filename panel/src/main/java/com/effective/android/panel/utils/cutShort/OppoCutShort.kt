@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
+import com.effective.android.panel.LogTracker
 
 /**
  * oppo 刘海计算
@@ -19,7 +20,7 @@ class OppoCutShort : DeviceCutShort {
         try {
             manufacturer = Build.MANUFACTURER
         } catch (var3: Exception) {
-            var3.printStackTrace()
+            LogTracker.log("cutShort#hasCutShort","try Oppo Device,but fail")
         }
         var isOppo = false
         if (!TextUtils.isEmpty(manufacturer) && manufacturer.equals("OPPO", ignoreCase = true)) {
@@ -37,9 +38,5 @@ class OppoCutShort : DeviceCutShort {
         return if (!isCusShortVisible(context)) {
             0
         } else 80
-    }
-
-    companion object {
-        const val VENDOR = "Oppo"
     }
 }
