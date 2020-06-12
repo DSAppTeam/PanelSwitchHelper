@@ -298,6 +298,8 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
     * Panel class specification naming, with native Linear/Relative/Frame as a prefix, it is easier to distinguish
     * PanelView migrated to panel package
 
+* 1.3.1 (2020-06-12) supports using the bottom system layout to capture a copy of the user's gesture. The extra system view at the bottom of the interface in this part of the layout may cause input method calculations to be biased. Rice and other samples.
+
 
 ### Expectations
 

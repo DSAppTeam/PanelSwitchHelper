@@ -2,6 +2,7 @@ package com.effective.android.panel.utils.cutShort
 
 import android.content.Context
 import android.view.View
+import com.effective.android.panel.LogTracker
 
 /**
  * 华为刘海计算
@@ -20,7 +21,7 @@ class HuaweiCutShort : DeviceCutShort {
             ret = get.invoke(hwNotchSizeUtil) as Boolean
             ret
         } catch (var8: Exception) {
-            var8.printStackTrace()
+            LogTracker.log("cutShort#hasCutShort","try Huawei Device,but fail")
             ret
         } finally {
         }
@@ -38,7 +39,7 @@ class HuaweiCutShort : DeviceCutShort {
             val widthAndHeight = getHuaweiDisplayCutoutSize(view.context)
             if (widthAndHeight != null && widthAndHeight.size == 2) widthAndHeight[1] else 0
         } catch (var2: Exception) {
-            var2.printStackTrace()
+            LogTracker.log("cutShort#getCurrentCutShortHeight","try Huawei Device,but fail")
             0
         }
     }
@@ -52,13 +53,9 @@ class HuaweiCutShort : DeviceCutShort {
             ret = get.invoke(hwNotchSizeUtil) as IntArray
             ret
         } catch (var8: Exception) {
-            var8.printStackTrace()
+            LogTracker.log("cutShort#getHuaweiDisplayCutoutSize","try Huawei Device,but fail")
             ret
         } finally {
         }
-    }
-
-    companion object {
-        const val VENDOR = "Huawei"
     }
 }

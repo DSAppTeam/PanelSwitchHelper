@@ -18,7 +18,7 @@ object PanelUtil {
 
     private var pHeight: Int = -1
     private var lHeight: Int = -1
-    private const val LIMIT_MIN = 40
+    private const val LIMIT_MIN = 60
 
     @JvmStatic
     fun showKeyboard(context: Context, view: View):Boolean {
@@ -56,8 +56,12 @@ object PanelUtil {
 
     @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
+        /**
+         * 部分rom，比如findx，底部有4Px的像素用于处理用户手势。再比如一些支持用户从底部滑动来交互的 vivo/红米 版本，底部也有一个小的区域用于捕获用户手势。
+         */
         if(height < LIMIT_MIN){
             LogTracker.log("PanelUtil#onGlobalLayout", "KeyBoardHeight is : $height, it may be a wrong value, just ignore!")
+            return true
         }
         val isPortrait = isPortrait(context)
         if (isPortrait && pHeight == height) {

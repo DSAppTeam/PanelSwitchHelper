@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
+import com.effective.android.panel.LogTracker
 
 /**
  * 小米刘海计算
@@ -29,7 +30,7 @@ class XiaoMiCutShort : DeviceCutShort {
             }
             ret
         } catch (var7: Exception) {
-            var7.printStackTrace()
+            LogTracker.log("cutShort#hasCutShort","try Xiaomi Device,but fail")
             ret
         } finally {
         }
@@ -58,7 +59,7 @@ class XiaoMiCutShort : DeviceCutShort {
             }
             height
         } catch (var4: Exception) {
-            var4.printStackTrace()
+            LogTracker.log("cutShort#getCurrentCutShortHeight","try Xiaomi Device,but fail")
             0
         }
     }
@@ -73,12 +74,8 @@ class XiaoMiCutShort : DeviceCutShort {
             val params = arrayOf<Any>(StringBuilder(key), 0)
             result = getInt.invoke(systemProperties, *params) as Int
         } catch (var8: Exception) {
-            var8.printStackTrace()
+            LogTracker.log("cutShort#getInt","try Xiaomi Device,but fail")
         }
         return result
-    }
-
-    companion object {
-        const val VENDOR = "XiaoMi"
     }
 }

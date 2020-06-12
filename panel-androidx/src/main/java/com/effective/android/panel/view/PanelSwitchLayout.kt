@@ -338,7 +338,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             LogTracker.log("$TAG#onLayout", " 界面高度（包含系统UI）  ：${deviceInfo.screenH}");
             LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，无论导航栏显示与否）  ：${deviceInfo.screenWithoutNavigationH}");
             LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，动态计算）  ：${deviceInfo.screenWithoutSystemUiH}");
-            LogTracker.log("$TAG#onLayout", " 刘海高度  ： + ${deviceInfo.cutShortH}");
+            LogTracker.log("$TAG#onLayout", " 刘海高度  ：  ${deviceInfo.cutShortH}");
             LogTracker.log("$TAG#onLayout", " toolbar高度  ：${deviceInfo.toolbarH}");
             LogTracker.log("$TAG#onLayout", " StatusBar高度  ：${deviceInfo.statusBarH}");
             LogTracker.log("$TAG#onLayout", " NavigationBar高度  ：${deviceInfo.navigationBarH}");

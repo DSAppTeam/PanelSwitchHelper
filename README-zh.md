@@ -296,6 +296,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.0'
         * EmptyView 移除，可参考 Demo 如何更优雅实现隐藏面板
         * 面板类规范命名，已原生 Linear/Relative/Frame 为前缀，更容易区分
         * PanelView 迁移到 panel 包
+* 1.3.1(2020-06-12) 支持适配采用底部系统布局来捕获用户手势的机型，这部分机型在界面底部多出的系统view可能导致输入法计算有偏差。比如 Findx，红米等机型。
 
 
 ### 期望

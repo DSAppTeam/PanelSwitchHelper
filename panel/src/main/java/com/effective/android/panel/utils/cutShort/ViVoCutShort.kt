@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
+import com.effective.android.panel.LogTracker
 import com.effective.android.panel.utils.DisplayUtil
 
 /**
@@ -29,7 +30,7 @@ class ViVoCutShort : DeviceCutShort {
             hasDisplayCutout = get.invoke(ftFeature, 32) as Boolean
             isVivo && hasDisplayCutout
         } catch (var7: Exception) {
-            var7.printStackTrace()
+            LogTracker.log("cutShort#hasCutShort","try Vivo Device,but fail")
             false
         }
     }
@@ -43,9 +44,5 @@ class ViVoCutShort : DeviceCutShort {
         return if (!isCusShortVisible(context)) {
             0
         } else DisplayUtil.dip2px(view.context, 27.0f)
-    }
-
-    companion object {
-        const val VENDOR = "ViVo"
     }
 }

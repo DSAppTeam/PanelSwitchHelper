@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.view.WindowInsets
+import com.effective.android.panel.LogTracker
 import java.util.*
 
 /**
@@ -23,7 +24,7 @@ class SamSungCutShort : DeviceCutShort {
             val spec = if (resId > 0) res.getString(resId) else null
             spec != null && !TextUtils.isEmpty(spec)
         } catch (var5: Exception) {
-            var5.printStackTrace()
+            LogTracker.log("cutShort#hasCutShort","try Samsung Device,but fail")
             false
         }
     }
@@ -65,12 +66,8 @@ class SamSungCutShort : DeviceCutShort {
             }
             0
         } catch (var11: Exception) {
-            var11.printStackTrace()
+            LogTracker.log("cutShort#getCurrentCutShortHeight","try Samsung Device,but fail")
             0
         }
-    }
-
-    companion object {
-        const val VENDOR = "Samsung"
     }
 }
