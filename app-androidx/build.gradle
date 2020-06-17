@@ -59,6 +59,6 @@ dependencies {
     implementation deps.androidx.constraint
     implementation deps.pageindicator
     implementation deps.circleimageview
-    implementation deps.panelSwitchHelper_androidx
-//    implementation project(":panel-androidx")
+//    implementation deps.panelSwitchHelper_androidx
+    implementation project(":panel-androidx")
 }
