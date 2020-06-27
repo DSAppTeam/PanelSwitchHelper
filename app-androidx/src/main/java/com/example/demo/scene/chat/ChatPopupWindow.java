@@ -40,6 +40,8 @@ public class ChatPopupWindow extends PopupWindow {
         this.mActivity = activity;
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.common_chat_with_titlebar_layout, null, false);
         setContentView(mBinding.getRoot());
+        mBinding.statusBar.setVisibility(View.GONE);
+        mBinding.statusBar.setVisibility(View.GONE);
         mBinding.titleBar.setVisibility(View.VISIBLE);
         mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
         mBinding.title.setText(R.string.pupupwindow_name);

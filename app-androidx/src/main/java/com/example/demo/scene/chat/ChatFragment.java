@@ -50,8 +50,8 @@ public class ChatFragment extends Fragment {
 
         switch (type) {
             case ChatPageType.COLOR_STATUS_BAR: {
-                StatusbarHelper.setStatusBarColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.statusBar.setColor(R.color.colorPrimary);
                 mBinding.titleBar.setVisibility(View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.title.setText("Fragment-自定义标题栏,状态栏着色");
@@ -65,6 +65,7 @@ public class ChatFragment extends Fragment {
             }
             default: {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.common_page_bg_color));
+                mBinding.statusBar.setColor(R.color.colorPrimary);
                 mBinding.titleBar.setVisibility(type == ChatPageType.DEFAULT ? View.GONE : View.VISIBLE);
                 mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 mBinding.title.setText("Fragment-自定义标题栏");

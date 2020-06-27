@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.2-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -35,10 +35,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.1'
+implementation 'com.effective.android:panelSwitchHelper:1.3.2'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.1'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -297,6 +297,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.1'
         * 面板类规范命名，已原生 Linear/Relative/Frame 为前缀，更容易区分
         * PanelView 迁移到 panel 包
 * 1.3.1(2020-06-12) 支持适配采用底部系统布局来捕获用户手势的机型，这部分机型在界面底部多出的系统view可能导致输入法计算有偏差。比如 Findx，红米等机型。
+* 1.3.2(2020-06-27) 支持xml布局预览，优化动画，解决Demo存在背景时切换面板背景可见的问题
 
 
 ### 期望

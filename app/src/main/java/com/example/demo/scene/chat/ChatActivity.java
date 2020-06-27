@@ -63,8 +63,8 @@ public class ChatActivity extends AppCompatActivity {
             case ChatPageType.COLOR_STATUS_BAR: {
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 StatusbarHelper.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+                mBinding.statusBar.setVisibility(View.VISIBLE);
                 getSupportActionBar().setTitle("Activity-有标题栏，状态栏着色");
-                mBinding.getRoot().setFitsSystemWindows(true);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
@@ -80,13 +80,12 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.cusTitleBar.setVisibility(View.VISIBLE);
                 mBinding.title.setText("Activity-自定义标题栏");
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
-                mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
             }
             case ChatPageType.TRANSPARENT_STATUS_BAR: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
-                mBinding.getRoot().setFitsSystemWindows(true);
+                mBinding.statusBar.setVisibility(View.VISIBLE);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
@@ -94,7 +93,6 @@ public class ChatActivity extends AppCompatActivity {
             case ChatPageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
-                mBinding.getRoot().setFitsSystemWindows(false);
                 StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
