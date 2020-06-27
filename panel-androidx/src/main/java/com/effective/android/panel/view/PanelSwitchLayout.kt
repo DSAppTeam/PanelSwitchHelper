@@ -2,6 +2,7 @@ package com.effective.android.panel.view
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.Rect
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
@@ -28,6 +29,7 @@ import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
 import com.effective.android.panel.utils.PanelUtil.hideKeyboard
 import com.effective.android.panel.utils.PanelUtil.showKeyboard
+import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.panel.IPanelView
 import com.effective.android.panel.view.panel.PanelContainer
@@ -70,6 +72,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private var deviceRuntime: DeviceRuntime? = null
 
+    private var realBounds: Rect? = null
+
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
         initView(attrs, defStyleAttr, 0)
@@ -90,6 +94,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         super.onDetachedFromWindow()
         removeCallbacks(retryCheckoutKb)
     }
+
 
     private val retryCheckoutKb = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
 
@@ -177,8 +182,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     info.statusBarH + (if (it.isNavigationBarShow) info.getCurrentNavigationBarHeightWhenVisible(it.isPortrait, it.isPad) else 0)
                 }
                 val keyboardHeight = screenHeight - contentHeight - systemUIHeight
-                LogTracker.log("$TAG#onGlobalLayout", "screenHeight : $screenHeight, contentHeight : $contentHeight，systemUIHeight : $systemUIHeight")
-                LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= 0) {
                         isKeyboardShowing = false
@@ -188,22 +191,24 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         notifyKeyboardState(false)
                     } else {
                         if (getKeyBoardHeight(context) != keyboardHeight) {
-                            requestLayout()
                             PanelUtil.setKeyBoardHeight(context, keyboardHeight)
+                            requestLayout()
                             LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
                         }
                     }
                 } else {
                     if (keyboardHeight > 0) {
+                        isKeyboardShowing = true
                         if (getKeyBoardHeight(context) != keyboardHeight) {
-                            requestLayout()
                             PanelUtil.setKeyBoardHeight(context, keyboardHeight)
+                            requestLayout()
                             LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
                         }
-                        isKeyboardShowing = true
                         notifyKeyboardState(true)
                     }
                 }
+                LogTracker.log("$TAG#onGlobalLayout", "screenHeight : $screenHeight, contentHeight : $contentHeight，systemUIHeight : $systemUIHeight")
+                LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             }
         }
     }
@@ -322,7 +327,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             contentContainerTop += paddingTop
             val contentContainerHeight = getContentContainerHeight(allHeight, paddingTop, scrollOutsideHeight)
             val panelContainerTop = contentContainerTop + contentContainerHeight
-            setTransition(animationSpeed.toLong(), panelId)
 
             if (Constants.DEBUG) {
                 LogTracker.log("$TAG#onLayout", " onLayout(changed : $changed , l : $l  , t : $t , r : $r , b : $b） ===================&&&&=================")
@@ -354,6 +358,17 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 LogTracker.log("$TAG#onLayout", " 面板容器 高度 $scrollOutsideHeight");
             }
 
+            //计算实际bounds
+            val changeBounds = isBoundChange(l, contentContainerTop, r, panelContainerTop + scrollOutsideHeight)
+            LogTracker.log("$TAG#onLayout", " changeBounds : $changeBounds")
+            if (changeBounds) {
+                val reverseResetState = reverseResetState()
+                LogTracker.log("$TAG#onLayout", " reverseResetState : $reverseResetState")
+                if (reverseResetState) {
+                    setTransition(animationSpeed.toLong(), panelId)
+                }
+            }
+
             //处理第一个view contentContainer
             run {
                 contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight)
@@ -361,16 +376,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 LogTracker.log("$TAG#onLayout", " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight))
                 contentContainer.changeContainerHeight(contentContainerHeight)
             }
+
             //处理第二个view panelContainer
             run {
                 panelContainer.layout(l, panelContainerTop, r, panelContainerTop + scrollOutsideHeight)
                 LogTracker.log("$TAG#onLayout", " layout参数 panelContainerTop : height - $scrollOutsideHeight")
                 LogTracker.log("$TAG#onLayout", " layout参数 panelContainer : " + " l : " + l + "  : " + panelContainerTop + " r : " + r + " b : " + (panelContainerTop + scrollOutsideHeight))
-                val layoutParams = panelContainer.layoutParams
-                if (layoutParams.height != scrollOutsideHeight) {
-                    layoutParams.height = scrollOutsideHeight
-                    panelContainer.layoutParams = layoutParams
-                }
+                panelContainer.changeContainerHeight(scrollOutsideHeight)
             }
             return
         }
@@ -379,21 +391,30 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         super.onLayout(changed, l, t, r, b)
     }
 
+
+    private fun isBoundChange(l: Int, t: Int, r: Int, b: Int): Boolean {
+        val change = realBounds == null || realBounds!!.run {
+            this.left != l || this.top != top || this.right != r || this.bottom != b
+        }
+        realBounds = Rect(l, t, r, b)
+        return change
+    }
+
     private fun isUserPanel(panelId: Int) = panelId != Constants.PANEL_KEYBOARD && panelId != Constants.PANEL_NONE
 
     private fun isKeyboardPanel(panelId: Int) = panelId == Constants.PANEL_KEYBOARD
 
     private fun isResetState(panelId: Int) = panelId == Constants.PANEL_NONE
 
+    private fun reverseResetState(): Boolean = (isResetState(lastPanelId) && !isResetState(panelId))
+            || (!isResetState(lastPanelId) && isResetState(panelId))
+
+
     @TargetApi(19)
     private fun setTransition(duration: Long, panelId: Int) {
-        if ((isResetState(lastPanelId) && !isResetState(panelId))
-                || !isResetState(lastPanelId) && isResetState(panelId)) {
-            val changeBounds = ChangeBounds()
-            changeBounds.duration = duration
-            TransitionManager.beginDelayedTransition(this, changeBounds)
-        }
-        return
+        val changeBounds = ChangeBounds()
+        changeBounds.duration = duration
+        TransitionManager.beginDelayedTransition(this, changeBounds)
     }
 
 
@@ -446,13 +467,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
         when (panelId) {
             Constants.PANEL_NONE -> {
-                panelContainer.hidePanels()
                 hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 contentContainer.getInputActionImpl().clearFocusByEditText()
                 contentContainer.getResetActionImpl().enableReset(false)
             }
             Constants.PANEL_KEYBOARD -> {
-                panelContainer.hidePanels()
                 val showKbResult = showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 if (!showKbResult) {
                     LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
@@ -462,12 +481,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 contentContainer.getResetActionImpl().enableReset(true)
             }
             else -> {
-                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 val size = Pair(measuredWidth - paddingLeft - paddingRight, getKeyBoardHeight(context))
                 val oldSize = panelContainer.showPanel(panelId, size)
                 if (size.first != oldSize.first || size.second != oldSize.second) {
                     notifyPanelSizeChange(panelContainer.getPanelView(panelId), isPortrait(context), oldSize.first, oldSize.second, size.first, size.second)
                 }
+                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 contentContainer.getResetActionImpl().enableReset(true)
             }
         }

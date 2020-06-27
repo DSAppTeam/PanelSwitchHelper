@@ -11,4 +11,8 @@
         <attr name="cus_panel_trigger" format="reference" />
         <attr name="cus_panel_toggle" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="StatusBarView">
+        <attr name="status_bar_color" format="color" />
+    </declare-styleable>
 </resources>

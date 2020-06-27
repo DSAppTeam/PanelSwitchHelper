@@ -49,6 +49,7 @@ public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyList
         super(context);
         this.activity = context;
         mBinding = DataBindingUtil.bind(rootView);
+        mBinding.statusBar.setVisibility(View.GONE);
         getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, R.color.common_page_bg_color)));
         setOnKeyListener(this);
         initView();

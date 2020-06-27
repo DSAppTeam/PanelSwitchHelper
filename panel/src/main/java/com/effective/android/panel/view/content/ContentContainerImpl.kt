@@ -44,7 +44,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
              *  2. 如果不想在子 View 处理，则需要在点击的区域构建一个透明view盖住，监听点击之后调用 PanelSwitchHelper#resetState 手动隐藏。
              *  hookDispatchTouchEvent 为第一种方案预留可能
              */
-            override fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean) :Boolean{
+            override fun hookDispatchTouchEvent(ev: MotionEvent?, consume: Boolean): Boolean {
                 ev?.let { event ->
                     if (event.action == MotionEvent.ACTION_UP) {
                         action?.let {

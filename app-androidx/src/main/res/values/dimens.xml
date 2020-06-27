@@ -26,4 +26,6 @@
 
     <dimen name="px_1">1px</dimen>
     <dimen name="_px_1">-1px</dimen>
+
+    <dimen name="base_status_bar_height">25dp</dimen>
 </resources>

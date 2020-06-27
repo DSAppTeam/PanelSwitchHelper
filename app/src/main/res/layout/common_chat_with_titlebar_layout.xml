@@ -7,6 +7,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.example.demo.systemui.StatusBarView
+            android:id="@+id/status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:status_bar_color="@android:color/transparent"/>
+
         <RelativeLayout
             android:background="@color/colorPrimary"
             android:id="@+id/title_bar"

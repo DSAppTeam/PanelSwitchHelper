@@ -44,6 +44,7 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.common_chat_with_titlebar_layout, container, false);
+        mBinding.statusBar.setVisibility(View.GONE);
         mBinding.titleBar.setVisibility(View.VISIBLE);
         mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mBinding.title.setText(R.string.dialog_fragment_name);

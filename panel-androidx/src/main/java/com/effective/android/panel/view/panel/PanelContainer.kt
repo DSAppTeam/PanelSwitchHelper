@@ -42,6 +42,10 @@ class PanelContainer : FrameLayout, ViewAssertion {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {}
 
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
         assertView()
@@ -65,14 +69,6 @@ class PanelContainer : FrameLayout, ViewAssertion {
         return panel?.getBindingTriggerViewId() ?: Constants.PANEL_KEYBOARD
     }
 
-    fun hidePanels() {
-        for (i in 0 until panelSparseArray.size()) {
-            val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
-            if (panelView is View)
-                panelView.visibility = View.GONE
-        }
-    }
-
     fun showPanel(panelId: Int, size: Pair<Int, Int>): Pair<Int, Int> {
         val panel = panelSparseArray[panelId]
         for (i in 0 until panelSparseArray.size()) {
@@ -88,5 +84,11 @@ class PanelContainer : FrameLayout, ViewAssertion {
             (panel as View).layoutParams = layoutParams
         }
         return curSize
+    }
+
+    fun changeContainerHeight(targetHeight: Int) {
+        if (layoutParams != null && layoutParams.height != targetHeight) {
+            layoutParams.height = targetHeight
+        }
     }
 }
