@@ -87,9 +87,12 @@ object DisplayUtil {
     }
 
     @JvmStatic
-    fun getStatusBarHeight(context: Context): Int {
-        return getInternalDimensionSize(context.resources, Constants.STATUS_BAR_HEIGHT_RES_NAME)
+    fun getStatusBarHeight(window: Window): Int {
+        val frame = Rect()
+        window.decorView.getWindowVisibleDisplayFrame(frame)
+        return frame.top
     }
+
 
     @JvmStatic
     fun getNavigationBarHeight(context: Context): Int {
