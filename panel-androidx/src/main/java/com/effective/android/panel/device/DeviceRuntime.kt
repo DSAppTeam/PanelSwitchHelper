@@ -41,7 +41,7 @@ class DeviceRuntime(val context: Context, val window: Window) {
         }
 
         val navigationBarHeight = DisplayUtil.getNavigationBarHeight(context)
-        val statusBarHeight = DisplayUtil.getStatusBarHeight(context)
+        val statusBarHeight = DisplayUtil.getStatusBarHeight(window)
         val cusShortHeight = CusShortUtil.getDeviceCutShortHeight(window.decorView)
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         var toolbarH = DisplayUtil.getToolbarHeight(window)

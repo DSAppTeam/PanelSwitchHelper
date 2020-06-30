@@ -193,7 +193,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         if (getKeyBoardHeight(context) != keyboardHeight) {
                             PanelUtil.setKeyBoardHeight(context, keyboardHeight)
                             requestLayout()
-                            LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
+                            LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight（isKeyboardShowing=true） is : $keyboardHeight")
                         }
                     }
                 } else {
@@ -202,12 +202,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         if (getKeyBoardHeight(context) != keyboardHeight) {
                             PanelUtil.setKeyBoardHeight(context, keyboardHeight)
                             requestLayout()
-                            LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight is : $keyboardHeight")
+                            LogTracker.log("$TAG#onGlobalLayout", "setKeyBoardHeight（isKeyboardShowing=false） is : $keyboardHeight")
                         }
                         notifyKeyboardState(true)
                     }
                 }
-                LogTracker.log("$TAG#onGlobalLayout", "screenHeight : $screenHeight, contentHeight : $contentHeight，systemUIHeight : $systemUIHeight")
+                LogTracker.log("$TAG#onGlobalLayout", "statusBarH is : ${info.statusBarH}")
+                LogTracker.log("$TAG#onGlobalLayout", "navigationBarH is : ${info.navigationBarH}")
+                LogTracker.log("$TAG#onGlobalLayout", "screenHeight is : $screenHeight")
+                LogTracker.log("$TAG#onGlobalLayout", "contentHeight is : $contentHeight")
+                LogTracker.log("$TAG#onGlobalLayout", "systemUIHeight is : $systemUIHeight")
                 LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             }
         }
