@@ -28,6 +28,10 @@ Demo 内容如下
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
+从二维码下载 Demo
+
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/down_code.png" width = "256" height = "256"/>
+
 默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
 
 ### 使用方法
