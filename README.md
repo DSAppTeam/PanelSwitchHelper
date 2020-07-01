@@ -28,6 +28,10 @@ Demo content is as follows
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/> <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
 
+Download from QR code
+
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/down_code.png" width = "256" height = "256"/>
+
 The Androidx version runs by default. If you need to open non-Androidx, open the app in `Settings.gradle` and close the Androidx configuration in `gradle.properties`.
 
 ### Instructions
