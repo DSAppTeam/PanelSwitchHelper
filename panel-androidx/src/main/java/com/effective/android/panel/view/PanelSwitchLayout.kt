@@ -8,6 +8,7 @@ import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Pair
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.widget.LinearLayout
@@ -93,8 +94,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         removeCallbacks(retryCheckoutKb)
+        globalLayoutListener.let {
+            window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
+        }
     }
-
 
     private val retryCheckoutKb = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
 
@@ -167,12 +170,14 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         this.scrollOutsideBorder = scrollOutsideBorder
     }
 
+    private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
     fun bindWindow(window: Window) {
         this.window = window
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         deviceRuntime = DeviceRuntime(context, window)
         deviceRuntime?.let {
-            window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener {
+            globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
                 val screenHeight = getScreenHeightWithSystemUI(window)
                 val contentHeight = getScreenHeightWithoutSystemUI(window)
                 val info = it.getDeviceInfoByOrientation(true)
@@ -214,6 +219,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 LogTracker.log("$TAG#onGlobalLayout", "systemUIHeight is : $systemUIHeight")
                 LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             }
+            window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
         }
     }
 
