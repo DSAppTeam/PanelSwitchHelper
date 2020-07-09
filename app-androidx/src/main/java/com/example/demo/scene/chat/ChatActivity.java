@@ -3,7 +3,10 @@ package com.example.demo.scene.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,22 +17,26 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatLayoutBinding;
 import com.example.demo.Constants;
 import com.example.demo.anno.ChatPageType;
-import com.example.demo.scene.chat.Adapter.ChatAdapter;
-import com.example.demo.scene.chat.Adapter.ChatInfo;
+import com.example.demo.scene.chat.adapter.ChatAdapter;
+import com.example.demo.scene.chat.adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by yummyLau on 18-7-11
@@ -48,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+
     private static final String TAG = ChatActivity.class.getSimpleName();
 
     @Override
@@ -55,7 +63,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra(Constants.KEY_PAGE_TYPE, ChatPageType.DEFAULT);
         switch (type) {
-            case ChatPageType.TITLE_BAR:{
+            case ChatPageType.TITLE_BAR: {
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 getSupportActionBar().setTitle("Activity-有标题栏");
@@ -69,13 +77,13 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
-            case ChatPageType.DEFAULT:{
+            case ChatPageType.DEFAULT: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
                 break;
             }
-            case ChatPageType.CUS_TITLE_BAR:{
+            case ChatPageType.CUS_TITLE_BAR: {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
                 mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
                 mBinding.cusTitleBar.setVisibility(View.VISIBLE);
@@ -114,17 +122,14 @@ public class ChatActivity extends AppCompatActivity {
                 return;
             }
             mAdapter.insertInfo(ChatInfo.CREATE(content));
-//                如果超过某些条目，可开启滑动外部，使得更为流畅
-            if(mAdapter.getItemCount() > 10){
-                mHelper.scrollOutsideEnable(true);
-            }
             mBinding.editText.setText(null);
             scrollToBottom();
         });
     }
 
+
     private void scrollToBottom() {
-        mBinding.getRoot().post(() -> mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1)) ;
+        mBinding.getRoot().post(() -> mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1));
     }
 
     @Override
@@ -136,16 +141,16 @@ public class ChatActivity extends AppCompatActivity {
                     .addKeyboardStateListener((visible, height) -> Log.d(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
                     .addEditTextFocusChangeListener((view, hasFocus) -> {
                         Log.d(TAG, "输入框是否获得焦点 : " + hasFocus);
-                        if(hasFocus){
+                        if (hasFocus) {
                             scrollToBottom();
                         }
                     })
                     //可选
                     .addViewClickListener(view -> {
-                        switch (view.getId()){
+                        switch (view.getId()) {
                             case R.id.edit_text:
                             case R.id.add_btn:
-                            case R.id.emotion_btn:{
+                            case R.id.emotion_btn: {
                                 scrollToBottom();
                             }
                         }
@@ -170,16 +175,16 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onPanel(IPanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
-                            if(view instanceof PanelView){
-                                mBinding.emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                            if (view instanceof PanelView) {
+                                mBinding.emotionBtn.setSelected(((PanelView) view).getId() == R.id.panel_emotion ? true : false);
                                 scrollToBottom();
                             }
                         }
 
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            if(panelView instanceof PanelView){
-                                switch (((PanelView)panelView).getId()) {
+                            if (panelView instanceof PanelView) {
+                                switch (((PanelView) panelView).getId()) {
                                     case R.id.panel_emotion: {
                                         EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
                                         int viewPagerSize = height - DisplayUtils.dip2px(ChatActivity.this, 30f);
@@ -197,11 +202,46 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     })
-                    .contentCanScrollOutside(false)
+                    .addDistanceMeasurer(new ViewDistanceMeasurer() {
+                        @Override
+                        public int getUnfilledHeight() {
+                            return unfilledHeight;
+                        }
+
+                        @NotNull
+                        @Override
+                        public String getViewTag() {
+                            return "recycler_view";
+                        }
+                    })
                     .logTrack(true)             //output log
                     .build();
+            mBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                    if (layoutManager instanceof LinearLayoutManager) {
+                        int childCount = recyclerView.getChildCount();
+                        if (childCount > 0) {
+                            View lastChildView = recyclerView.getChildAt(childCount - 1);
+                            int bottom = lastChildView.getBottom();
+                            int listHeight = mBinding.recyclerView.getHeight() - mBinding.recyclerView.getPaddingBottom();
+                            int listUnfilledHeight = listHeight - bottom;
+                            if (listUnfilledHeight > 0) {
+                                unfilledHeight = listUnfilledHeight;
+                            } else {
+                                unfilledHeight = 0;
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
+
+    private int unfilledHeight = 0;
+
 
     @Override
     public void onBackPressed() {

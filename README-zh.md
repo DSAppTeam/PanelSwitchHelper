@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.2.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.3-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -26,7 +26,7 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 Demo 内容如下
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo.png" width = "360" height = "790"/>
 
 从二维码下载 Demo
 
@@ -39,10 +39,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.2.1'
+implementation 'com.effective.android:panelSwitchHelper:1.3.3'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.3'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -244,7 +244,15 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
  								//可选实现，输入法动态调整时引起的面板高度变化动态回调
                         }
                     }
-                    .contentCanScrollOutside(true)    //可选模式，默认true，当面板实现时内容区域是否往上滑动
+                    .addDistanceMeasurer {      //用于视频IM场景下如果数据还不到一屏，则动态控制滑动距离
+                        getUnfilledHeight{
+                            //业务可动态计算
+                            0 
+                        }
+                        getViewTag{
+                            "recyclerView"
+                        }
+                    }
                     .logTrack(true)                   //可选，默认false，是否开启log信息输出
                     .build(true)			          //可选，默认false，是否默认打开输入法
         }
@@ -303,6 +311,11 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
 * 1.3.1(2020-06-12) 支持适配采用底部系统布局来捕获用户手势的机型，这部分机型在界面底部多出的系统view可能导致输入法计算有偏差。比如 Findx，红米等机型。
 * 1.3.2(2020-06-27) 支持xml布局预览，优化动画，解决Demo存在背景时切换面板背景可见的问题
     * 1.3.2.1(2020-06-30) 兼容使用autoSize库的项目，解决可能因为状态栏高度被修改导致输入法高度计算错误的问题
+* 1.3.3(2020-07-09) 优化体验，修复已知问题
+    * 修复多fragment场景下 window 可能引起 fragment 内存泄漏问题
+    * 移除固定模式，移除 `contentCanScrollOutside` api，滑动模式实现高性能滑动，移除刘海api判断
+    * 新增 `toPanelState`api 用于外部拉起面板
+    * 新增 `addDistanceMeasurer` 用于外部自主控制内容区域滑动，兼容 IM 场景下未满一屏数据被滑走的问题
 
 
 ### 期望

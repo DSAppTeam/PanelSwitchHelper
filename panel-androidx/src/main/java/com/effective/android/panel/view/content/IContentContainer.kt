@@ -5,11 +5,12 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.EditText
 import androidx.annotation.IdRes
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer
 
 interface IContentContainer {
     //容器行为
     fun findTriggerView(@IdRes id: Int): View?
-    fun layoutContainer(l: Int, t: Int, r: Int, b: Int)
+    fun layoutContainer(l: Int, t: Int, r: Int, b: Int,viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>)
     fun changeContainerHeight(targetHeight: Int)
 
     //输入相关

@@ -93,6 +93,7 @@ object DisplayUtil {
         return frame.top
     }
 
+
     @JvmStatic
     fun getNavigationBarHeight(context: Context): Int {
         return getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
@@ -163,7 +164,7 @@ object DisplayUtil {
         }
         return false
     }
-    
+
     @JvmStatic
     fun dip2px(context:Context, dipValue:Float): Int {
         val scale:Float = context.resources.displayMetrics.density

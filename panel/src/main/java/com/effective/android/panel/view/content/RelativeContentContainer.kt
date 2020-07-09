@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
 import com.effective.android.panel.R
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer
 
 /**
  * --------------------
@@ -57,8 +58,8 @@ class RelativeContentContainer : RelativeLayout, IContentContainer {
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, autoResetId)
     }
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int) {
-        contentContainer.layoutContainer(l, t, r, b)
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int, viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>) {
+        contentContainer.layoutContainer(l, t, r, b, viewDistanceMeasurers)
     }
 
     override fun findTriggerView(id: Int): View? {

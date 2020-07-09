@@ -10,10 +10,10 @@
 
         <com.example.demo.systemui.StatusBarView
             android:id="@+id/status_bar"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:status_bar_color="@android:color/transparent"/>
+            android:visibility="gone"
+            app:status_bar_color="@android:color/transparent" />
 
         <RelativeLayout
             android:id="@+id/cus_title_bar"
@@ -44,24 +44,77 @@
             <!-- 内容区域 -->
             <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
             <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
-            <com.effective.android.panel.view.content.LinearContentContainer
+            <com.effective.android.panel.view.content.RelativeContentContainer
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text"
+                app:relative_edit_view="@id/edit_text"
                 tools:layout_height="500dp">
 
                 <com.example.demo.scene.chat.view.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/bottom_action"
+                    android:tag="recycler_view" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tip_view_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_bright"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:tag="tip_view_top"
+                    android:layout_marginTop="100dp"
+                    android:text="干预滑动，偏顶部布局滑动时不被其滑走"
+                    android:textColor="@android:color/white"
+                    android:layout_alignParentRight="true"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:typeface="sans" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tip_view"
+                    android:layout_width="wrap_content"
+                    android:layout_marginRight="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_bright"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:layout_marginTop="200dp"
+                    android:text="不做干预，默认 ContentContainer 内的布局会随面板展开而滑动"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:typeface="sans" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tip_view_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_bright"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:tag="tip_view_bottom"
+                    android:layout_above="@+id/bottom_action"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="100dp"
+                    android:text="干预滑动，偏底部布局滑动时让其不被盖住"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:typeface="sans" />
 
                 <LinearLayout
                     android:id="@+id/bottom_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:background="@drawable/shape_input_layout"
                     android:gravity="bottom"
                     android:minHeight="@dimen/dp_50"
@@ -124,7 +177,7 @@
 
                 </LinearLayout>
 
-            </com.effective.android.panel.view.content.LinearContentContainer>
+            </com.effective.android.panel.view.content.RelativeContentContainer>
 
 
             <!-- 面板区域，仅能包含PanelView-->

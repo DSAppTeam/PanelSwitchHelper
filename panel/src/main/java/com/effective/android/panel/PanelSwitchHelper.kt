@@ -2,14 +2,15 @@ package com.effective.android.panel
 
 import android.R
 import android.app.Activity
+import android.support.annotation.IdRes
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import com.effective.android.panel.interfaces.OnScrollOutsideBorder
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer
+import com.effective.android.panel.interfaces.ViewDistanceMeasurerBuilder
 import com.effective.android.panel.interfaces.listener.*
-import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
@@ -22,14 +23,12 @@ import com.effective.android.panel.view.PanelSwitchLayout
  * updated by yummyLau on 20/03/18
  * 重构整个输入法切换框架，移除旧版使用 weight+Runnable延迟切换，使用新版 layout+动画无缝衔接！
  */
-class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boolean) {
+class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Boolean) {
 
     private val mPanelSwitchLayout: PanelSwitchLayout
-    private var canScrollOutside: Boolean
 
     init {
         Constants.DEBUG = builder.logTrack
-        canScrollOutside = builder.contentCanScrollOutside
         if (builder.logTrack) {
             builder.viewClickListeners.add(LogTracker)
             builder.panelChangeListeners.add(LogTracker)
@@ -37,17 +36,11 @@ class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boole
             builder.editFocusChangeListeners.add(LogTracker)
         }
         mPanelSwitchLayout = builder.panelSwitchLayout!!
-        mPanelSwitchLayout.setScrollOutsideBorder(object : OnScrollOutsideBorder {
-            override fun canLayoutOutsideBorder(): Boolean {
-                return canScrollOutside
-            }
-
-            override fun getOutsideHeight(): Int = getKeyBoardHeight(mPanelSwitchLayout.context)
-        })
+        mPanelSwitchLayout.setDistanceMeasurers(builder.distanceMeasurers)
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners)
         mPanelSwitchLayout.bindWindow(builder.window)
-        if(showKeyboard){
-            mPanelSwitchLayout.toKeyboardState()
+        if (showKeyboard) {
+            mPanelSwitchLayout.toKeyboardState(true)
         }
     }
 
@@ -55,15 +48,21 @@ class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boole
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher()
     }
 
-    fun scrollOutsideEnable(enable: Boolean) {
-        canScrollOutside = enable
-    }
 
     /**
      * 外部显示输入框
      */
     fun toKeyboardState() {
-        mPanelSwitchLayout.toKeyboardState()
+        mPanelSwitchLayout.toKeyboardState(false)
+    }
+
+    /**
+     * 外部显示面板
+     */
+    fun toPanelState(@IdRes triggerViewId: Int) {
+        mPanelSwitchLayout.findViewById<View>(triggerViewId).let {
+            it.performClick()
+        }
     }
 
     /**
@@ -78,11 +77,11 @@ class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boole
         var panelChangeListeners: MutableList<OnPanelChangeListener> = mutableListOf()
         var keyboardStatusListeners: MutableList<OnKeyboardStateListener> = mutableListOf()
         var editFocusChangeListeners: MutableList<OnEditFocusChangeListener> = mutableListOf()
+        var distanceMeasurers: MutableList<ViewDistanceMeasurer> = mutableListOf()
         var panelSwitchLayout: PanelSwitchLayout? = null
         var window: Window
         var rootView: View
         var logTrack = false
-        var contentCanScrollOutside = true
 
         constructor(activity: Activity) : this(activity.window, activity.window.decorView.findViewById<View>(R.id.content))
         constructor(fragment: Fragment) : this(fragment.activity?.window, fragment.view)
@@ -149,8 +148,15 @@ class PanelSwitchHelper private constructor(builder: Builder,showKeyboard: Boole
             return this
         }
 
-        fun contentCanScrollOutside(canScrollOutside: Boolean): Builder {
-            contentCanScrollOutside = canScrollOutside
+        fun addDistanceMeasurer(function: ViewDistanceMeasurerBuilder.() -> Unit): Builder {
+            distanceMeasurers.add(ViewDistanceMeasurerBuilder().also(function))
+            return this
+        }
+
+        fun addDistanceMeasurer(distanceMeasurer: ViewDistanceMeasurer): Builder {
+            if (!distanceMeasurers.contains(distanceMeasurer)) {
+                distanceMeasurers.add(distanceMeasurer)
+            }
             return this
         }
 

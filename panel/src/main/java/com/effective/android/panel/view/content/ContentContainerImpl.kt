@@ -10,6 +10,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.interfaces.ViewAssertion
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer
+import com.effective.android.panel.utils.PanelUtil
+import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
  * 内容区域代理
@@ -141,8 +144,34 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         return mViewGroup.findViewById(id)
     }
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int) {
+    private data class ViewPosition(val tag: String, val l: Int, val t: Int, val r: Int, val b: Int)
+
+    private val map = HashMap<String, ViewPosition>()
+
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int, viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>) {
         mViewGroup.layout(l, t, r, b)
+        for (viewDistanceMeasurer in viewDistanceMeasurers) {
+            val tag = viewDistanceMeasurer.getViewTag()
+            if (tag.isNotEmpty()) {
+                val view = (mViewGroup).findViewWithTag<View>(tag)
+                view.let {
+                    var viewPosition = map[tag]
+                    if (viewPosition == null) {
+                        viewPosition = ViewPosition(tag, view.left, view.top, view.right, view.bottom)
+                        map[tag] = viewPosition
+                    }
+                    val unfilledHeight = viewDistanceMeasurer.getUnfilledHeight()
+                    val keyboardHeight = PanelUtil.getKeyBoardHeight(mViewGroup.context)
+                    val viewLeft = viewPosition.l
+                    val viewTop = (if (t != 0) if (unfilledHeight > keyboardHeight) keyboardHeight else unfilledHeight else 0) + viewPosition.t
+                    val viewRight = viewPosition.r
+                    var viewBottom = viewTop + (viewPosition.b - viewPosition.t)
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "viewDistanceMeasurer(tag $tag , unfilledHeight $unfilledHeight) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "viewDistanceMeasurer(tag $tag , unfilledHeight $unfilledHeight) layout parent(l $l,t $t,r $r,b $b) self(l $viewLeft,t $viewTop,r $viewRight, b${viewBottom})")
+                    view.layout(viewLeft, viewTop, viewRight, viewBottom)
+                }
+            }
+        }
     }
 
     override fun changeContainerHeight(targetHeight: Int) {

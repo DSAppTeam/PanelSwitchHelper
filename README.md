@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.2.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.3-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [中文文档](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -26,7 +26,7 @@ For more details, please refer to
 
 Demo content is as follows
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_1.jpeg" width = "360" height = "790"/> <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo_2.jpeg" width = "360" height = "790"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/demo.png" width = "360" height = "790"/>
 
 Download from QR code
 
@@ -39,10 +39,10 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 1. Add library dependencies in module script `build.gradle`
 
 ```
-implementation'com.effective.android:panelSwitchHelper:1.3.2.1'
+implementation'com.effective.android:panelSwitchHelper:1.3.3'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.3'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
@@ -244,7 +244,15 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
  								//Optional implementation, dynamic callback of panel height change caused by input method dynamic adjustment
                         }
                     }
-                    .contentCanScrollOutside(true)    //Optional mode, default true, whether the content area slides up when the panel is implemented
+                    .addDistanceMeasurer {      //Used in IM scenarios if the data is less than one screen, then dynamically control the sliding distance
+                        getUnfilledHeight{
+                            //dynamically calculated
+                            0 
+                        }
+                        getViewTag{
+                            "recyclerView"
+                        }
+                    }
                     .logTrack(true)                   //Optional, default false, whether to enable log information output
                     .build(true)			          //Optional, default false, whether to open the input method by default
         }
@@ -305,8 +313,12 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.2.1'
 * 1.3.1 (2020-06-12) supports using the bottom system layout to capture a copy of the user's gesture. The extra system view at the bottom of the interface in this part of the layout may cause input method calculations to be biased. Rice and other samples.
 * 1.3.2 (2020-06-27) supports xml layout preview, optimizes animation, and solves the problem that the background of the switch panel is visible when there is a background in the presentation
     * 1.3.2.1(2020-06-30) Compatible with projects that use the autoSize library, to solve the problem that the height of the input method may be incorrectly calculated due to the height of the status bar
-
-
+* 1.3.3(2020-07-09) Optimize the experience and fix known problems
+     * Fixed the problem that window may cause fragment memory leak in multiple fragment scenarios
+     * Remove fixed mode, remove `contentCanScrollOutside` api, slide mode to achieve high performance sliding, remove bang api judgment
+     * Added `toPanelState`api for externally pulling up the panel
+     * Added `addDistanceMeasurer` for external autonomous control of content area sliding, compatible with the problem of data being swept away under a screen in IM scenarios
+     
 ### Expectations
 
 The project was written only to improve the efficiency of daily development and focus on processing business. If you have better practices or suggestions, please write to yummyl.lau@gmail.com.

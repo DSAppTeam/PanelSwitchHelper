@@ -59,6 +59,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity android:name="com.example.demo.scene.feed.FeedActivity" />
+        <activity android:name="com.example.demo.scene.chat.ChatCusContentScrollActivity" />
 
     </application>
 

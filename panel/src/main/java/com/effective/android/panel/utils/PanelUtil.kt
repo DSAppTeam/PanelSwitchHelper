@@ -18,7 +18,7 @@ object PanelUtil {
 
     private var pHeight: Int = -1
     private var lHeight: Int = -1
-    private const val LIMIT_MIN = 40
+    private const val LIMIT_MIN = 100
 
     @JvmStatic
     fun showKeyboard(context: Context, view: View):Boolean {

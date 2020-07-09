@@ -17,8 +17,8 @@ import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
 import com.example.demo.Constants
 import com.example.demo.anno.ApiContentType
-import com.example.demo.scene.chat.Adapter.ChatAdapter
-import com.example.demo.scene.chat.Adapter.ChatInfo
+import com.example.demo.scene.chat.adapter.ChatAdapter
+import com.example.demo.scene.chat.adapter.ChatInfo
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
 import com.example.demo.scene.chat.view.HookActionUpRecyclerView
@@ -48,7 +48,7 @@ class ContentActivity : AppCompatActivity() {
             }
             ApiContentType.Frame -> {
                 setContentView(R.layout.activity_api_content_frame_layout)
-                findViewById<TextView>(R.id.title).text = "桢布局"
+                findViewById<TextView>(R.id.title).text = "帧布局"
             }
             ApiContentType.Relative -> {
                 setContentView(R.layout.activity_api_content_relative_layout)
@@ -86,10 +86,6 @@ class ContentActivity : AppCompatActivity() {
                 return@OnClickListener
             }
             mAdapter.insertInfo(ChatInfo.CREATE(content))
-            //                如果超过某些条目，可开启滑动外部，使得更为流畅
-            if (mAdapter.itemCount > 10) {
-                mHelper?.scrollOutsideEnable(true)
-            }
             editView.text = null
             scrollToBottom()
         })
