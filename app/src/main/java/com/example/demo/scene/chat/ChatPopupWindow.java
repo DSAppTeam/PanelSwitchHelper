@@ -19,8 +19,8 @@ import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatWithTitlebarLayoutBinding;
-import com.example.demo.scene.chat.Adapter.ChatAdapter;
-import com.example.demo.scene.chat.Adapter.ChatInfo;
+import com.example.demo.scene.chat.adapter.ChatAdapter;
+import com.example.demo.scene.chat.adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.util.DisplayUtils;
@@ -40,6 +40,7 @@ public class ChatPopupWindow extends PopupWindow {
         this.mActivity = activity;
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.common_chat_with_titlebar_layout, null, false);
         setContentView(mBinding.getRoot());
+        mBinding.statusBar.setVisibility(View.GONE);
         mBinding.titleBar.setVisibility(View.VISIBLE);
         mBinding.titleBar.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.colorPrimary));
         mBinding.title.setText(R.string.pupupwindow_name);

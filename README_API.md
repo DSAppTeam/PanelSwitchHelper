@@ -11,7 +11,7 @@ The framework defines the PanelSwitchLayout container, the content of which cons
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/arch.jpg" width = "696" height = "703"/>
 
-Based on the above structure, the frame supports two modes to better serve complex scenarios.
+At the same time based on the above structure, before version 1.3.2.1, the framework supports the following two modes
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/mode.jpg" width = "662" height = "444" align=center />
 
@@ -130,7 +130,15 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
                     //Optional implementation, dynamic callback of panel height change caused by dynamic adjustment of input method
                 }
             }
-            .contentCanScrollOutside(true)
+            .addDistanceMeasurer {      //IM scene is more important
+                getUnfilledHeight{
+                    //业务可动态计算
+                    0 
+                }
+                getViewTag{
+                    "recyclerView"
+                }
+            }
             .logTrack(true)
             .build(true)
 ```
@@ -141,13 +149,22 @@ Among them, the functions that the builder can specify during the build process 
 2. addEditTextFocusChangeListener, to monitor the focus change of the specified input source
 3. addViewClickListener, monitor trigger and input source clicks, such as clicking the emoticon switch button, input source click, etc.
 4. addPanelChangeListener, monitor panel changes, including input method display, panel display, the height change of the input method causes the panel height change callback, hide the panel status
-5. contentCanScrollOutside specifies whether to select the sliding mode, the default is open
+5. addDistanceMeasurer, used to interfere with the sliding of the frame, for example, the child View inside the ContentContainer does not slide along with the parent layout
+     * getUnfilledHeight is currently unfilled height, such as recyclerview under IM, when the item is not enough for a screen, if you slide with the parent layout, the top message will disappear, this is the height frame, the currently not filled height is How many
+     * getViewTag, the tag of the child view to intervene in processing, this is used when the view is obtained inside the framework
 6. Does logTrack output log information
 7. Build, return PanelSwitchHelper object, you can pass the parameter to specify whether to display the input method automatically for the first time, not by default.
+
+The following figure shows the behavior of multiple views in the content area after the intervention of addDistanceMeasurer, after the soft keyboard/panel is pulled up
+
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/cus_scroll_content.gif" width = "289" height = "638"/>
+
+The list and the two Views on the right have intervened, and the View on the left has not intervened, see the Demo class `ChatCusContentScrollActivity`
 
 In addition to the functions provided in the above construction process, the following important methods are also provided:
 
 1. scrollOutsideEnable, dynamic change mode
 2. toKeyboardState, switch to input method panel
-3. resetState, hide all panels
-4. hookSystemBackByPanelSwitcher intercepts the return, if the current user presses the return or business return key, the panel is preferentially hidden
+3. toPanelState, switch to the corresponding function panel
+4. resetState, hide all panels
+5. hookSystemBackByPanelSwitcher intercepts the return, if the current user presses the return or business return key, the panel is preferentially hidden

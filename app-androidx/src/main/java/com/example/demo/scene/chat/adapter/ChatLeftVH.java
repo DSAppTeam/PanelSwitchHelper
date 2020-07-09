@@ -1,20 +1,21 @@
-package com.example.demo.scene.chat.Adapter;
+package com.example.demo.scene.chat.adapter;
+
 
 import android.view.View;
 import android.widget.Toast;
 
-import com.effective.databinding.VhChatRightLayoutBinding;
+import com.effective.databinding.VhChatLeftLayoutBinding;
 import com.example.demo.scene.chat.emotion.EmojiSpanBuilder;
 
 /**
- * the right of chatting item
+ * the left of chatting item
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class ChatRightVH extends ChatBaseVH<VhChatRightLayoutBinding, ChatInfo> {
+public class ChatLeftVH extends ChatBaseVH<VhChatLeftLayoutBinding, ChatInfo> {
 
-    public ChatRightVH(VhChatRightLayoutBinding binding) {
+    public ChatLeftVH(VhChatLeftLayoutBinding binding) {
         super(binding);
     }
 

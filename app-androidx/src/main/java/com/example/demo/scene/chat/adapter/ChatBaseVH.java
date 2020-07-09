@@ -1,11 +1,11 @@
-package com.example.demo.scene.chat.Adapter;
+package com.example.demo.scene.chat.adapter;
 
-import android.databinding.ViewDataBinding;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * base {@link android.support.v7.widget.RecyclerView.ViewHolder} for chatting pager.
+ * base {@link androidx.recyclerview.widget.RecyclerView} for chatting pager.
  * Created by yummyLau on 18-7-11
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com

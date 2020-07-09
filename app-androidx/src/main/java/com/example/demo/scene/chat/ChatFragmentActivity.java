@@ -43,40 +43,9 @@ public class ChatFragmentActivity extends FragmentActivity {
         //涉及fragment页面沉浸的，建议统一都在fragment里面，这样做是为了多fragment的时候灵活控制
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat_fragment_layout);
         StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
-//        fragment = new ChatFragment();
-//        fragment.setArguments(getIntent().getExtras());
-//        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
-        List<Fragment> fragments = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Fragment fragment = new ChatFragment();
-            fragment.setArguments(getIntent().getExtras());
-            fragments.add(fragment);
-        }
-        mBinding.pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return fragments.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
-
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                Log.d("setAdapter","instantiateItem: " + position);
-                return super.instantiateItem(container, position);
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                super.destroyItem(container, position, object);
-                Log.d("setAdapter","destroyItem position : " + position);
-            }
-        });
+        fragment = new ChatFragment();
+        fragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
     }
 
     @Override

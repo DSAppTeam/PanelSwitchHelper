@@ -1,10 +1,8 @@
 package com.effective.android.panel.device
 
-import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.view.Window
-import com.effective.android.panel.utils.CusShortUtil
 import com.effective.android.panel.utils.DisplayUtil
 
 /**
@@ -42,7 +40,6 @@ class DeviceRuntime(val context: Context, val window: Window) {
 
         val navigationBarHeight = DisplayUtil.getNavigationBarHeight(context)
         val statusBarHeight = DisplayUtil.getStatusBarHeight(window)
-        val cusShortHeight = CusShortUtil.getDeviceCutShortHeight(window.decorView)
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         var toolbarH = DisplayUtil.getToolbarHeight(window)
         if (toolbarH == statusBarHeight) {
@@ -54,12 +51,12 @@ class DeviceRuntime(val context: Context, val window: Window) {
 
         return if (isPortrait) {
             deviceInfoP = DeviceInfo(window,true,
-                    statusBarHeight, navigationBarHeight, toolbarH, cusShortHeight,
+                    statusBarHeight, navigationBarHeight, toolbarH,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoP!!
         } else {
             deviceInfoL = DeviceInfo(window,false,
-                    statusBarHeight, navigationBarHeight, toolbarH, cusShortHeight,
+                    statusBarHeight, navigationBarHeight, toolbarH,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoL!!
         }

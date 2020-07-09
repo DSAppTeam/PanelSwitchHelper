@@ -1,4 +1,4 @@
-package com.example.demo.scene.chat.Adapter;
+package com.example.demo.scene.chat.adapter;
 
 /**
  * the information of chatting item

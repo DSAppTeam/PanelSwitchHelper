@@ -13,7 +13,6 @@ data class DeviceInfo(val window:Window,
                       val statusBarH: Int,
                       val navigationBarH: Int,
                       val toolbarH: Int,
-                      val cutShortH: Int,
                       val screenH: Int,
                       val screenWithoutSystemUiH: Int,
                       val screenWithoutNavigationH: Int) {

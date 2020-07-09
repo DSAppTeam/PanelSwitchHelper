@@ -35,7 +35,7 @@ publish {
     userOrg = 'yummylau'
     groupId = 'com.effective.android'
     artifactId = 'panelSwitchHelper-androidx'
-    publishVersion = '1.3.2.1'
+    publishVersion = '1.3.3'
     desc = 'the helper that is used to checkout panel when we are chatting'
     website = 'https://github.com/YummyLau/Anchors'
 }

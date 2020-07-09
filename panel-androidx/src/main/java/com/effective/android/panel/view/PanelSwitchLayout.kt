@@ -7,21 +7,17 @@ import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Pair
-import android.view.View
-import android.view.ViewTreeObserver
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
+import android.view.View.OnClickListener
+import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.effective.android.panel.Constants
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.R
 import com.effective.android.panel.device.DeviceRuntime
-import com.effective.android.panel.interfaces.OnScrollOutsideBorder
 import com.effective.android.panel.interfaces.ViewAssertion
-import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
-import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
-import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
-import com.effective.android.panel.interfaces.listener.OnViewClickListener
+import com.effective.android.panel.interfaces.ViewDistanceMeasurer
+import com.effective.android.panel.interfaces.listener.*
 import com.effective.android.panel.utils.DisplayUtil.getLocationOnScreen
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithSystemUI
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithoutSystemUI
@@ -30,10 +26,10 @@ import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
 import com.effective.android.panel.utils.PanelUtil.hideKeyboard
 import com.effective.android.panel.utils.PanelUtil.showKeyboard
-import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.panel.IPanelView
 import com.effective.android.panel.view.panel.PanelContainer
+
 
 /**
  * --------------------
@@ -64,7 +60,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
-    private lateinit var scrollOutsideBorder: OnScrollOutsideBorder
+    private val distanceMeasurers = mutableListOf<ViewDistanceMeasurer>()
 
     private var isKeyboardShowing = false
     private var panelId = Constants.PANEL_NONE
@@ -72,8 +68,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var animationSpeed = 200 //standard
 
     private var deviceRuntime: DeviceRuntime? = null
-
     private var realBounds: Rect? = null
+    private var keyboardStateRunnable = Runnable { toKeyboardState(false) }
+    private val retryCheckoutKbRunnable = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
 
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -93,13 +90,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        removeCallbacks(retryCheckoutKb)
+        removeCallbacks(retryCheckoutKbRunnable)
+        removeCallbacks(keyboardStateRunnable)
         globalLayoutListener.let {
             window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
         }
     }
-
-    private val retryCheckoutKb = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
 
     private fun initListener() {
         /**
@@ -113,7 +109,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
             //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
             if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                this@PanelSwitchLayout.post(retryCheckoutKb)
+                this@PanelSwitchLayout.post(retryCheckoutKbRunnable)
             }
         })
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
@@ -123,7 +119,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
                 //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
                 if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                    this@PanelSwitchLayout.post(retryCheckoutKb)
+                    this@PanelSwitchLayout.post(retryCheckoutKbRunnable)
                 }
             }
         })
@@ -166,8 +162,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         this.editFocusChangeListeners = editFocusChangeListeners
     }
 
-    fun setScrollOutsideBorder(scrollOutsideBorder: OnScrollOutsideBorder) {
-        this.scrollOutsideBorder = scrollOutsideBorder
+    fun setDistanceMeasurers(mutableList: MutableList<ViewDistanceMeasurer>) {
+        distanceMeasurers.addAll(mutableList)
     }
 
     private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -214,9 +210,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 }
                 LogTracker.log("$TAG#onGlobalLayout", "statusBarH is : ${info.statusBarH}")
                 LogTracker.log("$TAG#onGlobalLayout", "navigationBarH is : ${info.navigationBarH}")
+                LogTracker.log("$TAG#onGlobalLayout", "systemUIHeight is : $systemUIHeight")
                 LogTracker.log("$TAG#onGlobalLayout", "screenHeight is : $screenHeight")
                 LogTracker.log("$TAG#onGlobalLayout", "contentHeight is : $contentHeight")
-                LogTracker.log("$TAG#onGlobalLayout", "systemUIHeight is : $systemUIHeight")
                 LogTracker.log("$TAG#onGlobalLayout", "keyboardHeight is : $keyboardHeight, isShow : $isKeyboardShowing")
             }
             window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
@@ -286,14 +282,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
     private fun getContentContainerTop(scrollOutsideHeight: Int): Int {
-        return if (scrollOutsideBorder.canLayoutOutsideBorder()) {
-            if (panelId == Constants.PANEL_NONE) 0 else -scrollOutsideHeight
-        } else 0
+        return if (panelId == Constants.PANEL_NONE) 0 else -scrollOutsideHeight
     }
 
-    private fun getContentContainerHeight(allHeight: Int, paddingTop: Int, scrollOutsideHeight: Int): Int {
-        return allHeight - paddingTop -
-                if (!scrollOutsideBorder.canLayoutOutsideBorder() && panelId != Constants.PANEL_NONE) scrollOutsideHeight else 0
+    private fun getContentContainerHeight(allHeight: Int, paddingTop: Int): Int {
+        return allHeight - paddingTop
     }
 
     /**
@@ -311,7 +304,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
         deviceRuntime?.let {
             val deviceInfo = it.getDeviceInfoByOrientation()
-            val scrollOutsideHeight = scrollOutsideBorder.getOutsideHeight()
+            val scrollOutsideHeight = PanelUtil.getKeyBoardHeight(context)
             val paddingTop = paddingTop
             var allHeight = deviceInfo.screenH
 
@@ -335,7 +328,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             allHeight -= localLocation[1]
             var contentContainerTop = getContentContainerTop(scrollOutsideHeight)
             contentContainerTop += paddingTop
-            val contentContainerHeight = getContentContainerHeight(allHeight, paddingTop, scrollOutsideHeight)
+            val contentContainerHeight = getContentContainerHeight(allHeight, paddingTop)
             val panelContainerTop = contentContainerTop + contentContainerHeight
 
             if (Constants.DEBUG) {
@@ -345,8 +338,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     Constants.PANEL_KEYBOARD -> "显示键盘输入"
                     else -> "显示面板输入"
                 }
-                val mode = if (scrollOutsideBorder.canLayoutOutsideBorder()) "滑动模式" else "固定模式"
-                LogTracker.log("$TAG#onLayout", " 切换模式  :$mode")
                 LogTracker.log("$TAG#onLayout", " 当前状态  :$state")
                 LogTracker.log("$TAG#onLayout", " 是否是全屏  ：${it.isFullScreen}");
                 LogTracker.log("$TAG#onLayout", " 是否是pad机型  ：${it.isPad}");
@@ -355,7 +346,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 LogTracker.log("$TAG#onLayout", " 界面高度（包含系统UI）  ：${deviceInfo.screenH}");
                 LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，无论导航栏显示与否）  ：${deviceInfo.screenWithoutNavigationH}");
                 LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，动态计算）  ：${deviceInfo.screenWithoutSystemUiH}");
-                LogTracker.log("$TAG#onLayout", " 刘海高度  ：  ${deviceInfo.cutShortH}");
                 LogTracker.log("$TAG#onLayout", " toolbar高度  ：${deviceInfo.toolbarH}");
                 LogTracker.log("$TAG#onLayout", " StatusBar高度  ：${deviceInfo.statusBarH}");
                 LogTracker.log("$TAG#onLayout", " NavigationBar高度  ：${deviceInfo.navigationBarH}");
@@ -381,7 +371,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
             //处理第一个view contentContainer
             run {
-                contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight)
+                contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight, distanceMeasurers)
                 LogTracker.log("$TAG#onLayout", " layout参数 contentContainer : height - $contentContainerHeight")
                 LogTracker.log("$TAG#onLayout", " layout参数 contentContainer : " + " l : " + l + " t : " + contentContainerTop + " r : " + r + " b : " + (contentContainerTop + contentContainerHeight))
                 contentContainer.changeContainerHeight(contentContainerHeight)
@@ -448,11 +438,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         return false
     }
 
-    fun toKeyboardState() {
-        if (contentContainer.getInputActionImpl().editTextHasFocus()) {
-            contentContainer.getInputActionImpl().preformClickForEditText()
-        } else {
-            contentContainer.getInputActionImpl().requestFocusByEditText()
+    @JvmOverloads
+    fun toKeyboardState(async: Boolean = false) {
+        if(async){
+            post(keyboardStateRunnable)
+        }else{
+            if (contentContainer.getInputActionImpl().editTextHasFocus()) {
+                contentContainer.getInputActionImpl().preformClickForEditText()
+            } else {
+                contentContainer.getInputActionImpl().requestFocusByEditText()
+            }
         }
     }
 
@@ -510,7 +505,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
     companion object {
-        private val TAG = PanelSwitchLayout::class.java.simpleName
+        public val TAG = PanelSwitchLayout::class.java.simpleName
         private var preClickTime: Long = 0
     }
 }

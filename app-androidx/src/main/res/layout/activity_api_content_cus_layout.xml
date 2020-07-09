@@ -12,8 +12,7 @@
             android:id="@+id/cus_title_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorPrimary"
-            android:visibility="gone">
+            android:background="@color/colorPrimary">
 
             <TextView
                 android:id="@+id/title"
