@@ -30,7 +30,7 @@ Demo 内容如下
 
 从二维码下载 Demo
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/down_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.3_code.png" width = "256" height = "256"/>
 
 默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
 

@@ -15,6 +15,7 @@ At the same time based on the above structure, before version 1.3.2.1, the frame
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/mode.jpg" width = "662" height = "444" align=center />
 
+In version 1.3.3 and later, only the left swipe mode is supported, and the dynamic adjustment of the height avoids a bad experience. Even if the height is converted through animation, the experience is still not ideal.
 
 #### Content panel
 
@@ -132,7 +133,7 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
             }
             .addDistanceMeasurer {      //IM scene is more important
                 getUnfilledHeight{
-                    //业务可动态计算
+                    //can be calculated dynamically
                     0 
                 }
                 getViewTag{

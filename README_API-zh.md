@@ -15,7 +15,8 @@
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/mode.jpg" width = "662" height = "444" align=center />
 
-In version 1.3.3 and later, only the left sliding mode is supported, and the realization of dynamically adjusting the height avoids a bad experience, even if the height is transitioned with animation, the experience is still not ideal.
+在版本1.3.3和更高版本中，仅支持向左滑动模式，并且动态调整高度的实现避免了不好的体验，即使通过动画转换了高度，体验仍然不是理想的。
+
 
 #### 内容面板
 
