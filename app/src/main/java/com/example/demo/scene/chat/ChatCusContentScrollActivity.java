@@ -18,8 +18,9 @@ import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer;
+import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.CommonChatLayoutBinding;
@@ -58,6 +59,12 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
         mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
+        mBinding.tipView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PanelUtil.clearData(ChatCusContentScrollActivity.this);
+            }
+        });
         initView();
     }
 
@@ -156,40 +163,61 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                             }
                         }
                     })
-                    .addDistanceMeasurer(new ViewDistanceMeasurer() {
+                    /**
+                     * 根据recyclerview的内容填充度来滑动
+                     */
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
-                        public int getUnfilledHeight() {
-                            return unfilledHeight;
+                        public int getScrollDistance(int defaultDistance) {
+                            return defaultDistance - listUnfilledHeight;
                         }
 
-                        @NotNull
                         @Override
-                        public String getViewTag() {
-                            return "recycler_view";
+                        public int getScrollViewId() {
+                            return R.id.recycler_view;
                         }
                     })
-                    .addDistanceMeasurer(new ViewDistanceMeasurer() {
+                    /**
+                     * tipViewBottom 确保底部输入栏不遮挡
+                     */
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
-                        public int getUnfilledHeight() {
-                            return mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom();
+                        public int getScrollDistance(int defaultDistance) {
+                            return defaultDistance - bottomUnfilledHeight;
                         }
 
-                        @NotNull
                         @Override
-                        public String getViewTag() {
-                            return "tip_view_bottom";
+                        public int getScrollViewId() {
+                            return R.id.tip_view_bottom;
                         }
                     })
-                    .addDistanceMeasurer(new ViewDistanceMeasurer() {
+                    /**
+                     * tipViewTop 不跟随滑动
+                     */
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
-                        public int getUnfilledHeight() {
-                            return mBinding.bottomAction.getTop() - mBinding.tipViewTop.getBottom();
+                        public int getScrollDistance(int defaultDistance) {
+                            return 0;
                         }
 
-                        @NotNull
                         @Override
-                        public String getViewTag() {
-                            return "tip_view_top";
+                        public int getScrollViewId() {
+                            return R.id.tip_view_top;
+                        }
+                    })
+                    /**
+                     * 默认实现，contentContainer 内部的子view会随容器向上scroll defaultDistance 距离
+                     */
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
+
+                        @Override
+                        public int getScrollDistance(int defaultDistance) {
+                            return defaultDistance;
+                        }
+
+                        @Override
+                        public int getScrollViewId() {
+                            return R.id.tip_view;
                         }
                     })
                     .logTrack(true)             //output log
@@ -205,20 +233,22 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                             View lastChildView = recyclerView.getChildAt(childCount - 1);
                             int bottom = lastChildView.getBottom();
                             int listHeight = mBinding.recyclerView.getHeight() - mBinding.recyclerView.getPaddingBottom();
-                            int listUnfilledHeight = listHeight - bottom;
-                            if (listUnfilledHeight > 0) {
-                                unfilledHeight = listUnfilledHeight;
-                            } else {
-                                unfilledHeight = 0;
-                            }
+                            listUnfilledHeight = listHeight - bottom;
                         }
                     }
+                }
+            });
+            mBinding.recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    bottomUnfilledHeight = mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom();
                 }
             });
         }
     }
 
-    private int unfilledHeight = 0;
+    private int listUnfilledHeight = 0;
+    private int bottomUnfilledHeight = 0;
 
 
     @Override

@@ -8,9 +8,12 @@ import android.view.Window
 import androidx.annotation.IdRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer
-import com.effective.android.panel.interfaces.ViewDistanceMeasurerBuilder
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
+import com.effective.android.panel.interfaces.ContentScrollMeasurerBuilder
+import com.effective.android.panel.interfaces.PanelHeightMeasurer
+import com.effective.android.panel.interfaces.PanelHeightMeasurerBuilder
 import com.effective.android.panel.interfaces.listener.*
+import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
@@ -36,7 +39,9 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
             builder.editFocusChangeListeners.add(LogTracker)
         }
         mPanelSwitchLayout = builder.panelSwitchLayout!!
-        mPanelSwitchLayout.setDistanceMeasurers(builder.distanceMeasurers)
+        mPanelSwitchLayout.setContentScrollOutsizeEnable(builder.contentScrollOutsideEnable)
+        mPanelSwitchLayout.setScrollMeasurers(builder.contentScrollMeasurers)
+        mPanelSwitchLayout.setPanelHeightMeasurers(builder.panelHeightMeasurers)
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners)
         mPanelSwitchLayout.bindWindow(builder.window)
         if (showKeyboard) {
@@ -44,16 +49,29 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         }
     }
 
+
     fun hookSystemBackByPanelSwitcher(): Boolean {
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher()
     }
 
+    /**
+     * 设置内容滑动
+     */
+    fun setContentScrollOutsideEnable(enable: Boolean) {
+        mPanelSwitchLayout.setContentScrollOutsizeEnable(enable)
+    }
+
+    /**
+     * 判断内容是否允许滑动
+     */
+    fun isContentScrollOutsizeEnable() = mPanelSwitchLayout.isContentScrollOutsizeEnable()
 
     /**
      * 外部显示输入框
      */
-    fun toKeyboardState() {
-        mPanelSwitchLayout.toKeyboardState(false)
+    @JvmOverloads
+    fun toKeyboardState(async: Boolean = false) {
+        mPanelSwitchLayout.toKeyboardState(async)
     }
 
     /**
@@ -73,15 +91,17 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
     }
 
     class Builder(window: Window?, root: View?) {
-        var viewClickListeners: MutableList<OnViewClickListener> = mutableListOf()
-        var panelChangeListeners: MutableList<OnPanelChangeListener> = mutableListOf()
-        var keyboardStatusListeners: MutableList<OnKeyboardStateListener> = mutableListOf()
-        var editFocusChangeListeners: MutableList<OnEditFocusChangeListener> = mutableListOf()
-        var distanceMeasurers: MutableList<ViewDistanceMeasurer> = mutableListOf()
-        var panelSwitchLayout: PanelSwitchLayout? = null
-        var window: Window
-        var rootView: View
-        var logTrack = false
+        internal var viewClickListeners: MutableList<OnViewClickListener> = mutableListOf()
+        internal var panelChangeListeners: MutableList<OnPanelChangeListener> = mutableListOf()
+        internal var keyboardStatusListeners: MutableList<OnKeyboardStateListener> = mutableListOf()
+        internal var editFocusChangeListeners: MutableList<OnEditFocusChangeListener> = mutableListOf()
+        internal var contentScrollMeasurers: MutableList<ContentScrollMeasurer> = mutableListOf()
+        internal var panelHeightMeasurers: MutableList<PanelHeightMeasurer> = mutableListOf()
+        internal var panelSwitchLayout: PanelSwitchLayout? = null
+        internal var window: Window
+        internal var rootView: View
+        internal var logTrack = false
+        internal var contentScrollOutsideEnable = true
 
         constructor(activity: Activity) : this(activity.window, activity.window.decorView.findViewById<View>(R.id.content))
         constructor(fragment: Fragment) : this(fragment.activity?.window, fragment.view)
@@ -148,15 +168,32 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
             return this
         }
 
-        fun addDistanceMeasurer(function: ViewDistanceMeasurerBuilder.() -> Unit): Builder {
-            distanceMeasurers.add(ViewDistanceMeasurerBuilder().also(function))
+        fun addContentScrollMeasurer(function: ContentScrollMeasurerBuilder.() -> Unit): Builder {
+            contentScrollMeasurers.add(ContentScrollMeasurerBuilder().also(function))
             return this
         }
 
-        fun addDistanceMeasurer(distanceMeasurer: ViewDistanceMeasurer): Builder {
-            if (!distanceMeasurers.contains(distanceMeasurer)) {
-                distanceMeasurers.add(distanceMeasurer)
+        fun addContentScrollMeasurer(scrollMeasurer: ContentScrollMeasurer): Builder {
+            if (!contentScrollMeasurers.contains(scrollMeasurer)) {
+                contentScrollMeasurers.add(scrollMeasurer)
             }
+            return this
+        }
+
+        fun addPanelHeightMeasurer(function: PanelHeightMeasurerBuilder.() -> Unit): Builder {
+            panelHeightMeasurers.add(PanelHeightMeasurerBuilder().also(function))
+            return this
+        }
+
+        fun addPanelHeightMeasurer(panelHeightMeasurer: PanelHeightMeasurer): Builder {
+            if (!panelHeightMeasurers.contains(panelHeightMeasurer)) {
+                panelHeightMeasurers.add(panelHeightMeasurer)
+            }
+            return this
+        }
+
+        fun contentScrollOutsideEnable(contentScrollOutsideEnable: Boolean): Builder {
+            this.contentScrollOutsideEnable = contentScrollOutsideEnable
             return this
         }
 

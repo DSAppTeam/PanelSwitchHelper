@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer;
+import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
@@ -199,16 +199,15 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     })
-                    .addDistanceMeasurer(new ViewDistanceMeasurer() {
+                    .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
-                        public int getUnfilledHeight() {
-                            return unfilledHeight;
+                        public int getScrollDistance(int defaultDistance) {
+                            return defaultDistance - unfilledHeight;
                         }
 
-                        @NotNull
                         @Override
-                        public String getViewTag() {
-                            return "recycler_view";
+                        public int getScrollViewId() {
+                            return R.id.recycler_view;
                         }
                     })
                     .logTrack(true)             //output log
@@ -224,12 +223,7 @@ public class ChatActivity extends AppCompatActivity {
                             View lastChildView = recyclerView.getChildAt(childCount - 1);
                             int bottom = lastChildView.getBottom();
                             int listHeight = mBinding.recyclerView.getHeight() - mBinding.recyclerView.getPaddingBottom();
-                            int listUnfilledHeight = listHeight - bottom;
-                            if (listUnfilledHeight > 0) {
-                                unfilledHeight = listUnfilledHeight;
-                            } else {
-                                unfilledHeight = 0;
-                            }
+                            unfilledHeight = listHeight - bottom;
                         }
                     }
                 }

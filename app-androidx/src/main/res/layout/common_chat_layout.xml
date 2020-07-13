@@ -203,7 +203,7 @@
                 <com.effective.android.panel.view.panel.PanelView
                     android:id="@+id/panel_addition"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:panel_layout="@layout/panel_add_layout"
                     app:panel_trigger="@id/add_btn" />
 
