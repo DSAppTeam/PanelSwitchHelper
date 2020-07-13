@@ -10,8 +10,7 @@ import android.widget.EditText
 import androidx.annotation.IdRes
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.interfaces.ViewAssertion
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer
-import com.effective.android.panel.utils.PanelUtil
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
@@ -146,28 +145,38 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
 
     private data class ViewPosition(val tag: String, val l: Int, val t: Int, val r: Int, val b: Int)
 
-    private val map = HashMap<String, ViewPosition>()
+    private val map = HashMap<Int, ViewPosition>()
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int, viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>) {
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
+                                 contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
+                                 reset: Boolean) {
         mViewGroup.layout(l, t, r, b)
-        for (viewDistanceMeasurer in viewDistanceMeasurers) {
-            val tag = viewDistanceMeasurer.getViewTag()
-            if (tag.isNotEmpty()) {
-                val view = (mViewGroup).findViewWithTag<View>(tag)
+        if (reset || !canScrollOutsize) {
+            return
+        }
+        for (contentScrollMeasurer in contentScrollMeasurers) {
+            val viewId = contentScrollMeasurer.getScrollViewId()
+            if (viewId != -1) {
+                val view = (mViewGroup).findViewById<View>(viewId)
                 view.let {
-                    var viewPosition = map[tag]
+                    var viewPosition = map[viewId]
                     if (viewPosition == null) {
                         viewPosition = ViewPosition(tag, view.left, view.top, view.right, view.bottom)
-                        map[tag] = viewPosition
+                        map[viewId] = viewPosition
                     }
-                    val unfilledHeight = viewDistanceMeasurer.getUnfilledHeight()
-                    val keyboardHeight = PanelUtil.getKeyBoardHeight(mViewGroup.context)
+                    var willScrollDistance = contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
+                    if (willScrollDistance > defaultScrollHeight) {
+                        return
+                    }
+                    if (willScrollDistance < 0) {
+                        willScrollDistance = 0
+                    }
                     val viewLeft = viewPosition.l
-                    val viewTop = (if (t != 0) if (unfilledHeight > keyboardHeight) keyboardHeight else unfilledHeight else 0) + viewPosition.t
+                    val viewTop = viewPosition.t + defaultScrollHeight - willScrollDistance
                     val viewRight = viewPosition.r
                     var viewBottom = viewTop + (viewPosition.b - viewPosition.t)
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "viewDistanceMeasurer(tag $tag , unfilledHeight $unfilledHeight) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "viewDistanceMeasurer(tag $tag , unfilledHeight $unfilledHeight) layout parent(l $l,t $t,r $r,b $b) self(l $viewLeft,t $viewTop,r $viewRight, b${viewBottom})")
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(tag $tag , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(tag $tag , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance) layout parent(l $l,t $t,r $r,b $b) self(l $viewLeft,t $viewTop,r $viewRight, b${viewBottom})")
                     view.layout(viewLeft, viewTop, viewRight, viewBottom)
                 }
             }

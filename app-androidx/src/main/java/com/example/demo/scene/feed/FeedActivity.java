@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,17 +24,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.effective.R;
+import com.effective.android.panel.PanelSwitchHelper;
+import com.effective.android.panel.interfaces.ContentScrollMeasurer;
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.utils.DisplayUtil;
+import com.effective.android.panel.utils.PanelUtil;
+import com.effective.android.panel.view.panel.IPanelView;
+import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.ActivityFeedLayoutBinding;
+import com.example.demo.scene.chat.ChatCusContentScrollActivity;
+import com.example.demo.scene.chat.emotion.EmotionPagerView;
+import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
+import com.example.demo.util.DisplayUtils;
+import com.rd.PageIndicatorView;
 
 /**
- * 类微博/微信朋友圈信息流
+ * 类微博/微信朋友圈信息流 - 非 dialog 实现
  * created by yummylau on 2020/06/01
  */
 public class FeedActivity extends AppCompatActivity {
 
+    private static final String TAG = FeedActivity.class.getSimpleName();
     private ActivityFeedLayoutBinding mBinding;
+    private PanelSwitchHelper mHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +55,67 @@ public class FeedActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_feed_layout);
-        mBinding.feedList.setLayoutManager(new LinearLayoutManager(this));
-        mBinding.feedList.setAdapter(new FeedAdapter(this));
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recyclerView.setAdapter(new FeedAdapter(this));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mHelper == null) {
+            mHelper = new PanelSwitchHelper.Builder(this)
+                    .addPanelChangeListener(new OnPanelChangeListener() {
+                        @Override
+                        public void onKeyboard() {
+                            mBinding.emotionBtn.setSelected(false);
+                        }
+
+                        @Override
+                        public void onNone() {
+                            mBinding.emotionBtn.setSelected(false);
+                            mBinding.bottomAction.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onPanel(IPanelView view) {
+                            if (view instanceof PanelView) {
+                                mBinding.emotionBtn.setSelected(((PanelView) view).getId() == R.id.panel_emotion ? true : false);
+                            }
+                        }
+
+                        @Override
+                        public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if (panelView instanceof PanelView) {
+                                switch (((PanelView) panelView).getId()) {
+                                    case R.id.panel_emotion: {
+                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                        int viewPagerSize = height - DisplayUtils.dip2px(FeedActivity.this, 30f);
+                                        pagerView.buildEmotionViews(
+                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                                mBinding.editText,
+                                                Emotions.getEmotions(), width, viewPagerSize);
+                                        break;
+                                    }
+                                    case R.id.panel_addition: {
+                                        //auto center,nothing to do
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .contentScrollOutsideEnable(false)
+                    .logTrack(true)             //output log
+                    .build();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -83,25 +156,6 @@ public class FeedActivity extends AppCompatActivity {
 
         private FeedActionPopup popup;
         private Rect selectedItemRect = new Rect();
-        private FeedCommentDialog.onDialogStatus dialogStatusListener = new FeedCommentDialog.onDialogStatus() {
-            private boolean lastVisibleStatue = false;
-
-            @Override
-            public void onStatus(boolean visible, final int currentTop) {
-                if (lastVisibleStatue == visible) {
-                    return;
-                }
-                lastVisibleStatue = visible;
-                if (visible) {
-                    int dist = selectedItemRect.bottom - currentTop;
-                    mBinding.feedList.scrollBy(0, dist);
-                } else {
-                    Rect currentRect = new Rect();
-                    itemView.getGlobalVisibleRect(currentRect);
-                    mBinding.feedList.scrollBy(0, currentRect.bottom - selectedItemRect.bottom);
-                }
-            }
-        };
 
         public FeedItemHolder(View itemView) {
             super(itemView);
@@ -119,7 +173,7 @@ public class FeedActivity extends AppCompatActivity {
                     if (popup == null) {
                         popup = new FeedActionPopup(context, v1 -> {
                             itemView.getGlobalVisibleRect(selectedItemRect);
-                            new FeedCommentDialog((FeedActivity) v1.getContext(), dialogStatusListener).show();
+                            scrollView(selectedItemRect, PanelUtil.getKeyBoardHeight(v.getContext()));
                         });
                     }
                     if (popup.isShowing()) {
@@ -131,6 +185,13 @@ public class FeedActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void scrollView(Rect selectedItemRect, int panelHeight) {
+        mBinding.bottomAction.setVisibility(View.VISIBLE);
+        mHelper.toKeyboardState(true);
+        int dist = selectedItemRect.bottom - (mBinding.recyclerView.getBottom() - panelHeight - DisplayUtil.dip2px(FeedActivity.this, 50f));
+        mBinding.recyclerView.scrollBy(0, dist);
     }
 
     public class CoverHolder extends RecyclerView.ViewHolder {

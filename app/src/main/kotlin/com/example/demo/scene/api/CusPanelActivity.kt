@@ -1,6 +1,7 @@
 package com.example.demo.scene.api
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -8,7 +9,6 @@ import android.view.Window
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
@@ -22,7 +22,7 @@ import com.rd.PageIndicatorView
  * 使用自定义面板
  * created by yummylau on 2020/06/06
  */
-class PanelActivity : AppCompatActivity() {
+class CusPanelActivity : AppCompatActivity() {
     private var mHelper: PanelSwitchHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class PanelActivity : AppCompatActivity() {
         sendView.setOnClickListener(View.OnClickListener {
             val content = editView.text.toString()
             if (TextUtils.isEmpty(content)) {
-                Toast.makeText(this@PanelActivity, "当前没有输入", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CusPanelActivity, "当前没有输入", Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
             editView.text = null
@@ -92,7 +92,7 @@ class PanelActivity : AppCompatActivity() {
                                 when (panelView.id) {
                                     R.id.panel_emotion -> {
                                         val pagerView: EmotionPagerView = findViewById(R.id.view_pager)
-                                        val viewPagerSize = height - DisplayUtils.dip2px(this@PanelActivity, 30f)
+                                        val viewPagerSize = height - DisplayUtils.dip2px(this@CusPanelActivity, 30f)
                                         pagerView.buildEmotionViews(
                                                 findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
                                                 editView,

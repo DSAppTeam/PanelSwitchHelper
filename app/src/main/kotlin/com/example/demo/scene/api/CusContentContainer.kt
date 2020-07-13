@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.effective.R
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.view.content.ContentContainerImpl
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.content.IInputAction
@@ -42,8 +42,10 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, resetViewId)
     }
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int, viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>) {
-        contentContainer.layoutContainer(l, t, r, b,viewDistanceMeasurers)
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
+                                 contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
+                                 reset: Boolean) {
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
     }
 
     override fun findTriggerView(id: Int): View? {

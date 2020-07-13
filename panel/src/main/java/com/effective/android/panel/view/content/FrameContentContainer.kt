@@ -8,7 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import com.effective.android.panel.R
-import com.effective.android.panel.interfaces.ViewDistanceMeasurer
+import com.effective.android.panel.interfaces.ContentScrollMeasurer
 
 /**
  * --------------------
@@ -59,8 +59,10 @@ class FrameContentContainer : FrameLayout, IContentContainer {
         contentContainer = ContentContainerImpl(this,autoResetByOnTouch, editTextId, autoResetId)
     }
 
-    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int, viewDistanceMeasurers: MutableList<ViewDistanceMeasurer>) {
-        contentContainer.layoutContainer(l, t, r, b, viewDistanceMeasurers)
+    override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
+                                 contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
+                                 reset: Boolean) {
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
     }
 
     override fun findTriggerView(id: Int): View? {

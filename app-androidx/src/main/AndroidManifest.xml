@@ -25,6 +25,10 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity
+            android:name="com.example.demo.scene.chat.ChatSuperActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
+        <activity
             android:name="com.example.demo.scene.chat.ChatFragmentActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
@@ -37,7 +41,11 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity
-            android:name="com.example.demo.scene.api.PanelActivity"
+            android:name="com.example.demo.scene.api.CusPanelActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
+        <activity
+            android:name="com.example.demo.scene.api.DefaultHeightPanelActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <activity
@@ -58,6 +66,7 @@
             android:theme="@style/VideoActivityTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
+        <activity android:name="com.example.demo.scene.feed.FeedDialogActivity" />
         <activity android:name="com.example.demo.scene.feed.FeedActivity" />
         <activity android:name="com.example.demo.scene.chat.ChatCusContentScrollActivity" />
 

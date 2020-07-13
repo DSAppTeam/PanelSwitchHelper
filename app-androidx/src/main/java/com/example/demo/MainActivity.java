@@ -20,7 +20,8 @@ import com.example.demo.anno.ApiContentType;
 import com.example.demo.anno.ApiResetType;
 import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.api.ContentActivity;
-import com.example.demo.scene.api.PanelActivity;
+import com.example.demo.scene.api.CusPanelActivity;
+import com.example.demo.scene.api.DefaultHeightPanelActivity;
 import com.example.demo.scene.api.ResetActivity;
 import com.example.demo.scene.chat.ChatActivity;
 import com.example.demo.scene.chat.ChatCusContentScrollActivity;
@@ -28,7 +29,9 @@ import com.example.demo.scene.chat.ChatDialog;
 import com.example.demo.scene.chat.ChatDialogFragment;
 import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.ChatPopupWindow;
+import com.example.demo.scene.chat.ChatSuperActivity;
 import com.example.demo.scene.feed.FeedActivity;
+import com.example.demo.scene.feed.FeedDialogActivity;
 import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.scene.live.douyin.PhoneDouyinLiveActivity;
 import com.example.demo.scene.video.BiliBiliSampleActivity;
@@ -64,8 +67,10 @@ public class MainActivity extends AppCompatActivity{
     final String scene_title = "扩展场景";
     final String scene_1 = "视频播放(优于b站)";
     final String scene_2 = "信息流评论(同微信朋友圈效果)";
+//    final String scene_2_2 = "信息流评论(同微信朋友圈效果-非dialog)";
     final String scene_3 = "PC直播(优于虎牙效果)";
     final String scene_4 = "手机直播(优于抖音效果)";
+    final String scene_5 = "复杂聊天场景";
 
     final String api_content_container_title = "api 内容容器及扩展";
     final String api_content_container_1 = "基于 LinearLayout 实现";
@@ -73,13 +78,14 @@ public class MainActivity extends AppCompatActivity{
     final String api_content_container_3 = "基于 FrameLayout 实现";
     final String api_content_container_4 = "自定义布局实现";
 
-    final String api_cus_panel_title = "api 自定义面板";
-    final String api_cus_panel = "自定义PanelView";
-
-    final String api_define_content_container_scroll_title = "api 自定义内容滑动";
+    final String api_define_content_container_scroll_title = "api 内容容器内部布局干预滑动";
     final String api_define_content_container_scroll = "内容区域干预子View滑动行为";
 
-    final String api_reset_title = "api 自动隐藏面板";
+    final String api_cus_panel_title = "api 面板扩展及默认高度设置";
+    final String api_cus_panel = "自定义PanelView";
+    final String api_cus_panel_height = "未获取输入法高度前高度兼容";
+
+    final String api_reset_title = "api 自动隐藏软键盘/面板";
     final String api_reset_1 = "点击内容容器收起面板(默认处理)";
     final String api_reset_2 = "点击空白 View 收起面板";
     final String api_reset_3 = "点击原生 RecyclerView 收起面板";
@@ -92,18 +98,18 @@ public class MainActivity extends AppCompatActivity{
             window_title,
             scene_title,
             api_content_container_title,
-            api_cus_panel_title,
             api_define_content_container_scroll_title,
+            api_cus_panel_title,
             api_reset_title};
 
     final String[][] childStrings = {
             {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {window_1,window_2,window_3},
-            {scene_1,scene_2,scene_3,scene_4},
+            {scene_1,scene_2,scene_3,scene_4,scene_5},
             {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
-            {api_cus_panel},
             {api_define_content_container_scroll},
+            {api_cus_panel,api_cus_panel_height},
             {api_reset_1,api_reset_2,api_reset_3,api_reset_4,api_reset_5}
     };
 
@@ -204,9 +210,13 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
                     case scene_2:{
-                        startActivity(new Intent(MainActivity.this, FeedActivity.class));
+                        startActivity(new Intent(MainActivity.this, FeedDialogActivity.class));
                         break;
                     }
+//                    case scene_2_2:{
+//                        startActivity(new Intent(MainActivity.this, FeedActivity.class));
+//                        break;
+//                    }
                     case scene_3:{
                         startActivity(new Intent(MainActivity.this, PcHuyaLiveActivity.class));
                         break;
@@ -215,9 +225,18 @@ public class MainActivity extends AppCompatActivity{
                         startActivity(new Intent(MainActivity.this, PhoneDouyinLiveActivity.class));
                         break;
                     }
+                    case scene_5:{
+                        startActivity(new Intent(MainActivity.this, ChatSuperActivity.class));
+                        break;
+                    }
 
                     case api_cus_panel:{
-                        startActivity(new Intent(MainActivity.this, PanelActivity.class));
+                        startActivity(new Intent(MainActivity.this, CusPanelActivity.class));
+                        break;
+                    }
+
+                    case api_cus_panel_height:{
+                        startActivity(new Intent(MainActivity.this, DefaultHeightPanelActivity.class));
                         break;
                     }
 

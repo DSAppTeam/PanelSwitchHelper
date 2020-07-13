@@ -2,52 +2,57 @@ package com.example.demo.scene.chat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
+import com.effective.android.panel.interfaces.PanelHeightMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
+import com.effective.databinding.ActivitySuperChatLayoutBinding;
 import com.effective.databinding.CommonChatLayoutBinding;
+import com.example.demo.Constants;
+import com.example.demo.anno.ChatPageType;
+import com.example.demo.scene.api.CusPanelView;
 import com.example.demo.scene.chat.adapter.ChatAdapter;
 import com.example.demo.scene.chat.adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
+import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
- * 自定义内容面板内的scroll
- * 处理单独的兼容聊天场景，比如聊天页面内部可能出现一些复层的UI，如新消息提示，悬浮view等，可以自定义兼容滑动行为。
- * Created by yummyLau on 18-7-11
+ * 复杂的聊天界面，演示所有可能用到的api
+ * 包括：滑动模式，控制内容区元素滑动，初始化面板适配，自定义面板等
+ * Created by yummyLau on 20/07/13
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class ChatCusContentScrollActivity extends AppCompatActivity {
+public class ChatSuperActivity extends AppCompatActivity {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ChatCusContentScrollActivity.class);
         context.startActivity(intent);
     }
 
-    private CommonChatLayoutBinding mBinding;
+    private ActivitySuperChatLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -57,14 +62,8 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_super_chat_layout);
         mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
-        mBinding.tipView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PanelUtil.clearData(ChatCusContentScrollActivity.this);
-            }
-        });
         initView();
     }
 
@@ -79,12 +78,17 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
         mBinding.send.setOnClickListener(v -> {
             String content = mBinding.editText.getText().toString();
             if (TextUtils.isEmpty(content)) {
-                Toast.makeText(ChatCusContentScrollActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatSuperActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
                 return;
             }
             mAdapter.insertInfo(ChatInfo.CREATE(content));
             mBinding.editText.setText(null);
             scrollToBottom();
+        });
+        mBinding.title.setText("点击左侧 \"默认滑动演示 \" 可清除框架输入法高度缓存");
+        mBinding.tipView.setOnClickListener(v -> {
+            PanelUtil.clearData(ChatSuperActivity.this);
+            Toast.makeText(ChatSuperActivity.this,"已清除面板高度缓存，可拉起功能面板测试默认高度",Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -148,7 +152,7 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                                 switch (((PanelView) panelView).getId()) {
                                     case R.id.panel_emotion: {
                                         EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                        int viewPagerSize = height - DisplayUtils.dip2px(ChatCusContentScrollActivity.this, 30f);
+                                        int viewPagerSize = height - DisplayUtils.dip2px(ChatSuperActivity.this, 30f);
                                         pagerView.buildEmotionViews(
                                                 (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                                 mBinding.editText,
@@ -169,7 +173,7 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                     .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
                         public int getScrollDistance(int defaultDistance) {
-                            return defaultDistance - listUnfilledHeight;
+                            return defaultDistance - unfilledHeight;
                         }
 
                         @Override
@@ -183,7 +187,7 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                     .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
                         public int getScrollDistance(int defaultDistance) {
-                            return defaultDistance - bottomUnfilledHeight;
+                            return defaultDistance - (mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom());
                         }
 
                         @Override
@@ -199,7 +203,6 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                         public int getScrollDistance(int defaultDistance) {
                             return 0;
                         }
-
                         @Override
                         public int getScrollViewId() {
                             return R.id.tip_view_top;
@@ -214,10 +217,41 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                         public int getScrollDistance(int defaultDistance) {
                             return defaultDistance;
                         }
-
                         @Override
                         public int getScrollViewId() {
                             return R.id.tip_view;
+                        }
+                    })
+                    /**
+                     * 可选，可不设置
+                     * 测试时请清除本地sp缓存
+                     * 面板默认高度设置,输入法显示后会采纳输入法高度为面板高度，否则则以框架内部默认值为主
+                     */
+                    .addPanelHeightMeasurer(new PanelHeightMeasurer() {
+                        @Override
+                        public int getTargetPanelDefaultHeight() {
+                            return DisplayUtils.dip2px(ChatSuperActivity.this, 200f);
+                        }
+
+                        @Override
+                        public int getPanelTriggerId() {
+                            return R.id.add_btn;
+                        }
+                    })
+                    /**
+                     * 可选，可不设置
+                     * 测试时请清除本地sp缓存
+                     * 面板默认高度设置,输入法显示后会采纳输入法高度为面板高度，否则则以框架内部默认值为主
+                     */
+                    .addPanelHeightMeasurer(new PanelHeightMeasurer() {
+                        @Override
+                        public int getTargetPanelDefaultHeight() {
+                            return DisplayUtils.dip2px(ChatSuperActivity.this, 400f);
+                        }
+
+                        @Override
+                        public int getPanelTriggerId() {
+                            return R.id.emotion_btn;
                         }
                     })
                     .logTrack(true)             //output log
@@ -233,22 +267,15 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                             View lastChildView = recyclerView.getChildAt(childCount - 1);
                             int bottom = lastChildView.getBottom();
                             int listHeight = mBinding.recyclerView.getHeight() - mBinding.recyclerView.getPaddingBottom();
-                            listUnfilledHeight = listHeight - bottom;
+                            unfilledHeight = listHeight - bottom;
                         }
                     }
-                }
-            });
-            mBinding.recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    bottomUnfilledHeight = mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom();
                 }
             });
         }
     }
 
-    private int listUnfilledHeight = 0;
-    private int bottomUnfilledHeight = 0;
+    private int unfilledHeight = 0;
 
 
     @Override
