@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.4-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.5-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -30,7 +30,7 @@ Demo 内容如下
 
 从二维码下载 Demo
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.4_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.5_code.png" width = "256" height = "256"/>
 
 默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
 
@@ -39,10 +39,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.4'
+implementation 'com.effective.android:panelSwitchHelper:1.3.5'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.4'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.5'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -320,6 +320,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.4'
     * 更改 api `addDistanceMeasurer` -> `addContentScrollMeasurer`, 当处于滑动模式时，可自主控制内容滑动距离
     * 新增 api `addPanelHeightMeasurer` 用于设置默认面板高度，兼容未获取输入法场景
     * 优化动画及内部逻辑
+* 1.3.5 兼容 AndroidQ 全屏虚拟导航栏手势模式，如 MiUI12 设备等
  
 
 ### 期望

@@ -18,10 +18,9 @@ object PanelUtil {
 
     private var pHeight: Int = -1
     private var lHeight: Int = -1
-    private const val LIMIT_MIN = 100
 
     @JvmStatic
-    fun clearData(context: Context){
+    fun clearData(context: Context) {
         pHeight = -1
         lHeight = -1
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -66,19 +65,17 @@ object PanelUtil {
 
     @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
-        /**
-         * 部分rom，比如findx，底部有4Px的像素用于处理用户手势。再比如一些支持用户从底部滑动来交互的 vivo/红米 版本，底部也有一个小的区域用于捕获用户手势。
-         */
-        if (height < LIMIT_MIN) {
-            LogTracker.log("PanelUtil#onGlobalLayout", "KeyBoardHeight is : $height, it may be a wrong value, just ignore!")
+
+        if (getKeyBoardHeight(context) == height) {
+            LogTracker.log("PanelUtil#onGlobalLayout", "current KeyBoardHeight is equal，just ignore！")
             return false
         }
         val isPortrait = isPortrait(context)
         if (isPortrait && pHeight == height) {
-            return false
+            return true
         }
         if (!isPortrait && lHeight == height) {
-            return false
+            return true
         }
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
         val key = if (isPortrait) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
