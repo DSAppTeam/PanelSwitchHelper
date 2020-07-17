@@ -166,8 +166,10 @@ object DisplayUtil {
     }
 
     @JvmStatic
-    fun dip2px(context:Context, dipValue:Float): Int {
-        val scale:Float = context.resources.displayMetrics.density
+    fun dip2px(context: Context, dipValue: Float): Int {
+        val scale: Float = context.resources.displayMetrics.density
         return (dipValue * scale + 0.5f).toInt()
     }
+
+    fun hasSystemUIFlag(window: Window, flag: Int): Boolean = window.decorView.systemUiVisibility and flag == flag
 }

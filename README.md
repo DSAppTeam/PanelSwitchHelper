@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.4-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.5-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [中文文档](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -30,7 +30,7 @@ Demo content is as follows
 
 Download from QR code
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.4_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.5_code.png" width = "256" height = "256"/>
 
 The Androidx version runs by default. If you need to open non-Androidx, open the app in `Settings.gradle` and close the Androidx configuration in `gradle.properties`.
 
@@ -39,10 +39,10 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 1. Add library dependencies in module script `build.gradle`
 
 ```
-implementation'com.effective.android:panelSwitchHelper:1.3.4'
+implementation'com.effective.android:panelSwitchHelper:1.3.5'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.4'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.5'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
@@ -322,6 +322,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.4'
     * Change api`addDistanceMeasurer`->`addContentScrollMeasurer`, when in sliding mode, can control the content sliding distance independently
     * Add api`addPanelHeightMeasurer` to set the panel height, compatible with scenes without input method
     * Optimized animation and internal logic
+* 1.3.5 Compatible with AndroidQ full-screen virtual navigation bar gesture mode, such as MiUI12 devices, etc.
      
 ### Expectations
 
