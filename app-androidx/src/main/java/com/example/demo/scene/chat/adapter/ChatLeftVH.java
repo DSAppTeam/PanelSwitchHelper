@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.effective.databinding.VhChatLeftLayoutBinding;
+import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.emotion.EmojiSpanBuilder;
+import com.example.demo.util.DisplayUtils;
 
 /**
  * the left of chatting item
