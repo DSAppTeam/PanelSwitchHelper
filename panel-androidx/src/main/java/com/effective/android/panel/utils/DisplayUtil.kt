@@ -7,11 +7,14 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.Rect
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import com.effective.android.panel.Constants
+
 
 object DisplayUtil {
     /**
@@ -50,8 +53,25 @@ object DisplayUtil {
     }
 
     /**
+     * 获取设备真实高度，包含可能存在的虚拟导航栏，未显示的刘海区域，状态栏等
+     */
+    fun getScreenRealHeight(window: Window): Int {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            val wm = window.context
+                    .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val outMetrics = DisplayMetrics()
+            wm.defaultDisplay.getRealMetrics(outMetrics)
+            return outMetrics.heightPixels
+        }else{
+            getScreenHeightWithSystemUI(window)
+        }
+    }
+
+
+    /**
      * 实际上获取的是DecorView的布局高度，是一个 FrameLayout，其内置布局 id 为 com.android.internal.R.layout.screen_simple 的 LinearLayout
      * 包含 id为 @+id/action_mode_bar_stub_ViewStub 的 ViewStub 还有 id 为 @Android：id/content 的 FrameLayout。
+     * 如果系统设置刘海留空，则 该高度不包含刘海高度
      *
      * @param window
      * @return
