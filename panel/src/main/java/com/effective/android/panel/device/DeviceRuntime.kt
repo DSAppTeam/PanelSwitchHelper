@@ -45,7 +45,7 @@ class DeviceRuntime(val context: Context, val window: Window) {
         if (toolbarH == statusBarHeight) {
             toolbarH = 0
         }
-        val screenHeight = DisplayUtil.getScreenHeightWithSystemUI(window)
+        val screenHeight = DisplayUtil.getScreenRealHeight(window)
         val screenWithoutSystemUIHeight = DisplayUtil.getScreenHeightWithoutSystemUI(window)
         val screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(context)
 

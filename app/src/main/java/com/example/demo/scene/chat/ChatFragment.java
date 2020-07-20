@@ -33,6 +33,7 @@ import com.rd.PageIndicatorView;
 
 public class ChatFragment extends Fragment {
 
+
     private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
