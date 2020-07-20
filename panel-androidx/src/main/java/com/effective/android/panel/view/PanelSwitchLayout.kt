@@ -112,7 +112,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!hasAttachLister) {
-            globalLayoutListener.let {
+            globalLayoutListener?.let {
                 window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(it)
                 hasAttachLister = true
             }
@@ -123,13 +123,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         removeCallbacks(retryCheckoutKbRunnable)
         removeCallbacks(keyboardStateRunnable)
         if (hasAttachLister) {
-            globalLayoutListener.let {
+            globalLayoutListener?.let {
                 window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
                 hasAttachLister = false
             }
         }
     }
-
     private fun initListener() {
         /**
          * 1. if current currentPanelId is None,should show keyboard
@@ -539,6 +538,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         realBounds = Rect(l, t, r, b)
         return change
     }
+
+    internal fun isPanelState() = panelId != Constants.PANEL_NONE
+
+    internal fun isKeyboardState() = panelId == Constants.PANEL_KEYBOARD
+
+    internal fun isResetState() = panelId == Constants.PANEL_NONE
 
     private fun isUserPanel(panelId: Int) = panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD
 

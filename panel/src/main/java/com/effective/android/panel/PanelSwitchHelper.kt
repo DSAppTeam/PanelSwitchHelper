@@ -50,6 +50,12 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher()
     }
 
+    fun isPanelState() = mPanelSwitchLayout.isPanelState()
+
+    fun isKeyboardState() = mPanelSwitchLayout.isKeyboardState()
+
+    fun isResetState() = mPanelSwitchLayout.isResetState()
+
     /**
      * 设置内容滑动
      */
