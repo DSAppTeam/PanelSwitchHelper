@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.5-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.6-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -30,7 +30,7 @@ Demo 内容如下
 
 从二维码下载 Demo
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.5_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.6_code.png" width = "256" height = "256"/>
 
 默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
 
@@ -39,10 +39,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.5'
+implementation 'com.effective.android:panelSwitchHelper:1.3.6'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.5'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.6'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -310,7 +310,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.5'
         * PanelView 迁移到 panel 包
 * 1.3.1 支持适配采用底部系统布局来捕获用户手势的机型，这部分机型在界面底部多出的系统view可能导致输入法计算有偏差。比如 Findx，红米等机型。
 * 1.3.2 支持xml布局预览，优化动画，解决Demo存在背景时切换面板背景可见的问题
-    * 1.3.2.1(2020-06-30) 兼容使用autoSize库的项目，解决可能因为状态栏高度被修改导致输入法高度计算错误的问题
+    * 1.3.2.1 兼容使用autoSize库的项目，解决可能因为状态栏高度被修改导致输入法高度计算错误的问题
 * 1.3.3 优化体验，修复已知问题
     * 修复多fragment场景下 window 可能引起 fragment 内存泄漏问题
     * 新增 `toPanelState`api 用于外部拉起面板
@@ -321,7 +321,10 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.5'
     * 新增 api `addPanelHeightMeasurer` 用于设置默认面板高度，兼容未获取输入法场景
     * 优化动画及内部逻辑
 * 1.3.5 兼容 AndroidQ 全屏虚拟导航栏手势模式，如 MiUI12 设备等
- 
+* 1.3.6 扩展 api
+    * 扩展 `animationSpeed`，支持设置动画速度， `standard` 标准速，`slow` 慢速,`slowest` 最慢速,`fast` 快速,`fastest`最快速
+    * PanelSwitchHelper 新增判断当前面板状态，如 `isPanelState()` 等
+    * 优化全面屏软键盘高度计算逻辑，修复已知问题 
 
 ### 期望
 

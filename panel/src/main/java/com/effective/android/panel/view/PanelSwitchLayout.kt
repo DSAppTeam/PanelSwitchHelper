@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import com.effective.android.panel.Constants
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.R
+import com.effective.android.panel.device.DeviceInfo
 import com.effective.android.panel.device.DeviceRuntime
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.PanelHeightMeasurer
@@ -28,6 +29,7 @@ import com.effective.android.panel.utils.DisplayUtil
 import com.effective.android.panel.utils.DisplayUtil.getLocationOnScreen
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithSystemUI
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithoutSystemUI
+import com.effective.android.panel.utils.DisplayUtil.getScreenRealHeight
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
@@ -114,7 +116,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!hasAttachLister) {
-            globalLayoutListener.let {
+            globalLayoutListener?.let {
                 window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(it)
                 hasAttachLister = true
             }
@@ -125,7 +127,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         removeCallbacks(retryCheckoutKbRunnable)
         removeCallbacks(keyboardStateRunnable)
         if (hasAttachLister) {
-            globalLayoutListener.let {
+            globalLayoutListener?.let {
                 window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
                 hasAttachLister = false
             }
@@ -541,6 +543,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         realBounds = Rect(l, t, r, b)
         return change
     }
+
+    internal fun isPanelState() = panelId != Constants.PANEL_NONE
+
+    internal fun isKeyboardState() = panelId == Constants.PANEL_KEYBOARD
+
+    internal fun isResetState() = panelId == Constants.PANEL_NONE
 
     private fun isUserPanel(panelId: Int) = panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD
 
