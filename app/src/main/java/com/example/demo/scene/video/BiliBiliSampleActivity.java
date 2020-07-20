@@ -24,7 +24,6 @@ import com.example.demo.util.DisplayUtils;
  * blog: yummylau.com
  */
 public class BiliBiliSampleActivity extends AppCompatActivity {
-
     private ActivityBilibiliVideoLayoutBinding mBinding;
     private BiliBiliCommentPopWindow videoPopWindow;
     private Runnable runnable = new Runnable() {
@@ -65,6 +64,7 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
         };
         mBinding.input.setOnClickListener(inputClick);
         mBinding.inputH.setOnClickListener(inputClick);
+        psize = DisplayUtils.getScreenSize(this);
     }
 
     @Override
@@ -80,29 +80,65 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    Pair<Integer, Integer> psize;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBinding.videoView.getLayoutParams();
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            StatusbarHelper.setStatusBarColor(this, Color.BLACK);
-            Pair<Integer, Integer> size = DisplayUtils.getScreenSize(this);
-            layoutParams.width = size.first;
-            layoutParams.height = size.first * 9 / 16;
+            checkoutSystemUIMode(true);
+            psize = DisplayUtils.getScreenSize(this);
+            layoutParams.width = psize.first;
+            layoutParams.height = psize.first * 9 / 16;
             mBinding.inputH.setVisibility(View.GONE);
             mBinding.checkout.setVisibility(View.VISIBLE);
         } else {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            checkoutSystemUIMode(false);
             Pair<Integer, Integer> size = DisplayUtils.getScreenSize(this);
             layoutParams.width = size.first;
-            layoutParams.height = size.second;
+            layoutParams.height = psize.first;
             mBinding.inputH.setVisibility(View.VISIBLE);
             mBinding.checkout.setVisibility(View.GONE);
         }
         mBinding.videoView.setLayoutParams(layoutParams);
     }
 
+    private void checkoutSystemUIMode(boolean isP){
+        if(isP){
+            getWindow().getDecorView().setSystemUiVisibility(0); //重置
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            StatusbarHelper.setStatusBarColor(this, Color.BLACK);
+        }else{
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                Window window = getWindow();
+                getWindow().getDecorView().setSystemUiVisibility(0);
+                window.getDecorView().setSystemUiVisibility(
+                        window.getDecorView().getSystemUiVisibility() |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+        }
+    }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus && !DisplayUtil.isPortrait(this)){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                Window window = getWindow();
+                getWindow().getDecorView().setSystemUiVisibility(0);
+                window.getDecorView().setSystemUiVisibility(
+                        window.getDecorView().getSystemUiVisibility() |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+        }
+    }
 }

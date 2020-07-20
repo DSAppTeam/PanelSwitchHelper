@@ -72,10 +72,12 @@ object PanelUtil {
         }
         val isPortrait = isPortrait(context)
         if (isPortrait && pHeight == height) {
-            return true
+            LogTracker.log("PanelUtil#onGlobalLayout", "current KeyBoardHeight is equal，just ignore！")
+            return false
         }
         if (!isPortrait && lHeight == height) {
-            return true
+            LogTracker.log("PanelUtil#onGlobalLayout", "current KeyBoardHeight is equal，just ignore！")
+            return false
         }
         val sp = context.getSharedPreferences(Constants.KB_PANEL_PREFERENCE_NAME, Context.MODE_PRIVATE)
         val key = if (isPortrait) Constants.KEYBOARD_HEIGHT_FOR_P else Constants.KEYBOARD_HEIGHT_FOR_L
