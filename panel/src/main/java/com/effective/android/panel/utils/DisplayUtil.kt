@@ -8,12 +8,15 @@ import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import com.effective.android.panel.Constants
+import java.lang.Exception
+
 
 object DisplayUtil {
     /**
@@ -55,13 +58,13 @@ object DisplayUtil {
      * 获取设备真实高度，包含可能存在的虚拟导航栏，未显示的刘海区域，状态栏等
      */
     fun getScreenRealHeight(window: Window): Int {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             val wm = window.context
                     .getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val outMetrics = DisplayMetrics()
             wm.defaultDisplay.getRealMetrics(outMetrics)
             return outMetrics.heightPixels
-        }else{
+        } else {
             getScreenHeightWithSystemUI(window)
         }
     }
@@ -169,6 +172,7 @@ object DisplayUtil {
      */
     @JvmStatic
     fun isNavBarVisible(context: Context, window: Window): Boolean {
+        var isVisible = false
         var viewGroup: ViewGroup? = window.decorView as ViewGroup?
         if (viewGroup != null) {
             for (i in 0 until viewGroup.childCount) {
@@ -176,12 +180,26 @@ object DisplayUtil {
                 if (id != android.view.View.NO_ID) {
                     var resourceEntryName: String? = context.resources.getResourceEntryName(id)
                     if ((("navigationBarBackground" == resourceEntryName) && viewGroup.getChildAt(i).visibility == android.view.View.VISIBLE)) {
-                        return true
+                        isVisible = true
                     }
                 }
             }
         }
-        return false
+        if (isVisible) {
+            // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入之后判断错误
+            // 这个问题在 OneUI 2 & android 10 版本已修复，
+            val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
+            if (manufacturer.toLowerCase().contains("samsung")
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                try {
+                    return  Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
+                } catch (e: Exception) {
+                    //nothing to do
+                }
+            }
+            isVisible = !hasSystemUIFlag(window, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        }
+        return isVisible
     }
 
     @JvmStatic

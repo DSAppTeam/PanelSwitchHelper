@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.6-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.7-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -30,7 +30,7 @@ Demo 内容如下
 
 从二维码下载 Demo
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.6_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.7_code.png" width = "256" height = "256"/>
 
 默认运行 Androidx 版本，如果需要打开非 Androidx，则在 `Settings.gradle` 中打开 `app` 并在 `gradle.properties` 中关闭 Androidx 配置即可。
 
@@ -39,10 +39,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.6'
+implementation 'com.effective.android:panelSwitchHelper:1.3.7'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.6'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.7'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -325,6 +325,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.6'
     * 扩展 `animationSpeed`，支持设置动画速度， `standard` 标准速，`slow` 慢速,`slowest` 最慢速,`fast` 快速,`fastest`最快速
     * PanelSwitchHelper 新增判断当前面板状态，如 `isPanelState()` 等
     * 优化全面屏软键盘高度计算逻辑，修复已知问题 
+* 1.3.7 兼容OneUI 2版本前 s8/note8 等三星设备 
 
 ### 期望
 
