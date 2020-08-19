@@ -144,7 +144,28 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         return mViewGroup.findViewById(id)
     }
 
-    private data class ViewPosition(val tag: String, val l: Int, val t: Int, val r: Int, val b: Int)
+    private data class ViewPosition(val id: Int, val l: Int, val t: Int, val r: Int, val b: Int) {
+        var changeL: Int = l
+        var changeT: Int = t
+        var changeR: Int = r
+        var changeB: Int = b
+
+        fun hasChange() = changeL != l || changeT != t || changeR != r || changeB != b
+
+        fun change(newL: Int, newT: Int, newR: Int, newB: Int) {
+            changeL = newL
+            changeT = newT
+            changeR = newR
+            changeB = newB
+        }
+
+        fun reset() {
+            changeL = l
+            changeT = t
+            changeR = r
+            changeB = b
+        }
+    }
 
     private val map = HashMap<Int, ViewPosition>()
 
@@ -152,7 +173,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
         mViewGroup.layout(l, t, r, b)
-        if (reset || !canScrollOutsize) {
+        if (!canScrollOutsize) {
             return
         }
         for (contentScrollMeasurer in contentScrollMeasurers) {
@@ -162,23 +183,34 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 view.let {
                     var viewPosition = map[viewId]
                     if (viewPosition == null) {
-                        viewPosition = ViewPosition(tag, view.left, view.top, view.right, view.bottom)
+                        viewPosition = ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
                         map[viewId] = viewPosition
                     }
-                    var willScrollDistance = contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
-                    if (willScrollDistance > defaultScrollHeight) {
-                        return
+
+                    var willScrollDistance = 0;
+                    if (reset) {
+                        if (viewPosition.hasChange()) {
+                            val viewLeft = viewPosition.l
+                            val viewTop = viewPosition.t
+                            val viewRight = viewPosition.r
+                            var viewBottom = viewPosition.b
+                            view.layout(viewLeft, viewTop, viewRight, viewBottom)
+                            viewPosition.reset();
+                        }
+                    } else {
+                        willScrollDistance = contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
+                        if (willScrollDistance > defaultScrollHeight) {
+                            return
+                        }
+                        if (willScrollDistance < 0) {
+                            willScrollDistance = 0
+                        }
+                        val diffY = defaultScrollHeight - willScrollDistance;
+                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b  + diffY);
+                        view.layout(viewPosition.changeL, viewPosition.changeT, viewPosition.changeR, viewPosition.changeB)
                     }
-                    if (willScrollDistance < 0) {
-                        willScrollDistance = 0
-                    }
-                    val viewLeft = viewPosition.l
-                    val viewTop = viewPosition.t + defaultScrollHeight - willScrollDistance
-                    val viewRight = viewPosition.r
-                    var viewBottom = viewTop + (viewPosition.b - viewPosition.t)
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(tag $tag , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(tag $tag , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance) layout parent(l $l,t $t,r $r,b $b) self(l $viewLeft,t $viewTop,r $viewRight, b${viewBottom})")
-                    view.layout(viewLeft, viewTop, viewRight, viewBottom)
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) layout parent(l $l,t $t,r $r,b $b) self(l ${viewPosition.changeL},t ${viewPosition.changeT},r ${viewPosition.changeR}, b${viewPosition.changeB})")
                 }
             }
         }

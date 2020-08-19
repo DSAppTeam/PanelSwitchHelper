@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleExpandableListAdapter;
 
+import com.effective.BuildConfig;
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
 import com.example.demo.anno.ApiContentType;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private ActivityMainLayoutBinding mBinding;
 
@@ -103,20 +104,21 @@ public class MainActivity extends AppCompatActivity{
             api_reset_title};
 
     final String[][] childStrings = {
-            {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
-            {fragment_1,fragment_2,fragment_3,fragment_4},
-            {window_1,window_2,window_3},
-            {scene_1,scene_2,scene_3,scene_4,scene_5},
-            {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
+            {activity_1, activity_2, activity_3, activity_4, activity_5, activity_6},
+            {fragment_1, fragment_2, fragment_3, fragment_4},
+            {window_1, window_2, window_3},
+            {scene_1, scene_2, scene_3, scene_4, scene_5},
+            {api_content_container_1, api_content_container_2, api_content_container_3, api_content_container_4},
             {api_define_content_container_scroll},
-            {api_cus_panel,api_cus_panel_height},
-            {api_reset_1,api_reset_2,api_reset_3,api_reset_4,api_reset_5}
+            {api_cus_panel, api_cus_panel_height},
+            {api_reset_1, api_reset_2, api_reset_3, api_reset_4, api_reset_5}
     };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_layout);
+        mBinding.version.setText("version : " + BuildConfig.VERSION);
 
         final String TITLE = "TITLE";
 
@@ -146,70 +148,70 @@ public class MainActivity extends AppCompatActivity{
         mBinding.list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                switch (childStrings[groupPosition][childPosition]){
-                    case activity_1:{
+                switch (childStrings[groupPosition][childPosition]) {
+                    case activity_1: {
                         ChatActivity.start(MainActivity.this, ChatPageType.DEFAULT);
                         break;
                     }
-                    case activity_2:{
+                    case activity_2: {
                         ChatActivity.start(MainActivity.this, ChatPageType.TITLE_BAR);
                         break;
                     }
-                    case activity_3:{
+                    case activity_3: {
                         ChatActivity.start(MainActivity.this, ChatPageType.CUS_TITLE_BAR);
                         break;
                     }
-                    case activity_4:{
+                    case activity_4: {
                         ChatActivity.start(MainActivity.this, ChatPageType.COLOR_STATUS_BAR);
                         break;
                     }
-                    case activity_5:{
+                    case activity_5: {
                         ChatActivity.start(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR);
                         break;
                     }
-                    case activity_6:{
+                    case activity_6: {
                         ChatActivity.start(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER);
                         break;
                     }
 
-                    case fragment_1:{
+                    case fragment_1: {
                         ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.DEFAULT);
                         break;
                     }
-                    case fragment_2:{
+                    case fragment_2: {
                         ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.TITLE_BAR);
                         break;
                     }
-                    case fragment_3:{
+                    case fragment_3: {
                         ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.COLOR_STATUS_BAR);
                         break;
                     }
-                    case fragment_4:{
+                    case fragment_4: {
                         ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR);
                         break;
                     }
 
-                    case window_1:{
+                    case window_1: {
                         DialogFragment dialogFragment = new ChatDialogFragment();
                         dialogFragment.showNow(getSupportFragmentManager(), "dialogFragment");
                         break;
                     }
-                    case window_2:{
+                    case window_2: {
                         PopupWindow popupWindow = new ChatPopupWindow(MainActivity.this);
                         popupWindow.showAtLocation(mBinding.getRoot(), Gravity.NO_GRAVITY, 0, 0);
                         break;
                     }
-                    case window_3:{
+                    case window_3: {
                         Dialog dialog = new ChatDialog(MainActivity.this);
                         dialog.show();
                         break;
                     }
 
-                    case scene_1:{
+                    case scene_1: {
                         startActivity(new Intent(MainActivity.this, BiliBiliSampleActivity.class));
                         break;
                     }
-                    case scene_2:{
+                    case scene_2: {
                         startActivity(new Intent(MainActivity.this, FeedDialogActivity.class));
                         break;
                     }
@@ -217,68 +219,68 @@ public class MainActivity extends AppCompatActivity{
 //                        startActivity(new Intent(MainActivity.this, FeedActivity.class));
 //                        break;
 //                    }
-                    case scene_3:{
+                    case scene_3: {
                         startActivity(new Intent(MainActivity.this, PcHuyaLiveActivity.class));
                         break;
                     }
-                    case scene_4:{
+                    case scene_4: {
                         startActivity(new Intent(MainActivity.this, PhoneDouyinLiveActivity.class));
                         break;
                     }
-                    case scene_5:{
+                    case scene_5: {
                         startActivity(new Intent(MainActivity.this, ChatSuperActivity.class));
                         break;
                     }
 
-                    case api_cus_panel:{
+                    case api_cus_panel: {
                         startActivity(new Intent(MainActivity.this, CusPanelActivity.class));
                         break;
                     }
 
-                    case api_cus_panel_height:{
+                    case api_cus_panel_height: {
                         startActivity(new Intent(MainActivity.this, DefaultHeightPanelActivity.class));
                         break;
                     }
 
-                    case api_define_content_container_scroll:{
+                    case api_define_content_container_scroll: {
                         ChatCusContentScrollActivity.start(MainActivity.this);
                         break;
                     }
 
-                    case api_content_container_1:{
+                    case api_content_container_1: {
                         ContentActivity.start(MainActivity.this, ApiContentType.Linear);
                         break;
                     }
-                    case api_content_container_2:{
+                    case api_content_container_2: {
                         ContentActivity.start(MainActivity.this, ApiContentType.Relative);
                         break;
                     }
-                    case api_content_container_3:{
+                    case api_content_container_3: {
                         ContentActivity.start(MainActivity.this, ApiContentType.Frame);
                         break;
                     }
-                    case api_content_container_4:{
+                    case api_content_container_4: {
                         ContentActivity.start(MainActivity.this, ApiContentType.CUS);
                         break;
                     }
 
-                    case api_reset_1:{
+                    case api_reset_1: {
                         ResetActivity.start(MainActivity.this, ApiResetType.ENABLE);
                         break;
                     }
-                    case api_reset_2:{
+                    case api_reset_2: {
                         ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_EmptyView);
                         break;
                     }
-                    case api_reset_3:{
+                    case api_reset_3: {
                         ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_RecyclerView);
                         break;
                     }
-                    case api_reset_4:{
+                    case api_reset_4: {
                         ResetActivity.start(MainActivity.this, ApiResetType.ENABLE_HookActionUpRecyclerview);
                         break;
                     }
-                    case api_reset_5:{
+                    case api_reset_5: {
                         ResetActivity.start(MainActivity.this, ApiResetType.DISABLE);
                         break;
                     }

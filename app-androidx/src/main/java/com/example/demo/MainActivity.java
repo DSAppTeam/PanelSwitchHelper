@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
+import com.effective.BuildConfig;
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
 import com.example.demo.anno.ApiContentType;
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_layout);
+        mBinding.version.setText("version : " + BuildConfig.VERSION);
 
         final String TITLE = "TITLE";
 

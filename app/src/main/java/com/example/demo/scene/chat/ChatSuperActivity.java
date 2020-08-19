@@ -85,10 +85,10 @@ public class ChatSuperActivity extends AppCompatActivity {
             mBinding.editText.setText(null);
             scrollToBottom();
         });
-        mBinding.title.setText("点击左侧 \"默认滑动演示 \" 可清除框架输入法高度缓存");
+        mBinding.title.setText("点击左侧 \"默认滑动演示 \" 可清除框架输入法高度缓存测试 \"功能面板不同步软键盘高度 & 表情面板同步软键盘高度\"");
         mBinding.tipView.setOnClickListener(v -> {
             PanelUtil.clearData(ChatSuperActivity.this);
-            Toast.makeText(ChatSuperActivity.this,"已清除面板高度缓存，可拉起功能面板测试默认高度",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatSuperActivity.this, "已清除面板高度缓存，可拉起功能面板测试默认高度", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -187,7 +187,7 @@ public class ChatSuperActivity extends AppCompatActivity {
                     .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
                         public int getScrollDistance(int defaultDistance) {
-                            return defaultDistance - (mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom());
+                            return defaultDistance - getBottomUnfilledHeight();
                         }
 
                         @Override
@@ -203,6 +203,7 @@ public class ChatSuperActivity extends AppCompatActivity {
                         public int getScrollDistance(int defaultDistance) {
                             return 0;
                         }
+
                         @Override
                         public int getScrollViewId() {
                             return R.id.tip_view_top;
@@ -217,6 +218,7 @@ public class ChatSuperActivity extends AppCompatActivity {
                         public int getScrollDistance(int defaultDistance) {
                             return defaultDistance;
                         }
+
                         @Override
                         public int getScrollViewId() {
                             return R.id.tip_view;
@@ -224,10 +226,19 @@ public class ChatSuperActivity extends AppCompatActivity {
                     })
                     /**
                      * 可选，可不设置
-                     * 测试时请清除本地sp缓存
                      * 面板默认高度设置,输入法显示后会采纳输入法高度为面板高度，否则则以框架内部默认值为主
                      */
                     .addPanelHeightMeasurer(new PanelHeightMeasurer() {
+
+                        /**
+                         * false 为不同步输入法高度
+                         * @return
+                         */
+                        @Override
+                        public boolean synchronizeKeyboardHeight() {
+                            return false;
+                        }
+
                         @Override
                         public int getTargetPanelDefaultHeight() {
                             return DisplayUtils.dip2px(ChatSuperActivity.this, 200f);
@@ -240,10 +251,19 @@ public class ChatSuperActivity extends AppCompatActivity {
                     })
                     /**
                      * 可选，可不设置
-                     * 测试时请清除本地sp缓存
                      * 面板默认高度设置,输入法显示后会采纳输入法高度为面板高度，否则则以框架内部默认值为主
                      */
                     .addPanelHeightMeasurer(new PanelHeightMeasurer() {
+
+                        /**
+                         * true表示当输入法显示过时，则同步输入法高度
+                         * @return
+                         */
+                        @Override
+                        public boolean synchronizeKeyboardHeight() {
+                            return true;
+                        }
+
                         @Override
                         public int getTargetPanelDefaultHeight() {
                             return DisplayUtils.dip2px(ChatSuperActivity.this, 400f);
@@ -276,6 +296,14 @@ public class ChatSuperActivity extends AppCompatActivity {
     }
 
     private int unfilledHeight = 0;
+    private int bottomUnfilledHeight = 0;
+
+    private int getBottomUnfilledHeight() {
+        if (bottomUnfilledHeight == 0) {
+            bottomUnfilledHeight = mBinding.bottomAction.getTop() - mBinding.tipViewBottom.getBottom();
+        }
+        return bottomUnfilledHeight;
+    }
 
 
     @Override

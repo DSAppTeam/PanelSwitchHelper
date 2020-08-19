@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.7-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.8-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [中文文档](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -30,7 +30,7 @@ Demo content is as follows
 
 Download from QR code
 
-<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/v1.3.7_code.png" width = "256" height = "256"/>
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code_apk.png" width = "256" height = "256"/>
 
 The Androidx version runs by default. If you need to open non-Androidx, open the app in `Settings.gradle` and close the Androidx configuration in `gradle.properties`.
 
@@ -39,10 +39,10 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 1. Add library dependencies in module script `build.gradle`
 
 ```
-implementation'com.effective.android:panelSwitchHelper:1.3.7'
+implementation'com.effective.android:panelSwitchHelper:1.3.8'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.7'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
@@ -328,6 +328,9 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.7'
     * PanelSwitchHelper added to judge the current panel state, such as `isPanelState()` etc.
     * Optimize the height calculation logic of the full-screen soft keyboard and fix known issues
 * 1.3.7 Compatible with Samsung devices such as s8/note8 before OneUI 2 version
+* 1.3.8 Extension api
+    * Extend the `PanelHeightMeasurer` interface and add the `synchronizeKeyboardHeight` method to control whether the panel height is synchronized with the soft keyboard height
+    * Container supports to control the internal multi-layer layout freely sliding
      
 ### Expectations
 
@@ -335,6 +338,6 @@ The project was written only to improve the efficiency of daily development and 
 
 You can also add WeChat and enter the feedback group to discuss feedback.
 
-<img src = "https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code.jpg" width = "385" height = "385" />
+<img src = "https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code_wx.jpg" width = "385" height = "385" />
 
 If the framework is helpful to you, Amway can give the partners around you, and every star is an affirmation of the framework.
