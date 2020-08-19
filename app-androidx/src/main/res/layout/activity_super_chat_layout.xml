@@ -30,7 +30,7 @@
                 android:paddingRight="20dp"
                 android:text="自定义标题栏"
                 android:textColor="@android:color/white"
-                android:textSize="15sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 

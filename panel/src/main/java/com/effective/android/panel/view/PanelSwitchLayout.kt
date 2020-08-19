@@ -133,7 +133,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
         }
     }
-
     private fun initListener() {
         /**
          * 1. if current currentPanelId is None,should show keyboard
@@ -408,12 +407,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (!contentScrollOutsizeEnable && panelId != Constants.PANEL_NONE) scrollOutsideHeight else 0
     }
 
-    fun getCompatPanelHeight(panelId: Int): Int {
-        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD && !PanelUtil.hasMeasuredKeyboard(context)) {
-            if (panelHeightMeasurers[panelId] != null) {
-                val result = panelHeightMeasurers[panelId]!!.getTargetPanelDefaultHeight()
-                LogTracker.log("$TAG#onLayout", " getCompatPanelHeight by default panel  :$result")
-                return result
+    private fun getCompatPanelHeight(panelId: Int): Int {
+        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
+            val panelHeightMeasurer = panelHeightMeasurers[panelId]
+            panelHeightMeasurer?.let {
+                if(!PanelUtil.hasMeasuredKeyboard(context) || !it.synchronizeKeyboardHeight()){
+                    val result = it.getTargetPanelDefaultHeight()
+                    LogTracker.log("$TAG#onLayout", " getCompatPanelHeight by default panel  :$result")
+                    return result
+                }
             }
         }
         val result = getKeyBoardHeight(context);
