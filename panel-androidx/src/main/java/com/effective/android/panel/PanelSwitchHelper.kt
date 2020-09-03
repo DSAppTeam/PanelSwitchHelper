@@ -13,7 +13,6 @@ import com.effective.android.panel.interfaces.ContentScrollMeasurerBuilder
 import com.effective.android.panel.interfaces.PanelHeightMeasurer
 import com.effective.android.panel.interfaces.PanelHeightMeasurerBuilder
 import com.effective.android.panel.interfaces.listener.*
-import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
@@ -84,8 +83,10 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
      * 外部显示面板
      */
     fun toPanelState(@IdRes triggerViewId: Int) {
-        mPanelSwitchLayout.findViewById<View>(triggerViewId).let {
-            it.performClick()
+        if (triggerViewId != Constants.PANEL_FULLSCREEN_TRANSITION) {
+            mPanelSwitchLayout.findViewById<View>(triggerViewId).let {
+                it.performClick()
+            }
         }
     }
 
