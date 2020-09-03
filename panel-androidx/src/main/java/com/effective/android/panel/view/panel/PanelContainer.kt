@@ -3,14 +3,12 @@ package com.effective.android.panel.view.panel
 import android.annotation.TargetApi
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Pair
 import android.util.SparseArray
 import android.view.View
 import android.widget.FrameLayout
 import com.effective.android.panel.Constants
 import com.effective.android.panel.interfaces.ViewAssertion
-import com.effective.android.panel.utils.PanelUtil
 
 /**
  * --------------------
@@ -61,6 +59,11 @@ class PanelContainer : FrameLayout, ViewAssertion {
             panelSparseArray.put(panel.getBindingTriggerViewId(), panel)
             (panel as View).visibility = View.GONE
         }
+        //兼容全屏场景
+        val tempTransitionPanel = FullScreenTransitionView(context) as IPanelView
+        panelSparseArray.put(tempTransitionPanel.getBindingTriggerViewId(), tempTransitionPanel)
+        (tempTransitionPanel as View).visibility = View.GONE
+        addView(tempTransitionPanel)
     }
 
     fun getPanelView(panelId: Int): IPanelView? {

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.effective.R;
+import com.effective.android.panel.Constants;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.PanelHeightMeasurer;
@@ -27,7 +29,6 @@ import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.ActivitySuperChatLayoutBinding;
 import com.effective.databinding.CommonChatLayoutBinding;
-import com.example.demo.Constants;
 import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.api.CusPanelView;
 import com.example.demo.scene.chat.adapter.ChatAdapter;
@@ -62,6 +63,7 @@ public class ChatSuperActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_super_chat_layout);
         mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
         initView();
@@ -70,20 +72,20 @@ public class ChatSuperActivity extends AppCompatActivity {
     private void initView() {
         mBinding.tipViewTop.setVisibility(View.VISIBLE);
         mBinding.tipViewBottom.setVisibility(View.VISIBLE);
-        mBinding.tipView.setVisibility(View.VISIBLE);
+
         mLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new ChatAdapter(this, 4);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(v -> {
-            String content = mBinding.editText.getText().toString();
-            if (TextUtils.isEmpty(content)) {
-                Toast.makeText(ChatSuperActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            mAdapter.insertInfo(ChatInfo.CREATE(content));
-            mBinding.editText.setText(null);
-            scrollToBottom();
+//            String content = mBinding.editText.getText().toString();
+//            if (TextUtils.isEmpty(content)) {
+//                Toast.makeText(ChatSuperActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            mAdapter.insertInfo(ChatInfo.CREATE(content));
+//            mBinding.editText.setText(null);
+//            scrollToBottom();
         });
         mBinding.title.setText("点击左侧 \"默认滑动演示 \" 可清除框架输入法高度缓存测试 \"功能面板不同步软键盘高度 & 表情面板同步软键盘高度\"");
         mBinding.tipView.setOnClickListener(v -> {

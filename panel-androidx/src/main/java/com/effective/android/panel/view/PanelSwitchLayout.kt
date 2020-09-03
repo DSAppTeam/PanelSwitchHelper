@@ -8,19 +8,26 @@ import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.util.Pair
-import android.view.*
+import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnFocusChangeListener
+import android.view.ViewTreeObserver
+import android.view.Window
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import com.effective.android.panel.Constants
 import com.effective.android.panel.LogTracker
 import com.effective.android.panel.R
 import com.effective.android.panel.device.DeviceInfo
 import com.effective.android.panel.device.DeviceRuntime
-import com.effective.android.panel.interfaces.ViewAssertion
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.PanelHeightMeasurer
-import com.effective.android.panel.interfaces.listener.*
+import com.effective.android.panel.interfaces.ViewAssertion
+import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
+import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
+import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
+import com.effective.android.panel.interfaces.listener.OnViewClickListener
 import com.effective.android.panel.utils.DisplayUtil
 import com.effective.android.panel.utils.DisplayUtil.getLocationOnScreen
 import com.effective.android.panel.utils.DisplayUtil.getScreenHeightWithoutSystemUI
@@ -78,8 +85,25 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var deviceRuntime: DeviceRuntime? = null
     private var realBounds: Rect? = null
     private var keyboardStateRunnable = Runnable { toKeyboardState(false) }
-    private val retryCheckoutKbRunnable = Runnable { checkoutPanel(Constants.PANEL_KEYBOARD) }
+
+    private var doingCheckout = false
+    private var inputType: Int = Int.MIN_VALUE
     lateinit var TAG: String
+
+    private val retryCheckoutKbRunnable = CheckoutKbRunnable()
+
+    inner class CheckoutKbRunnable : Runnable {
+        var retry = false
+        var delay: Long = 0L
+        override fun run() {
+            val result = checkoutPanel(Constants.PANEL_KEYBOARD)
+            if (!result && panelId != Constants.PANEL_KEYBOARD && retry) {
+                this@PanelSwitchLayout.postDelayed(this, delay)
+            }
+            retry = false
+        }
+    }
+
 
     @JvmOverloads
     constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -129,6 +153,34 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
         }
     }
+
+    private fun checkoutKeyboard(retry: Boolean = true, delay: Long = 200L) {
+        deviceRuntime?.let {
+            if (it.isFullScreen) {
+                val isNone = panelId == Constants.PANEL_NONE
+                var isUserPanelButBelowKeyboard = isPanelState()
+                if (isUserPanelButBelowKeyboard) {
+                    isUserPanelButBelowKeyboard = getCompatPanelHeight(panelId) < getKeyBoardHeight(context)
+                    if (isUserPanelButBelowKeyboard) {
+                        setInputType(false)
+                    }
+                }
+                if (isNone || isUserPanelButBelowKeyboard) {
+                    checkoutPanel(Constants.PANEL_FULLSCREEN_TRANSITION)
+                    this@PanelSwitchLayout.removeCallbacks(retryCheckoutKbRunnable)
+                    retryCheckoutKbRunnable.retry = retry
+                    retryCheckoutKbRunnable.delay = delay
+                    this@PanelSwitchLayout.postDelayed(retryCheckoutKbRunnable, delay)
+                    return
+                }
+            }
+        }
+        this@PanelSwitchLayout.removeCallbacks(retryCheckoutKbRunnable)
+        retryCheckoutKbRunnable.retry = retry
+        retryCheckoutKbRunnable.delay = delay
+        retryCheckoutKbRunnable.run()
+    }
+
     private fun initListener() {
         /**
          * 1. if current currentPanelId is None,should show keyboard
@@ -136,23 +188,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
          */
         contentContainer.getInputActionImpl().setEditTextClickListener(OnClickListener { v ->
             notifyViewClick(v)
-            //checkout currentFlag to keyboard
-            val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-
-            //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
-            if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                this@PanelSwitchLayout.post(retryCheckoutKbRunnable)
-            }
+            checkoutKeyboard()
         })
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
-            if (hasFocus) { // checkout currentFlag to keyboard
-                val result = checkoutPanel(Constants.PANEL_KEYBOARD)
-
-                //retry for handle,fix scene : some windows show failure after build PanelSwitchHelper Immediately.
-                if (!result && panelId != Constants.PANEL_KEYBOARD) {
-                    this@PanelSwitchLayout.post(retryCheckoutKbRunnable)
-                }
+            if (hasFocus) {
+                checkoutKeyboard()
             }
         })
         contentContainer.getResetActionImpl().setResetCallback(Runnable {
@@ -176,7 +217,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     notifyViewClick(v)
                     val targetId = panelContainer.getPanelId(panelView)
                     if (panelId == targetId && panelView.isTriggerViewCanToggle() && panelView.isShowing()) {
-                        checkoutPanel(Constants.PANEL_KEYBOARD)
+                        checkoutKeyboard(false)
                     } else {
                         checkoutPanel(targetId)
                     }
@@ -252,8 +293,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         deviceRuntime = DeviceRuntime(context, window)
         deviceRuntime?.let {
+            setInputType(false)
             globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
                 LogTracker.log("$TAG#onGlobalLayout", " ")
+                LogTracker.log("$TAG#onGlobalLayout", " window softInputMode (${window.attributes.softInputMode})")
                 LogTracker.log("$TAG#onGlobalLayout", "容器是否可见(${this@PanelSwitchLayout.visibility == View.VISIBLE})")
                 if (this@PanelSwitchLayout.visibility != View.VISIBLE) {
                     LogTracker.log("$TAG#onGlobalLayout", "skip cal keyboard Height When window is invisible!")
@@ -284,7 +327,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= minLimitOpenKeyboardHeight) {
                         isKeyboardShowing = false
-                        if (panelId == Constants.PANEL_KEYBOARD) {
+                        if (isKeyboardState()) {
                             checkoutPanel(Constants.PANEL_NONE)
                         }
                         notifyKeyboardState(false)
@@ -356,7 +399,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     listener.onKeyboard()
                 }
                 else -> {
-                    listener.onPanel(panelContainer.getPanelView(panelId))
+                    if (!isPreKeyboardState(panelId)) {
+                        listener.onPanel(panelContainer.getPanelView(panelId))
+                    }
                 }
             }
         }
@@ -404,10 +449,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
     private fun getCompatPanelHeight(panelId: Int): Int {
-        if (panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD) {
+        if (isPanelState(panelId)) {
             val panelHeightMeasurer = panelHeightMeasurers[panelId]
             panelHeightMeasurer?.let {
-                if(!PanelUtil.hasMeasuredKeyboard(context) || !it.synchronizeKeyboardHeight()){
+                if (!PanelUtil.hasMeasuredKeyboard(context) || !it.synchronizeKeyboardHeight()) {
                     val result = it.getTargetPanelDefaultHeight()
                     LogTracker.log("$TAG#onLayout", " getCompatPanelHeight by default panel  :$result")
                     return result
@@ -471,6 +516,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 val state = when (panelId) {
                     Constants.PANEL_NONE -> "收起所有输入源"
                     Constants.PANEL_KEYBOARD -> "显示键盘输入"
+                    Constants.PANEL_FULLSCREEN_TRANSITION -> "显示过渡面板(键盘前)"
                     else -> "显示面板输入"
                 }
                 LogTracker.log("$TAG#onLayout", " 当前状态  :$state")
@@ -481,6 +527,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 LogTracker.log("$TAG#onLayout", " 界面高度（包含系统UI）  ：${deviceInfo.screenH}");
                 LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，无论导航栏显示与否）  ：${deviceInfo.screenWithoutNavigationH}");
                 LogTracker.log("$TAG#onLayout", " 界面高度（不包含系统UI，动态计算）  ：${deviceInfo.screenWithoutSystemUiH}");
+                LogTracker.log("$TAG#onLayout", " localLocation[y]  ：${localLocation[1]}");
                 LogTracker.log("$TAG#onLayout", " toolbar高度  ：${deviceInfo.toolbarH}");
                 LogTracker.log("$TAG#onLayout", " StatusBar高度  ：${deviceInfo.statusBarH}");
                 LogTracker.log("$TAG#onLayout", " NavigationBar高度  ：${deviceInfo.navigationBarH}");
@@ -504,7 +551,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 }
             } else {
                 //如果功能面板的互相切换，则需要判断是否存在高度不一致，如果不一致则需要过渡
-                if (lastPanelHeight != -1 && lastPanelHeight != compatPanelHeight) {
+                if (lastPanelHeight != -1 && lastPanelHeight != compatPanelHeight && !isPreKeyboardState()) {
                     setTransition(animationSpeed.toLong(), panelId)
                 }
             }
@@ -542,20 +589,25 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         return change
     }
 
-    internal fun isPanelState() = panelId != Constants.PANEL_NONE
+    internal fun isPanelState() = isPanelState(panelId)
 
-    internal fun isKeyboardState() = panelId == Constants.PANEL_KEYBOARD
+    internal fun isKeyboardState() = isKeyboardState(panelId)
 
-    internal fun isResetState() = panelId == Constants.PANEL_NONE
+    internal fun isPreKeyboardState() = isPreKeyboardState(panelId)
 
-    private fun isUserPanel(panelId: Int) = panelId != Constants.PANEL_NONE && panelId != Constants.PANEL_KEYBOARD
+    internal fun isResetState() = isResetState(panelId)
+
+    private fun isPanelState(panelId: Int) = !isResetState(panelId) && !isKeyboardState(panelId) && !isPreKeyboardState(panelId)
+
+    private fun isPreKeyboardState(panelId: Int) = panelId == Constants.PANEL_FULLSCREEN_TRANSITION
+
+    private fun isKeyboardState(panelId: Int) = panelId == Constants.PANEL_KEYBOARD
 
     private fun isResetState(panelId: Int) = panelId == Constants.PANEL_NONE
 
     private fun reverseResetState(): Boolean = (isResetState(lastPanelId) && !isResetState(panelId))
             || (!isResetState(lastPanelId) && isResetState(panelId))
 
-    private fun checkoutBetweenFromUserPanel(): Boolean = isUserPanel(lastPanelId) && isUserPanel(panelId)
 
     @TargetApi(19)
     private fun setTransition(duration: Long, panelId: Int) {
@@ -573,9 +625,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @return if need hook
      */
     internal fun hookSystemBackByPanelSwitcher(): Boolean {
-        if (panelId != Constants.PANEL_NONE) {
+        if (!isResetState()) {
             //模仿系统输入法隐藏，如果直接掉  checkoutPanel(Constants.PANEL_NONE)，可能导致隐藏时上层 recyclerview 因为 layout 导致界面出现短暂卡顿。
-            if (panelId == Constants.PANEL_KEYBOARD) {
+            if (isKeyboardState()) {
                 hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
             } else {
                 checkoutPanel(Constants.PANEL_NONE)
@@ -598,7 +650,25 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
-    private var doingCheckout = false
+    private fun setInputType(canInput: Boolean) {
+        if (inputType == Int.MIN_VALUE) {
+            inputType = contentContainer.getInputActionImpl().getInputText().inputType
+        }
+        if (isFullScreenState()) {
+            contentContainer.getInputActionImpl().getInputText().inputType = if (canInput) inputType else EditorInfo.TYPE_NULL
+            return
+        }
+        if (canInput) {
+            contentContainer.getInputActionImpl().getInputText().inputType = inputType
+        }
+    }
+
+    private fun isFullScreenState(): Boolean {
+        deviceRuntime?.let {
+            return it.isFullScreen
+        }
+        return false
+    }
 
     /**
      * @param panelId
@@ -622,8 +692,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 contentContainer.getInputActionImpl().clearFocusByEditText()
                 contentContainer.getResetActionImpl().enableReset(false)
+                setInputType(false)
             }
+
             Constants.PANEL_KEYBOARD -> {
+                setInputType(true)
                 val showKbResult = showKeyboard(context, contentContainer.getInputActionImpl().getInputText())
                 if (!showKbResult) {
                     LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
@@ -638,7 +711,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (size.first != oldSize.first || size.second != oldSize.second) {
                     notifyPanelSizeChange(panelContainer.getPanelView(panelId), isPortrait(context), oldSize.first, oldSize.second, size.first, size.second)
                 }
-                hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                if (!isPreKeyboardState()) {
+                    hideKeyboard(context, contentContainer.getInputActionImpl().getInputText())
+                }
                 contentContainer.getResetActionImpl().enableReset(true)
             }
         }

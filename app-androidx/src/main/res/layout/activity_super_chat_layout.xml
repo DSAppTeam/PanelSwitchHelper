@@ -8,6 +8,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/edittext2"
+            android:layout_width="1px"
+            android:background="@null"
+            android:layout_height="1px"/>
+
         <com.example.demo.systemui.StatusBarView
             android:id="@+id/status_bar"
             android:layout_width="match_parent"
