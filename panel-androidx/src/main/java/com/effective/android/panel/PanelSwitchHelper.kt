@@ -83,10 +83,8 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
      * 外部显示面板
      */
     fun toPanelState(@IdRes triggerViewId: Int) {
-        if (triggerViewId != Constants.PANEL_FULLSCREEN_TRANSITION) {
-            mPanelSwitchLayout.findViewById<View>(triggerViewId).let {
-                it.performClick()
-            }
+        mPanelSwitchLayout.findViewById<View>(triggerViewId).let {
+            it.performClick()
         }
     }
 

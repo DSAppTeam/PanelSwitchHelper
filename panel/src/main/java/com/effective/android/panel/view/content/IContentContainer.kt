@@ -24,13 +24,14 @@ interface IContentContainer {
 }
 
 interface IInputAction {
-    fun getInputText(): EditText
     fun setEditTextClickListener(l: View.OnClickListener)
     fun setEditTextFocusChangeListener(l: OnFocusChangeListener)
-    fun clearFocusByEditText()
-    fun requestFocusByEditText()
-    fun editTextHasFocus(): Boolean
-    fun preformClickForEditText()
+    fun requestKeyboard()
+    fun hideKeyboard(clearFocus : Boolean)
+    fun showKeyboard() : Boolean
+    fun getFullScreenPixelInputView(): EditText
+    fun updateFullScreenParams(isFullScreen : Boolean, panelId : Int, panelHeight : Int)
+    fun recycler()
 }
 
 interface IResetAction {

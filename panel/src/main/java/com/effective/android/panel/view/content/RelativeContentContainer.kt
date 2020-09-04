@@ -56,12 +56,14 @@ class RelativeContentContainer : RelativeLayout, IContentContainer {
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, autoResetId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        addView(editText, 0,LayoutParams(1, 1))
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
-        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize, reset)
     }
 
     override fun findTriggerView(id: Int): View? {

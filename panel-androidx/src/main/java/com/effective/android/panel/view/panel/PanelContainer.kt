@@ -59,11 +59,6 @@ class PanelContainer : FrameLayout, ViewAssertion {
             panelSparseArray.put(panel.getBindingTriggerViewId(), panel)
             (panel as View).visibility = View.GONE
         }
-        //兼容全屏场景
-        val tempTransitionPanel = FullScreenTransitionView(context) as IPanelView
-        panelSparseArray.put(tempTransitionPanel.getBindingTriggerViewId(), tempTransitionPanel)
-        (tempTransitionPanel as View).visibility = View.GONE
-        addView(tempTransitionPanel)
     }
 
     fun getPanelView(panelId: Int): IPanelView? {
