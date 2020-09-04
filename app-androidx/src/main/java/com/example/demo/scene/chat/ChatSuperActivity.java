@@ -63,7 +63,6 @@ public class ChatSuperActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_super_chat_layout);
         mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
         initView();
@@ -78,14 +77,14 @@ public class ChatSuperActivity extends AppCompatActivity {
         mAdapter = new ChatAdapter(this, 4);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(v -> {
-//            String content = mBinding.editText.getText().toString();
-//            if (TextUtils.isEmpty(content)) {
-//                Toast.makeText(ChatSuperActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            mAdapter.insertInfo(ChatInfo.CREATE(content));
-//            mBinding.editText.setText(null);
-//            scrollToBottom();
+            String content = mBinding.editText.getText().toString();
+            if (TextUtils.isEmpty(content)) {
+                Toast.makeText(ChatSuperActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mAdapter.insertInfo(ChatInfo.CREATE(content));
+            mBinding.editText.setText(null);
+            scrollToBottom();
         });
         mBinding.title.setText("点击左侧 \"默认滑动演示 \" 可清除框架输入法高度缓存测试 \"功能面板不同步软键盘高度 & 表情面板同步软键盘高度\"");
         mBinding.tipView.setOnClickListener(v -> {

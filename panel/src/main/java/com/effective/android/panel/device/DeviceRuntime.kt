@@ -23,6 +23,9 @@ class DeviceRuntime(val context: Context, val window: Window) {
 
     init {
         isPad = (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+        isPortrait = DisplayUtil.isPortrait(context)
+        isNavigationBarShow = DisplayUtil.isNavigationBarShow(context, window)
+        isFullScreen = DisplayUtil.isFullScreen(window)
     }
 
     fun getDeviceInfoByOrientation(cache: Boolean = false): DeviceInfo {

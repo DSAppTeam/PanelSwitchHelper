@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -70,7 +71,7 @@ public class ChatSuperActivity extends AppCompatActivity {
     private void initView() {
         mBinding.tipViewTop.setVisibility(View.VISIBLE);
         mBinding.tipViewBottom.setVisibility(View.VISIBLE);
-        mBinding.tipView.setVisibility(View.VISIBLE);
+
         mLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new ChatAdapter(this, 4);
@@ -307,7 +308,8 @@ public class ChatSuperActivity extends AppCompatActivity {
 
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         if (mHelper != null && mHelper.hookSystemBackByPanelSwitcher()) {
             return;
         }

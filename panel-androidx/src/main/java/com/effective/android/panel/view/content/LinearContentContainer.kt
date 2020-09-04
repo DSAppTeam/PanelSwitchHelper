@@ -5,7 +5,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import com.effective.android.panel.R
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
@@ -57,6 +59,10 @@ class LinearContentContainer : LinearLayout, IContentContainer {
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, autoResetId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        val layoutParams = LayoutParams(1, 1)
+        layoutParams.topMargin = -1
+        addView(editText,0,layoutParams)
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,

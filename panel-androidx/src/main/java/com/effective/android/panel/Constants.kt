@@ -24,7 +24,6 @@ object Constants {
      */
     const val PANEL_NONE = -1
     const val PANEL_KEYBOARD = 0
-    const val PANEL_FULLSCREEN_TRANSITION = 1
     const val PROTECT_KEY_CLICK_DURATION = 500L
 
     @JvmField

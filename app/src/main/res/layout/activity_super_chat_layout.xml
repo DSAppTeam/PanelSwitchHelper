@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <com.example.demo.systemui.StatusBarView
+            android:layout_marginTop="-1px"
             android:id="@+id/status_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

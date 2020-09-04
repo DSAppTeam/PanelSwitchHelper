@@ -57,6 +57,8 @@ class FrameContentContainer : FrameLayout, IContentContainer {
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this,autoResetByOnTouch, editTextId, autoResetId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        addView(editText, 0,LayoutParams(1, 1))
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
@@ -88,5 +90,4 @@ class FrameContentContainer : FrameLayout, IContentContainer {
     override fun getInputActionImpl(): IInputAction = contentContainer.getInputActionImpl()
 
     override fun getResetActionImpl(): IResetAction = contentContainer.getResetActionImpl()
-
 }

@@ -64,6 +64,9 @@ object PanelUtil {
     }
 
     @JvmStatic
+    fun isPanelHeightBelowKeyboardHeight(context: Context, curPanelHeight: Int): Boolean = hasMeasuredKeyboard(context) && getKeyBoardHeight(context) > curPanelHeight
+
+    @JvmStatic
     fun setKeyBoardHeight(context: Context, height: Int): Boolean {
 
         if (getKeyBoardHeight(context) == height) {
