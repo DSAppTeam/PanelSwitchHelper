@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.8-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.10-beta-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [中文文档](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README-zh.md)
@@ -18,6 +18,7 @@ When developing a chat/video/live/information interface, users are expected to m
 * Rich model adaptation, adapt to non-conventional Phone models such as full screen/bang screen/digging screen/Pad
 * Rich scene support, support Activity/Fragment/Dialog/PopupWindow, apply to chat/video/live broadcast/stream comment, etc.
 * Rich API support, customizable content container, business panel, flexible control panel hiding, flexible control of switching panel speed
+* Support full screen mode, and panel switching can also be handled in FullScreen mode
 
 For more details, please refer to
 
@@ -39,10 +40,10 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 1. Add library dependencies in module script `build.gradle`
 
 ```
-implementation'com.effective.android:panelSwitchHelper:1.3.8'
+implementation'com.effective.android:panelSwitchHelper:1.3.10-beta'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.10-beta'
 ```
 
 2. Use the container provided by the framework in the layout file Xml
@@ -331,6 +332,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
 * 1.3.8 Extension api
     * Extend the `PanelHeightMeasurer` interface and add the `synchronizeKeyboardHeight` method to control whether the panel height is synchronized with the soft keyboard height
     * Container supports to control the internal multi-layer layout freely sliding
+* 1.3.10-beta supports full screen mode
      
 ### Expectations
 
