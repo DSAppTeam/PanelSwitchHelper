@@ -61,11 +61,11 @@ import com.effective.android.panel.view.panel.PanelContainer
  */
 class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
-    //must init
-    private lateinit var viewClickListeners: MutableList<OnViewClickListener>
-    private lateinit var panelChangeListeners: MutableList<OnPanelChangeListener>
-    private lateinit var keyboardStatusListeners: MutableList<OnKeyboardStateListener>
-    private lateinit var editFocusChangeListeners: MutableList<OnEditFocusChangeListener>
+    private var viewClickListeners: MutableList<OnViewClickListener>? = null
+    private var panelChangeListeners: MutableList<OnPanelChangeListener>? = null
+    private var keyboardStatusListeners: MutableList<OnKeyboardStateListener>? = null
+    private var editFocusChangeListeners: MutableList<OnEditFocusChangeListener>? = null
+
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
@@ -347,42 +347,52 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
     private fun notifyViewClick(view: View) {
-        for (listener in viewClickListeners) {
-            listener.onClickBefore(view)
+        viewClickListeners?.let {
+            for (listener in it) {
+                listener.onClickBefore(view)
+            }
         }
     }
 
     private fun notifyKeyboardState(visible: Boolean) {
-        for (listener in keyboardStatusListeners) {
-            listener.onKeyboardChange(visible, if (visible) getKeyBoardHeight(context) else 0)
+        keyboardStatusListeners?.let {
+            for (listener in it) {
+                listener.onKeyboardChange(visible, if (visible) getKeyBoardHeight(context) else 0)
+            }
         }
     }
 
     private fun notifyEditFocusChange(view: View, hasFocus: Boolean) {
-        for (listener in editFocusChangeListeners) {
-            listener.onFocusChange(view, hasFocus)
+        editFocusChangeListeners?.let {
+            for (listener in it) {
+                listener.onFocusChange(view, hasFocus)
+            }
         }
     }
 
     private fun notifyPanelChange(panelId: Int) {
-        for (listener in panelChangeListeners) {
-            when (panelId) {
-                Constants.PANEL_NONE -> {
-                    listener.onNone()
-                }
-                Constants.PANEL_KEYBOARD -> {
-                    listener.onKeyboard()
-                }
-                else -> {
-                    listener.onPanel(panelContainer.getPanelView(panelId))
+        panelChangeListeners?.let {
+            for (listener in it) {
+                when (panelId) {
+                    Constants.PANEL_NONE -> {
+                        listener.onNone()
+                    }
+                    Constants.PANEL_KEYBOARD -> {
+                        listener.onKeyboard()
+                    }
+                    else -> {
+                        listener.onPanel(panelContainer.getPanelView(panelId))
+                    }
                 }
             }
         }
     }
 
     private fun notifyPanelSizeChange(panelView: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
-        for (listener in panelChangeListeners) {
-            listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height)
+        panelChangeListeners?.let {
+            for (listener in it) {
+                listener.onPanelSizeChange(panelView, portrait, oldWidth, oldHeight, width, height)
+            }
         }
     }
 
@@ -515,7 +525,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
 
             //计算实际bounds
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 val changeBounds = isBoundChange(l, contentContainerTop, r, panelContainerTop + compatPanelHeight)
                 LogTracker.log("$TAG#onLayout", " changeBounds : $changeBounds")
                 if (changeBounds) {
