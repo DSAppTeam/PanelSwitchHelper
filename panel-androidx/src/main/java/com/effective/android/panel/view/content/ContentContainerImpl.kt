@@ -5,7 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnFocusChangeListener
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.EditorInfo
@@ -120,7 +120,6 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private var curPanelId = Int.MAX_VALUE
             private var cusFocusIndex = -1
             private var checkoutInputRight = true
-            private var hasMeasure = false;
 
             init {
                 realEditView.addTextChangedListener(object : TextWatcher {
@@ -185,26 +184,6 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             }
 
 
-            private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
-                checkoutInputRight = true
-                realEditViewAttach = true
-                mPixelInputView.clearFocus()
-                mPixelInputView.inputType = EditorInfo.TYPE_NULL
-                realEditView.inputType = realInputType
-                recycler()
-                if (requestFocus) {
-                    requestFocusRunnable.resetSelection = resetSelection
-                    val delay = if(!PanelUtil.hasMeasuredKeyboard(context)) 500L else 200L
-                    realEditView.postDelayed(requestFocusRunnable, delay)
-                } else {
-                    if (resetSelection) {
-                        resetSelectionRunnable.run()
-                    } else {
-                        checkoutInputRight = false
-                    }
-                }
-            }
-
             override fun getFullScreenPixelInputView(): EditText {
                 mPixelInputView.background = null
                 return mPixelInputView
@@ -227,11 +206,17 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 if (panelId == curPanelId) {
                     return
                 }
+                //解决部分手机抢占焦点，可能出现重复显示/隐藏输入法
+                mPixelInputView.visibility = if(isFullScreen) VISIBLE else GONE
+                if(mPixelInputView.parent is ViewGroup){
+                    (mPixelInputView.parent as ViewGroup).isFocusableInTouchMode = true
+                    (mPixelInputView.parent as ViewGroup).isFocusable = true
+                }
                 if (isFullScreen) {
                     if (panelId == Constants.PANEL_KEYBOARD) {
                         retrieveFocusRight(requestFocus = true, resetSelection = true)
                     } else if (panelId != Constants.PANEL_NONE && !PanelUtil.isPanelHeightBelowKeyboardHeight(context, panelHeight)) {
-                        retrieveFocusRight(resetSelection = true)
+                        retrieveFocusRight(requestFocus = false, resetSelection = true)
                     } else {
                         giveUpFocusRight()
                     }
@@ -239,6 +224,26 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     retrieveFocusRight()
                 }
                 curPanelId = panelId
+            }
+
+            private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
+                checkoutInputRight = true
+                realEditViewAttach = true
+                mPixelInputView.clearFocus()
+                mPixelInputView.inputType = EditorInfo.TYPE_NULL
+                realEditView.inputType = realInputType
+                recycler()
+                if (requestFocus) {
+                    requestFocusRunnable.resetSelection = resetSelection
+                    val delay = if (!PanelUtil.hasMeasuredKeyboard(context)) 500L else 200L
+                    realEditView.postDelayed(requestFocusRunnable, delay)
+                } else {
+                    if (resetSelection) {
+                        resetSelectionRunnable.run()
+                    } else {
+                        checkoutInputRight = false
+                    }
+                }
             }
 
             override fun setEditTextClickListener(l: View.OnClickListener) {

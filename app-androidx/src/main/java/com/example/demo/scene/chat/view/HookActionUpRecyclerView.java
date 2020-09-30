@@ -28,6 +28,12 @@ public class HookActionUpRecyclerView extends RecyclerView {
     public HookActionUpRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setLayoutManager(new LinearLayoutManager(context));
+        setOnFlingListener(new OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                return false;
+            }
+        });
     }
 
     /**

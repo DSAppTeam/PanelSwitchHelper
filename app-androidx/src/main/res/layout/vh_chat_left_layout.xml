@@ -14,7 +14,7 @@
             android:layout_height="@dimen/dp_40"
             android:src="@drawable/avatar_cat" />
 
-        <TextView
+        <com.example.demo.scene.chat.adapter.CusText
             android:gravity="center_vertical"
             android:id="@+id/text"
             android:layout_width="wrap_content"
