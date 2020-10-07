@@ -119,6 +119,7 @@ class DefaultHeightPanelActivity : AppCompatActivity() {
                     .logTrack(true) //output log
                     .build()
         }
+        findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
     }
 
     override fun onBackPressed() {

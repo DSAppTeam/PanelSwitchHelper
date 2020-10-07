@@ -229,6 +229,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
     private int unfilledHeight = 0;

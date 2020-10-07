@@ -126,7 +126,7 @@
                     android:text="点击view内部才有效，外部无效哦～"
                     android:textColor="@android:color/white" />
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:id="@+id/recycler_view"
                     android:visibility="gone"
                     android:layout_width="match_parent"

@@ -164,6 +164,7 @@ public class ChatPopupWindow extends PopupWindow {
                     .logTrack(true)             //output log
                     .build();
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
 }

@@ -21,7 +21,7 @@ import com.example.demo.scene.chat.adapter.ChatAdapter
 import com.example.demo.scene.chat.adapter.ChatInfo
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
-import com.example.demo.scene.chat.view.HookActionUpRecyclerView
+import com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
 import com.example.demo.util.DisplayUtils
 import com.rd.PageIndicatorView
 
@@ -62,8 +62,8 @@ class ContentActivity : AppCompatActivity() {
         initView()
     }
 
-    private val recyclerView: HookActionUpRecyclerView
-        get() = findViewById<View>(R.id.recycler_view) as HookActionUpRecyclerView
+    private val recyclerView: AutoHidePanelRecyclerView
+        get() = findViewById<View>(R.id.recycler_view) as AutoHidePanelRecyclerView
 
     private val sendView: View
         get() = findViewById(R.id.send)
@@ -159,6 +159,7 @@ class ContentActivity : AppCompatActivity() {
                     .logTrack(true) //output log
                     .build()
         }
+        findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
     }
 
     override fun onBackPressed() {
