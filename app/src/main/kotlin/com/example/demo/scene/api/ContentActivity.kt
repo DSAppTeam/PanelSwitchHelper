@@ -63,8 +63,8 @@ class ContentActivity : AppCompatActivity() {
         initView()
     }
 
-    private val recyclerView: HookActionUpRecyclerView
-        get() = findViewById<View>(R.id.recycler_view) as HookActionUpRecyclerView
+    private val recyclerView: AutoHidePanelRecyclerView
+        get() = findViewById<View>(R.id.recycler_view) as AutoHidePanelRecyclerView
 
     private val sendView: View
         get() = findViewById(R.id.send)
@@ -160,6 +160,7 @@ class ContentActivity : AppCompatActivity() {
                     .logTrack(true) //output log
                     .build()
         }
+        findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
     }
 
     override fun onBackPressed() {

@@ -127,6 +127,7 @@ public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyList
                     .logTrack(true)             //output log
                     .build();
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
         super.show();
     }
 

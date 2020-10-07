@@ -173,6 +173,7 @@ public class ChatFragment extends Fragment {
                     .logTrack(true)             //output log
                     .build();
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
     public boolean hookOnBackPressed() {

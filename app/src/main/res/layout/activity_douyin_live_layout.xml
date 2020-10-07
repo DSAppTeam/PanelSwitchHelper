@@ -106,7 +106,7 @@
                     android:textColor="#E7E7E7"
                     android:textSize="13sp" />
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:layout_below="@+id/time"
                     android:layout_marginTop="350dp"
                     android:id="@+id/comment_list"

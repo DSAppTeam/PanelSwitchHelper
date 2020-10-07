@@ -15,6 +15,7 @@ import com.effective.android.panel.utils.PanelUtil.clearData
 import com.effective.android.panel.view.panel.PanelView
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
+import com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
 import com.example.demo.util.DisplayUtils
 import com.rd.PageIndicatorView
 
@@ -123,6 +124,7 @@ class DefaultHeightPanelActivity : AppCompatActivity() {
                     .logTrack(true) //output log
                     .build()
         }
+        findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
     }
 
     override fun onBackPressed() {
