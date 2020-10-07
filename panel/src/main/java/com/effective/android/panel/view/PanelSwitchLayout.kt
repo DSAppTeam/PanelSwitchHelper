@@ -88,6 +88,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private val retryCheckoutKbRunnable = CheckoutKbRunnable()
 
+    internal fun getContentContainer() = contentContainer
+
     inner class CheckoutKbRunnable : Runnable {
         var retry = false
         var delay: Long = 0L
@@ -319,12 +321,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 } else {
                     if (keyboardHeight > minLimitOpenKeyboardHeight) {
                         isKeyboardShowing = true
-                        notifyKeyboardState(true)
                         if (keyboardHeight > lastKeyboardHeight) {
                             LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
                             PanelUtil.setKeyBoardHeight(context, realHeight)
                             requestLayout()
                         }
+                        if (!isKeyboardState()) {
+                            checkoutPanel(Constants.PANEL_KEYBOARD, false)
+                        }
+                        notifyKeyboardState(true)
                     } else {
                         //1.3.5 实时兼容导航栏动态隐藏调整布局
                         lastContentHeight?.let { lastHeight ->
@@ -634,7 +639,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @param panelId
      * @return
      */
-    internal fun checkoutPanel(panelId: Int): Boolean {
+    internal fun checkoutPanel(panelId: Int, checkoutKeyboard: Boolean = true): Boolean {
         if (doingCheckout) {
             LogTracker.log("$TAG#checkoutPanel", "is checkouting,just ignore!")
             return false
@@ -654,10 +659,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             }
 
             Constants.PANEL_KEYBOARD -> {
-                if (!contentContainer.getInputActionImpl().showKeyboard()) {
-                    LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
-                    doingCheckout = false
-                    return false
+                if (checkoutKeyboard) {
+                    if (!contentContainer.getInputActionImpl().showKeyboard()) {
+                        LogTracker.log("$TAG#checkoutPanel", "system show keyboard fail, just ignore!")
+                        doingCheckout = false
+                        return false
+                    }
                 }
                 contentContainer.getResetActionImpl().enableReset(true)
             }

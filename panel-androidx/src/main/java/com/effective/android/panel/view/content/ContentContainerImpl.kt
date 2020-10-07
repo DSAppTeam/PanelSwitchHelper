@@ -17,6 +17,9 @@ import com.effective.android.panel.interfaces.ViewAssertion
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
+import java.lang.ref.WeakReference
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * 内容区域代理
@@ -113,20 +116,47 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         }
         mInputAction = object : IInputAction {
 
-            private var onClickListener: View.OnClickListener? = null
-            private val realEditView: EditText = mEditText!!
-            private var realInputType = mEditText!!.inputType
+            private val mainInputView: EditText = mEditText!!
+            private var mainInputType = mEditText!!.inputType
+            private var mainFocusIndex = -1
+
+            private val secondaryViews = WeakHashMap<Int, EditText>()
+            private var secondaryViewRequestFocus = false
+            private var onClickListener: OnClickListener? = null
             private var realEditViewAttach: Boolean = true
             private var curPanelId = Int.MAX_VALUE
-            private var cusFocusIndex = -1
             private var checkoutInputRight = true
+            private val requestFocusRunnable = RequestFocusRunnable()
+            private val resetSelectionRunnable = ResetSelectionRunnable()
+
+            inner class RequestFocusRunnable : Runnable {
+                var resetSelection = false
+                override fun run() {
+                    mainInputView.requestFocus()
+                    if (resetSelection) {
+                        mainInputView.postDelayed(resetSelectionRunnable, 100)
+                    } else {
+                        checkoutInputRight = false
+                    }
+                }
+            }
+
+            inner class ResetSelectionRunnable : Runnable {
+                override fun run() {
+                    if (mainFocusIndex != -1) {
+                        mainInputView.setSelection(mainFocusIndex)
+                    } else {
+                        mainInputView.setSelection(mainInputView.text.length)
+                    }
+                    checkoutInputRight = false
+                }
+            }
 
             init {
-                realEditView.addTextChangedListener(object : TextWatcher {
-
+                mainInputView.addTextChangedListener(object : TextWatcher {
                     override fun afterTextChanged(s: Editable?) {
-                        if (realEditViewAttach && realEditView.hasFocus() && !checkoutInputRight) {
-                            cusFocusIndex = realEditView.selectionStart
+                        if (realEditViewAttach && mainInputView.hasFocus() && !checkoutInputRight) {
+                            mainFocusIndex = mainInputView.selectionStart
                         }
                     }
 
@@ -136,12 +166,12 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     }
                 })
-                realEditView.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                mainInputView.accessibilityDelegate = object : View.AccessibilityDelegate() {
                     override fun sendAccessibilityEvent(host: View?, eventType: Int) {
                         super.sendAccessibilityEvent(host, eventType)
                         if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
-                            if (realEditViewAttach && realEditView.hasFocus() && !checkoutInputRight) {
-                                cusFocusIndex = realEditView.selectionStart
+                            if (realEditViewAttach && mainInputView.hasFocus() && !checkoutInputRight) {
+                                mainFocusIndex = mainInputView.selectionStart
                             }
                         }
                     }
@@ -151,38 +181,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private fun giveUpFocusRight() {
                 checkoutInputRight = true
                 realEditViewAttach = false
-                realEditView.inputType = EditorInfo.TYPE_NULL
-                mPixelInputView.inputType = realInputType
+                mainInputView.inputType = EditorInfo.TYPE_NULL
+                mPixelInputView.inputType = mainInputType
                 mPixelInputView.clearFocus()
                 checkoutInputRight = false
             }
-
-            private val requestFocusRunnable = RequestFocusRunnable()
-            private val resetSelectionRunnable = ResetSelectionRunnable()
-
-            inner class RequestFocusRunnable : Runnable {
-                var resetSelection = false
-                override fun run() {
-                    realEditView.requestFocus()
-                    if (resetSelection) {
-                        realEditView.postDelayed(resetSelectionRunnable, 100)
-                    } else {
-                        checkoutInputRight = false
-                    }
-                }
-            }
-
-            inner class ResetSelectionRunnable : Runnable {
-                override fun run() {
-                    if (cusFocusIndex != -1) {
-                        realEditView.setSelection(cusFocusIndex)
-                    } else {
-                        realEditView.setSelection(realEditView.text.length)
-                    }
-                    checkoutInputRight = false
-                }
-            }
-
 
             override fun getFullScreenPixelInputView(): EditText {
                 mPixelInputView.background = null
@@ -190,8 +193,8 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             }
 
             override fun recycler() {
-                realEditView.removeCallbacks(requestFocusRunnable)
-                realEditView.removeCallbacks(resetSelectionRunnable)
+                mainInputView.removeCallbacks(requestFocusRunnable)
+                mainInputView.removeCallbacks(resetSelectionRunnable)
             }
 
             /**
@@ -206,9 +209,14 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 if (panelId == curPanelId) {
                     return
                 }
+                curPanelId = panelId
+                if (secondaryViewRequestFocus) {
+                    secondaryViewRequestFocus = false
+                    return
+                }
                 //解决部分手机抢占焦点，可能出现重复显示/隐藏输入法
-                mPixelInputView.visibility = if(isFullScreen) VISIBLE else GONE
-                if(mPixelInputView.parent is ViewGroup){
+                mPixelInputView.visibility = if (isFullScreen) VISIBLE else GONE
+                if (mPixelInputView.parent is ViewGroup) {
                     (mPixelInputView.parent as ViewGroup).isFocusableInTouchMode = true
                     (mPixelInputView.parent as ViewGroup).isFocusable = true
                 }
@@ -223,7 +231,23 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 } else {
                     retrieveFocusRight()
                 }
-                curPanelId = panelId
+            }
+
+            override fun addSecondaryInputView(editText: EditText) {
+                val key = editText.hashCode()
+                if (!secondaryViews.containsKey(key)) {
+                    editText.setOnFocusChangeListener { v, hasFocus ->
+                        secondaryViewRequestFocus = hasFocus
+                    }
+                    secondaryViews[key] = editText
+                }
+            }
+
+            override fun removeSecondaryInputView(editText: EditText) {
+                val key = editText.hashCode()
+                if (secondaryViews.containsKey(key)) {
+                    secondaryViews.remove(key)
+                }
             }
 
             private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
@@ -231,12 +255,12 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 realEditViewAttach = true
                 mPixelInputView.clearFocus()
                 mPixelInputView.inputType = EditorInfo.TYPE_NULL
-                realEditView.inputType = realInputType
+                mainInputView.inputType = mainInputType
                 recycler()
                 if (requestFocus) {
                     requestFocusRunnable.resetSelection = resetSelection
                     val delay = if (!PanelUtil.hasMeasuredKeyboard(context)) 500L else 200L
-                    realEditView.postDelayed(requestFocusRunnable, delay)
+                    mainInputView.postDelayed(requestFocusRunnable, delay)
                 } else {
                     if (resetSelection) {
                         resetSelectionRunnable.run()
@@ -246,9 +270,9 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 }
             }
 
-            override fun setEditTextClickListener(l: View.OnClickListener) {
+            override fun setEditTextClickListener(l: OnClickListener) {
                 onClickListener = l
-                realEditView.setOnClickListener { v ->
+                mainInputView.setOnClickListener { v ->
                     if (realEditViewAttach) {
                         onClickListener?.onClick(v)
                     } else {
@@ -258,7 +282,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             }
 
             override fun setEditTextFocusChangeListener(l: OnFocusChangeListener) {
-                realEditView.setOnFocusChangeListener { v, hasFocus ->
+                mainInputView.setOnFocusChangeListener { v, hasFocus ->
                     if (hasFocus) {
                         if (realEditViewAttach) {
                             l.onFocusChange(v, hasFocus)
@@ -275,7 +299,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             }
 
             override fun hideKeyboard(clearFocus: Boolean) {
-                val targetView = if (realEditViewAttach) realEditView else mPixelInputView
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
                 PanelUtil.hideKeyboard(context, targetView)
                 if (clearFocus) {
                     targetView.clearFocus()
@@ -283,12 +307,12 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             }
 
             override fun showKeyboard(): Boolean {
-                val targetView = if (realEditViewAttach) realEditView else mPixelInputView
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
                 return PanelUtil.showKeyboard(context, targetView)
             }
 
             override fun requestKeyboard() {
-                val targetView = if (realEditViewAttach) realEditView else mPixelInputView
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
                 if (targetView.hasFocus()) {
                     targetView.performClick()
                 } else {

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -48,6 +49,13 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         }
     }
 
+    fun addSecondaryInputView(editText: EditText){
+        mPanelSwitchLayout.getContentContainer().getInputActionImpl().addSecondaryInputView(editText)
+    }
+
+    fun removeSecondaryInputView(editText: EditText){
+        mPanelSwitchLayout.getContentContainer().getInputActionImpl().removeSecondaryInputView(editText)
+    }
 
     fun hookSystemBackByPanelSwitcher(): Boolean {
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher()

@@ -24,6 +24,8 @@ interface IContentContainer {
 }
 
 interface IInputAction {
+    fun addSecondaryInputView(editText: EditText)
+    fun removeSecondaryInputView(editText: EditText)
     fun setEditTextClickListener(l: View.OnClickListener)
     fun setEditTextFocusChangeListener(l: OnFocusChangeListener)
     fun requestKeyboard()

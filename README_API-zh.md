@@ -171,6 +171,7 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
 4. toPanelState，切换成对应功能面板
 5. resetState，隐藏所有面板
 6. hookSystemBackByPanelSwitcher 拦截返回，如果当前用户按下返回或者业务返回键，则优先隐藏面板
+7. addSecondaryInputView/removeSecondaryInputView 添加额外输入源，用于驱动输入法显示
 
 
 
