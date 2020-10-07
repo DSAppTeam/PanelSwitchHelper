@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.EditText
 import com.effective.android.panel.interfaces.*
 import com.effective.android.panel.interfaces.listener.*
 import com.effective.android.panel.view.PanelSwitchLayout
@@ -45,6 +46,13 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         }
     }
 
+    fun addSecondaryInputView(editText: EditText){
+        mPanelSwitchLayout.getContentContainer().getInputActionImpl().addSecondaryInputView(editText)
+    }
+
+    fun removeSecondaryInputView(editText: EditText){
+        mPanelSwitchLayout.getContentContainer().getInputActionImpl().removeSecondaryInputView(editText)
+    }
 
     fun hookSystemBackByPanelSwitcher(): Boolean {
         return mPanelSwitchLayout.hookSystemBackByPanelSwitcher()

@@ -42,3 +42,9 @@ For the mobile phone live broadcast effect, please refer to the realization of D
 The effect of the comment on the information flow can be found on the WeChat Moments. The picture on the left shows the effect of the WeChat Moments, and the picture on the right shows the effect of the Demo.
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/scene/wechat_feed.gif" width = "289" height = "638"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/scene/wechat_feed_demo.gif" width = "289" height = "638"/>
+
+
+####Complex chat scene
+
+* Customize the sliding of each subview
+* Support to simulate multiple EditText to pull up the panel

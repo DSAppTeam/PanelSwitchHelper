@@ -44,6 +44,10 @@
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/scene/wechat_feed.gif" width = "289" height = "638"/>   <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/scene/wechat_feed_demo.gif" width = "289" height = "638"/>
 
+#### 复杂聊天场景
+
+* 自定义各个子View滑动
+* 支持模拟多个EditText拉起面板
 
 
 
