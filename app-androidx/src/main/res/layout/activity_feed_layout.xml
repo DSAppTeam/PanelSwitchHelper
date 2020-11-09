@@ -48,7 +48,7 @@ xmlns:tools="http://schemas.android.com/tools">
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:relative_edit_view="@id/edit_text"
+            app:edit_view="@id/edit_text"
             tools:layout_height="500dp">
 
             <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView

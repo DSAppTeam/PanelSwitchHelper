@@ -43,8 +43,8 @@
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:relative_edit_view="@id/edit_text"
-                app:relative_auto_reset_area="@id/recycler_view">
+                app:edit_view="@id/edit_text"
+                app:auto_reset_area="@id/recycler_view">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

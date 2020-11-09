@@ -43,8 +43,8 @@
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:relative_auto_reset_area="@id/empty_view"
-                app:relative_edit_view="@id/edit_text">
+                app:auto_reset_area="@id/empty_view"
+                app:edit_view="@id/edit_text">
 
                 <LinearLayout
                     android:id="@+id/bottom_action"

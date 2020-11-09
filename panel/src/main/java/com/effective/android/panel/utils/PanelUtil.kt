@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.effective.android.panel.Constants
-import com.effective.android.panel.LogTracker
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.utils.DisplayUtil.dip2px
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
 

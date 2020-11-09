@@ -47,9 +47,9 @@ class LinearContentContainer : LinearLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinearContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.LinearContentContainer_linear_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.LinearContentContainer_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.LinearContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.LinearContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
         orientation = VERTICAL
     }

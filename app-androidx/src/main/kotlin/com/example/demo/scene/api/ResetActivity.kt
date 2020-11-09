@@ -63,7 +63,7 @@ class ResetActivity : AppCompatActivity() {
                 setContentView(R.layout.activity_api_auto_reset_enable_on_empty_view_layout)
                 findViewById<TextView>(R.id.title).text = "打开自动隐藏面板-自定义EmptyView，不消费事件，点击可隐藏面板"
             }
-            ApiResetType.ENABLE_RecyclerView-> {
+            ApiResetType.ENABLE_RecyclerView -> {
                 setContentView(R.layout.activity_api_auto_reset_enable_on_recyclerview_layout)
                 findViewById<TextView>(R.id.title).text = "打开自动隐藏面板-原生RecyclerView，默认消费事件，点击无法隐藏面板"
             }
@@ -105,7 +105,7 @@ class ResetActivity : AppCompatActivity() {
     }
 
     private fun scrollToBottom() {
-        recyclerView.post{ mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) }
+        recyclerView.post { mLinearLayoutManager?.scrollToPosition(mAdapter.itemCount - 1) }
     }
 
     override fun onStart() {
@@ -172,7 +172,9 @@ class ResetActivity : AppCompatActivity() {
                     .logTrack(true) //output log
                     .build()
         }
-        findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
+        if (findViewById<RecyclerView>(R.id.recycler_view) is AutoHidePanelRecyclerView) {
+            findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
+        }
     }
 
     override fun onBackPressed() {

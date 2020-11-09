@@ -47,9 +47,9 @@ class RelativeContentContainer : RelativeLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RelativeContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.RelativeContentContainer_relative_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.RelativeContentContainer_relative_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.RelativeContentContainer_relative_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.RelativeContentContainer_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.RelativeContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.RelativeContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 

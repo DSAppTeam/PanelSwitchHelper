@@ -14,6 +14,7 @@ import com.effective.android.panel.interfaces.ContentScrollMeasurerBuilder
 import com.effective.android.panel.interfaces.PanelHeightMeasurer
 import com.effective.android.panel.interfaces.PanelHeightMeasurerBuilder
 import com.effective.android.panel.interfaces.listener.*
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**
