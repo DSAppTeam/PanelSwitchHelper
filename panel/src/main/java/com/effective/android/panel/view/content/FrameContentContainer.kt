@@ -48,9 +48,9 @@ class FrameContentContainer : FrameLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FrameContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.FrameContentContainer_frame_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.FrameContentContainer_frame_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.FrameContentContainer_frame_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.FrameContentContainer_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.FrameContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.FrameContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 

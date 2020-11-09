@@ -12,12 +12,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.annotation.IdRes
 import com.effective.android.panel.Constants
-import com.effective.android.panel.LogTracker
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.interfaces.ViewAssertion
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
-import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -43,6 +42,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         if (imeOptions != null) {
             imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_EXTRACT_UI
             mEditText?.imeOptions = imeOptions
+            mPixelInputView.imeOptions = imeOptions
         }
         mResetAction = object : IResetAction {
 

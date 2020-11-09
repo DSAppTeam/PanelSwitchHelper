@@ -117,8 +117,17 @@ object DisplayUtil {
 
 
     @JvmStatic
-    fun getNavigationBarHeight(context: Context): Int {
-        return getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
+    fun getNavigationBarHeight(context: Context, window: Window): Int {
+        val deviceNavigationHeight = getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
+        //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
+        val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
+        if (manufacturer.toLowerCase().contains("samsung") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val stableBottom = window.decorView.rootWindowInsets.stableInsetBottom
+            if (stableBottom < deviceNavigationHeight) {
+                return stableBottom;
+            }
+        }
+        return deviceNavigationHeight;
     }
 
     private fun getInternalDimensionSize(res: Resources, key: String): Int {
@@ -192,7 +201,7 @@ object DisplayUtil {
             if (manufacturer.toLowerCase().contains("samsung")
                     && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 try {
-                    return  Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
+                    return Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
                 } catch (e: Exception) {
                     //nothing to do
                 }

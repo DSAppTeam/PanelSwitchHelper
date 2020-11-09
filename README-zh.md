@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.10-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.11-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -40,10 +40,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.10'
+implementation 'com.effective.android:panelSwitchHelper:1.3.11'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.10'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.11'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -331,11 +331,11 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.10'
     * 扩展 `PanelHeightMeasurer` 接口新增 `synchronizeKeyboardHeight` 方法控制面板高度是否同步软键盘高度
     * Container 容器支持控制内部多层嵌套布局自由滑动
 * 1.3.10 支持全屏模式，支持额外设置EditText唤起面板，修复已知问题
+* 1.3.11 修复部分 MiUI 手机横屏状态栏拉起输入法异常问题，优化 Log 显示，统一所有自定义面板容器属性命名的前缀
 
 ### 期望
 
 编写该项目只是希望能提高日常开发的效率，专注于处理业务。如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
-
 也可以添加微信，进反馈群讨论反馈。
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code_wx.jpg" width = "385" height = "385"/>

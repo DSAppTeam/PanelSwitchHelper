@@ -12,9 +12,9 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.effective.android.panel.Constants
-import com.effective.android.panel.LogTracker
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.ViewAssertion
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
 import java.util.*
@@ -42,6 +42,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         if (imeOptions != null) {
             imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_EXTRACT_UI
             mEditText?.imeOptions = imeOptions
+            mPixelInputView.imeOptions = imeOptions
         }
         mResetAction = object : IResetAction {
 
@@ -121,7 +122,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
 
             private val secondaryViews = WeakHashMap<Int, EditText>()
             private var secondaryViewRequestFocus = false
-            private var onClickListener: View.OnClickListener? = null
+            private var onClickListener: OnClickListener? = null
             private var realEditViewAttach: Boolean = true
             private var curPanelId = Int.MAX_VALUE
             private var checkoutInputRight = true

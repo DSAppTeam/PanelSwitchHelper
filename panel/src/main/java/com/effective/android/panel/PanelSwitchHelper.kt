@@ -11,6 +11,7 @@ import android.view.Window
 import android.widget.EditText
 import com.effective.android.panel.interfaces.*
 import com.effective.android.panel.interfaces.listener.*
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.view.PanelSwitchLayout
 
 /**

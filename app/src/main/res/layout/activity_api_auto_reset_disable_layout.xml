@@ -43,8 +43,8 @@
                 android:id="@+id/content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:relative_auto_reset_enable="false"
-                app:relative_edit_view="@id/edit_text">
+                app:auto_reset_enable="false"
+                app:edit_view="@id/edit_text">
 
                 <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:visibility="gone"

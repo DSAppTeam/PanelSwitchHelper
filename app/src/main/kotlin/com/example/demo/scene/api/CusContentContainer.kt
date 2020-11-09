@@ -31,9 +31,9 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
     private lateinit var contentContainer: ContentContainerImpl
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CusContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.CusContentContainer_cus_edit_view, -1)
-        resetViewId = typedArray.getResourceId(R.styleable.CusContentContainer_cus_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.CusContentContainer_cus_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.CusContentContainer_edit_view, -1)
+        resetViewId = typedArray.getResourceId(R.styleable.CusContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.CusContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 
