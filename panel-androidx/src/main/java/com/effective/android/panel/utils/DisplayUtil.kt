@@ -172,32 +172,30 @@ object DisplayUtil {
      */
     @JvmStatic
     fun isNavBarVisible(context: Context, window: Window): Boolean {
+        val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
+        if (manufacturer.toLowerCase().contains("samsung")
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            try {
+                return  Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") != 0
+            } catch (e: Exception) {
+                //nothing to do
+                e.printStackTrace()
+            }
+            return !hasSystemUIFlag(window, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        }
+
         var isVisible = false
-        var viewGroup: ViewGroup? = window.decorView as ViewGroup?
+        val viewGroup: ViewGroup? = window.decorView as ViewGroup?
         if (viewGroup != null) {
             for (i in 0 until viewGroup.childCount) {
-                var id: Int = viewGroup.getChildAt(i).id
+                val id: Int = viewGroup.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
-                    var resourceEntryName: String? = context.resources.getResourceEntryName(id)
+                    val resourceEntryName: String? = context.resources.getResourceEntryName(id)
                     if ((("navigationBarBackground" == resourceEntryName) && viewGroup.getChildAt(i).visibility == android.view.View.VISIBLE)) {
                         isVisible = true
                     }
                 }
             }
-        }
-        if (isVisible) {
-            // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入之后判断错误
-            // 这个问题在 OneUI 2 & android 10 版本已修复，
-            val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
-            if (manufacturer.toLowerCase().contains("samsung")
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                try {
-                    return  Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
-                } catch (e: Exception) {
-                    //nothing to do
-                }
-            }
-            isVisible = !hasSystemUIFlag(window, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         }
         return isVisible
     }
