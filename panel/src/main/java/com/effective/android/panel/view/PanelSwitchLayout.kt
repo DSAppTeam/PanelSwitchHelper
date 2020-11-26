@@ -276,8 +276,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
                 val logFormatter = LogFormatter.setUp()
                 logFormatter.addContent(value = "界面每一次变化的信息回调")
-                logFormatter.addContent("windowSoftInputMode","${window.attributes.softInputMode}")
-                logFormatter.addContent("currentPanelSwitchLayoutVisible","${this@PanelSwitchLayout.visibility == View.VISIBLE}")
+                logFormatter.addContent("windowSoftInputMode", "${window.attributes.softInputMode}")
+                logFormatter.addContent("currentPanelSwitchLayoutVisible", "${this@PanelSwitchLayout.visibility == View.VISIBLE}")
                 if (this@PanelSwitchLayout.visibility != View.VISIBLE) {
                     logFormatter.addContent(value = "skip cal keyboard Height When window is invisible!")
                 }
@@ -288,29 +288,29 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 val cusNavigationHeight = getCurrentNavigationHeight(it, info)
                 val androidQCompatNavH = getAndroidQNavHIfNavIsInvisible(it, window)
                 val systemUIHeight = curStatusHeight + cusNavigationHeight + androidQCompatNavH
-                logFormatter.addContent("screenHeight","$screenHeight")
-                logFormatter.addContent("contentHeight","$contentHeight")
-                logFormatter.addContent("isFullScreen","${it.isFullScreen}")
-                logFormatter.addContent("isNavigationBarShown","${it.isNavigationBarShow}")
-                logFormatter.addContent("deviceStatusBarH","${info.statusBarH}")
-                logFormatter.addContent("deviceNavigationBarH","${info.navigationBarH}")
+                logFormatter.addContent("screenHeight", "$screenHeight")
+                logFormatter.addContent("contentHeight", "$contentHeight")
+                logFormatter.addContent("isFullScreen", "${it.isFullScreen}")
+                logFormatter.addContent("isNavigationBarShown", "${it.isNavigationBarShow}")
+                logFormatter.addContent("deviceStatusBarH", "${info.statusBarH}")
+                logFormatter.addContent("deviceNavigationBarH", "${info.navigationBarH}")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val inset = window.decorView.rootWindowInsets
-                    logFormatter.addContent("systemInset","left(${inset.systemWindowInsetTop}) top(${inset.systemWindowInsetLeft}) right(${inset.systemWindowInsetRight}) bottom(${inset.systemWindowInsetBottom})")
-                    logFormatter.addContent("inset","left(${inset.stableInsetLeft}) top(${inset.stableInsetTop}) right(${inset.stableInsetRight}) bottom(${inset.stableInsetBottom})")
+                    logFormatter.addContent("systemInset", "left(${inset.systemWindowInsetTop}) top(${inset.systemWindowInsetLeft}) right(${inset.systemWindowInsetRight}) bottom(${inset.systemWindowInsetBottom})")
+                    logFormatter.addContent("inset", "left(${inset.stableInsetLeft}) top(${inset.stableInsetTop}) right(${inset.stableInsetRight}) bottom(${inset.stableInsetBottom})")
                 }
-                logFormatter.addContent("currentSystemInfo","statusBarH : $curStatusHeight, navigationBarH : $cusNavigationHeight 全面屏手势虚拟栏H : $androidQCompatNavH")
-                logFormatter.addContent("currentSystemH","$systemUIHeight")
+                logFormatter.addContent("currentSystemInfo", "statusBarH : $curStatusHeight, navigationBarH : $cusNavigationHeight 全面屏手势虚拟栏H : $androidQCompatNavH")
+                logFormatter.addContent("currentSystemH", "$systemUIHeight")
 
                 lastNavigationBarShow = it.isNavigationBarShow
                 val keyboardHeight = screenHeight - contentHeight - systemUIHeight
                 //输入法拉起时，需要追加 "悬浮在界面之上的全屏手势虚拟导航栏" 高度
                 val realHeight = keyboardHeight + androidQCompatNavH
                 minLimitCloseKeyboardHeight = if (info.navigationBarH > androidQCompatNavH) info.navigationBarH else androidQCompatNavH
-                logFormatter.addContent("minLimitCloseKeyboardH","$minLimitCloseKeyboardHeight")
-                logFormatter.addContent("minLimitOpenKeyboardH","$minLimitOpenKeyboardHeight")
-                logFormatter.addContent("lastKeyboardH","$lastKeyboardHeight")
-                logFormatter.addContent("currentKeyboardInfo","keyboardH : $keyboardHeight, realKeyboardH : $realHeight, isShown : $isKeyboardShowing")
+                logFormatter.addContent("minLimitCloseKeyboardH", "$minLimitCloseKeyboardHeight")
+                logFormatter.addContent("minLimitOpenKeyboardH", "$minLimitOpenKeyboardHeight")
+                logFormatter.addContent("lastKeyboardH", "$lastKeyboardHeight")
+                logFormatter.addContent("currentKeyboardInfo", "keyboardH : $keyboardHeight, realKeyboardH : $realHeight, isShown : $isKeyboardShowing")
                 if (isKeyboardShowing) {
                     if (keyboardHeight <= minLimitOpenKeyboardHeight) {
                         isKeyboardShowing = false
@@ -334,7 +334,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         if (keyboardHeight > lastKeyboardHeight) {
                             LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
                             PanelUtil.setKeyBoardHeight(context, realHeight)
-                            requestLayout()
+//                            requestLayout()
                         }
                         if (!isKeyboardState()) {
                             checkoutPanel(Constants.PANEL_KEYBOARD, false)
@@ -435,7 +435,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun getContentContainerTop(scrollOutsideHeight: Int): Int {
         val result = if (contentScrollOutsizeEnable) {
-            if (panelId == Constants.PANEL_NONE) 0 else -scrollOutsideHeight
+            if (isResetState()) 0 else -scrollOutsideHeight
         } else 0
         LogTracker.log("$TAG#onLayout", " getContentContainerTop  :$result")
         return result;
@@ -443,7 +443,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun getContentContainerHeight(allHeight: Int, paddingTop: Int, scrollOutsideHeight: Int): Int {
         return allHeight - paddingTop -
-                if (!contentScrollOutsizeEnable && panelId != Constants.PANEL_NONE) scrollOutsideHeight else 0
+                if (!contentScrollOutsizeEnable && !isResetState()) scrollOutsideHeight else 0
     }
 
     private fun getCompatPanelHeight(panelId: Int): Int {
@@ -562,7 +562,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             //处理第一个view contentContainer
             run {
                 contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight,
-                        contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, panelId == Constants.PANEL_NONE)
+                        contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState())
                 logFormatter.addContent("contentContainer Layout", "($l,$contentContainerTop,$r,${contentContainerTop + contentContainerHeight})")
                 contentContainer.changeContainerHeight(contentContainerHeight)
             }
@@ -627,7 +627,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!isResetState()) {
             //模仿系统输入法隐藏，如果直接掉  checkoutPanel(Constants.PANEL_NONE)，可能导致隐藏时上层 recyclerview 因为 layout 导致界面出现短暂卡顿。
             if (isKeyboardState()) {
-                contentContainer.getInputActionImpl().hideKeyboard(true)
+                if (isKeyboardShowing) {
+                    contentContainer.getInputActionImpl().hideKeyboard(true)
+                } else {
+                    checkoutPanel(Constants.PANEL_NONE)
+                    return false
+                }
             } else {
                 checkoutPanel(Constants.PANEL_NONE)
             }

@@ -432,7 +432,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun getContentContainerTop(scrollOutsideHeight: Int): Int {
         val result = if (contentScrollOutsizeEnable) {
-            if (panelId == Constants.PANEL_NONE) 0 else -scrollOutsideHeight
+            if (isResetState()) 0 else -scrollOutsideHeight
         } else 0
         LogTracker.log("$TAG#onLayout", " getContentContainerTop  :$result")
         return result;
@@ -440,7 +440,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun getContentContainerHeight(allHeight: Int, paddingTop: Int, scrollOutsideHeight: Int): Int {
         return allHeight - paddingTop -
-                if (!contentScrollOutsizeEnable && panelId != Constants.PANEL_NONE) scrollOutsideHeight else 0
+                if (!contentScrollOutsizeEnable && !isResetState()) scrollOutsideHeight else 0
     }
 
     private fun getCompatPanelHeight(panelId: Int): Int {
@@ -559,7 +559,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             //处理第一个view contentContainer
             run {
                 contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight,
-                        contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, panelId == Constants.PANEL_NONE)
+                        contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState())
                 logFormatter.addContent("contentContainer Layout", "($l,$contentContainerTop,$r,${contentContainerTop + contentContainerHeight})")
                 contentContainer.changeContainerHeight(contentContainerHeight)
             }
@@ -624,7 +624,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!isResetState()) {
             //模仿系统输入法隐藏，如果直接掉  checkoutPanel(Constants.PANEL_NONE)，可能导致隐藏时上层 recyclerview 因为 layout 导致界面出现短暂卡顿。
             if (isKeyboardState()) {
-                contentContainer.getInputActionImpl().hideKeyboard(true)
+                if (isKeyboardShowing) {
+                    contentContainer.getInputActionImpl().hideKeyboard(true)
+                } else {
+                    checkoutPanel(Constants.PANEL_NONE)
+                    return false
+                }
             } else {
                 checkoutPanel(Constants.PANEL_NONE)
             }
