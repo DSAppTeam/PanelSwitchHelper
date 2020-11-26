@@ -117,7 +117,6 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         mInputAction = object : IInputAction {
 
             private val mainInputView: EditText = mEditText!!
-            private var mainInputType = mEditText!!.inputType
             private var mainFocusIndex = -1
 
             private val secondaryViews = WeakHashMap<Int, EditText>()
@@ -181,9 +180,9 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private fun giveUpFocusRight() {
                 checkoutInputRight = true
                 realEditViewAttach = false
-                mainInputView.inputType = EditorInfo.TYPE_NULL
-                mPixelInputView.inputType = mainInputType
-                mPixelInputView.clearFocus()
+                if(mPixelInputView.hasFocus()){
+                    mPixelInputView.clearFocus()
+                }
                 checkoutInputRight = false
             }
 
@@ -253,14 +252,10 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
                 checkoutInputRight = true
                 realEditViewAttach = true
-                mPixelInputView.clearFocus()
-                mPixelInputView.inputType = EditorInfo.TYPE_NULL
-                mainInputView.inputType = mainInputType
                 recycler()
                 if (requestFocus) {
                     requestFocusRunnable.resetSelection = resetSelection
-                    val delay = if (!PanelUtil.hasMeasuredKeyboard(context)) 500L else 200L
-                    mainInputView.postDelayed(requestFocusRunnable, delay)
+                    requestFocusRunnable.run()
                 } else {
                     if (resetSelection) {
                         resetSelectionRunnable.run()
