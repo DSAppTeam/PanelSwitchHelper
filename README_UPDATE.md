@@ -63,3 +63,4 @@
 * 1.3.10 Supports full screen mode, supports additional setting of EditText to invoke the panel, and fixes known issues
 * 1.3.11 Fixed some MiUI mobile phone horizontal screen status bar pull up the input method abnormal problem, optimize the Log display, unify the prefix of all custom panel container property names
 * 1.3.12 compatible with floating keyboard scene
+* 1.3.12 Compatible with some mobile phone lock screen input method issues; compatible with Huawei customized tablet issues; optimize the full screen display speed;

@@ -142,7 +142,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
 
             inner class ResetSelectionRunnable : Runnable {
                 override fun run() {
-                    if (mainFocusIndex != -1) {
+                    if (mainFocusIndex != -1 && mainFocusIndex <= mainInputView.text.length) {
                         mainInputView.setSelection(mainFocusIndex)
                     } else {
                         mainInputView.setSelection(mainInputView.text.length)
@@ -180,7 +180,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private fun giveUpFocusRight() {
                 checkoutInputRight = true
                 realEditViewAttach = false
-                if(mPixelInputView.hasFocus()){
+                if (mPixelInputView.hasFocus()) {
                     mPixelInputView.clearFocus()
                 }
                 checkoutInputRight = false
@@ -252,10 +252,13 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
                 checkoutInputRight = true
                 realEditViewAttach = true
+                if (mPixelInputView.hasFocus()) {
+                    mPixelInputView.clearFocus()
+                }
                 recycler()
                 if (requestFocus) {
                     requestFocusRunnable.resetSelection = resetSelection
-                    requestFocusRunnable.run()
+                    mainInputView.postDelayed(requestFocusRunnable, 200L)
                 } else {
                     if (resetSelection) {
                         resetSelectionRunnable.run()

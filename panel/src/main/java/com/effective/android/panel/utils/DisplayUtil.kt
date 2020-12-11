@@ -15,10 +15,12 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import com.effective.android.panel.Constants
+import com.effective.android.panel.R
 import java.lang.Exception
 
 
 object DisplayUtil {
+
     /**
      * 获取toolar的高度，但是这个方法仅仅在非沉浸下才有用。
      *
@@ -183,12 +185,20 @@ object DisplayUtil {
     fun isNavBarVisible(context: Context, window: Window): Boolean {
         var isVisible = false
         var viewGroup: ViewGroup? = window.decorView as ViewGroup?
-        if (viewGroup != null) {
-            for (i in 0 until viewGroup.childCount) {
-                var id: Int = viewGroup.getChildAt(i).id
+        viewGroup?.let {
+            for (i in 0 until it.childCount) {
+                var id: Int = it.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
                     var resourceEntryName: String? = context.resources.getResourceEntryName(id)
-                    if ((("navigationBarBackground" == resourceEntryName) && viewGroup.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                    if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                        isVisible = true
+                    }
+                }
+            }
+            if (!isVisible) {
+                val navigationBarView: View? = it.findViewById(R.id.immersion_navigation_bar_view)
+                navigationBarView?.let { navigationBar ->
+                    if (navigationBar.visibility == View.VISIBLE) {
                         isVisible = true
                     }
                 }
