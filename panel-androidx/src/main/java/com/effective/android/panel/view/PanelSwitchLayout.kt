@@ -331,7 +331,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         if (keyboardHeight > lastKeyboardHeight) {
                             LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
                             PanelUtil.setKeyBoardHeight(context, realHeight)
-//                            requestLayout()
+                            requestLayout()
                         }
                         if (!isKeyboardState()) {
                             checkoutPanel(Constants.PANEL_KEYBOARD, false)
