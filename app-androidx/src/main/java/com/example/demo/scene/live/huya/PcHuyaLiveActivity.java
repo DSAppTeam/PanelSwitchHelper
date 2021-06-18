@@ -57,11 +57,14 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
     private Handler handler = new Handler();
+
+    private int count = 0;
+
     private Runnable insertMessage = new Runnable() {
         @Override
         public void run() {
             if (mAdapter != null) {
-                mAdapter.insertMessage(new Message("yummylau", "模拟插入数据" + System.currentTimeMillis()));
+//                mAdapter.insertMessage(new Message("yummylau", "模拟插入数据" + count++));
             }
             handler.postDelayed(this, 1500);
         }
@@ -87,7 +90,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_huya_live_layout);
         mBinding.videoView.getLayoutParams().width = size.first;
         mBinding.videoView.getLayoutParams().height = size.first * 9 / 16;
-        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uzi));
+//        mBinding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uzi));
         mBinding.videoView.setOnPreparedListener(mp -> {
             mp.start();
             mp.setLooping(true);
@@ -96,7 +99,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mBinding.checkout.setOnClickListener(v -> DisplayUtils.checkoutOrientation(PcHuyaLiveActivity.this));
         mBinding.back.setOnClickListener(v -> onBackPressed());
         View.OnClickListener inputClick = v -> {
-            if(videoPopWindow == null){
+            if (videoPopWindow == null) {
                 videoPopWindow = new PcHuyaCommentPopWindow(PcHuyaLiveActivity.this);
             }
             videoPopWindow.showAtLocation(mBinding.getRoot(), Gravity.NO_GRAVITY, 0, 0);
@@ -130,7 +133,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.chatList.setLayoutManager(mLinearLayoutManager);
         List<Message> messages = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 5; i++) {
             messages.add(new Message("yummylau" + i, "进入直播间"));
         }
         mAdapter = new ChatAdapter(this, messages);
@@ -181,6 +184,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
 
                         @Override
                         public void onKeyboard() {
+                            mBinding.LL.setVisibility(View.GONE);
                             Log.d(TAG, "唤起系统输入法");
                             mBinding.emotionBtn.setSelected(false);
                             scrollToBottom();
@@ -190,10 +194,12 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
                         public void onNone() {
                             Log.d(TAG, "隐藏所有面板");
                             mBinding.emotionBtn.setSelected(false);
+                            mBinding.LL.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         public void onPanel(IPanelView view) {
+                            mBinding.LL.setVisibility(View.GONE);
                             Log.d(TAG, "唤起面板 : " + view);
                             if (view instanceof PanelView) {
                                 mBinding.emotionBtn.setSelected(((PanelView) view).getId() == R.id.panel_emotion ? true : false);
@@ -266,12 +272,12 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
         mBinding.videoView.setLayoutParams(layoutParams);
     }
 
-    private void checkoutSystemUIMode(boolean isP){
-        if(isP){
+    private void checkoutSystemUIMode(boolean isP) {
+        if (isP) {
             getWindow().getDecorView().setSystemUiVisibility(0); //重置
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             StatusbarHelper.setStatusBarColor(this, Color.BLACK);
-        }else{
+        } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -279,8 +285,8 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
                 getWindow().getDecorView().setSystemUiVisibility(0);
                 window.getDecorView().setSystemUiVisibility(
                         window.getDecorView().getSystemUiVisibility() |
-                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
-                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
                                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             }
         }
@@ -289,7 +295,7 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus && !DisplayUtil.isPortrait(this)){
+        if (hasFocus && !DisplayUtil.isPortrait(this)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -297,8 +303,8 @@ public class PcHuyaLiveActivity extends AppCompatActivity {
                 getWindow().getDecorView().setSystemUiVisibility(0);
                 window.getDecorView().setSystemUiVisibility(
                         window.getDecorView().getSystemUiVisibility() |
-                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|
-                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
                                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             }
         }
