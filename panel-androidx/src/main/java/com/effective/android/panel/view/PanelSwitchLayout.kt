@@ -188,16 +188,18 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         return
                     }
 
-                    if (clickInterceptor?.intercept(v.id) != false) {
-                        notifyViewClick(v)
-                        val targetId = panelContainer.getPanelId(panelView)
-                        if (panelId == targetId && panelView.isTriggerViewCanToggle() && panelView.isShowing()) {
-                            checkoutKeyboard(false)
-                        } else {
-                            checkoutPanel(targetId)
-                        }
-                        preClickTime = currentTime
+                    if (clickInterceptor?.intercept(v.id) == true) {
+                        return
                     }
+
+                    notifyViewClick(v)
+                    val targetId = panelContainer.getPanelId(panelView)
+                    if (panelId == targetId && panelView.isTriggerViewCanToggle() && panelView.isShowing()) {
+                        checkoutKeyboard(false)
+                    } else {
+                        checkoutPanel(targetId)
+                    }
+                    preClickTime = currentTime
                 }
             })
         }
