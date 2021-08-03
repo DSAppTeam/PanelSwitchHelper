@@ -60,7 +60,6 @@ dependencies {
     implementation deps.androidx.constraint
     implementation deps.pageindicator
     implementation deps.circleimageview
-    implementation deps.panelSwitchHelper_androidx
-//    implementation project(":panel-androidx")
-//    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    implementation project(":panel-androidx")
+    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }

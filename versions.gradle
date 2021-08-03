@@ -30,8 +30,6 @@ ext.deps.androidx = androidx
 
 ext.deps.pageindicator = "com.romandanylyk:pageindicatorview:$versions.pageindicator"
 ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
-ext.deps.panelSwitchHelper = "com.effective.android:panelSwitchHelper:$versions.panelSwitchHelper"
-ext.deps.panelSwitchHelper_androidx = "com.effective.android:panelSwitchHelper-androidx:$versions.panelSwitchHelper_androidx"
 ext.deps.circleimageview = "de.hdodenhof:circleimageview:$versions.circleimageview"
 
 def config = [:]
