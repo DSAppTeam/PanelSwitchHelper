@@ -192,7 +192,8 @@ object DisplayUtil {
             if (manufacturer.toLowerCase().contains("samsung")
                     && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 try {
-                    return  Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
+                    isVisible = Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
+                    if(isVisible) return true
                 } catch (e: Exception) {
                     //nothing to do
                 }
