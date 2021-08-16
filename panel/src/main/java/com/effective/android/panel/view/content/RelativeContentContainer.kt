@@ -47,21 +47,23 @@ class RelativeContentContainer : RelativeLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RelativeContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.RelativeContentContainer_relative_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.RelativeContentContainer_relative_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.RelativeContentContainer_relative_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.RelativeContentContainer_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.RelativeContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.RelativeContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, autoResetId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        addView(editText, 0,LayoutParams(1, 1))
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
-        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize, reset)
     }
 
     override fun findTriggerView(id: Int): View? {

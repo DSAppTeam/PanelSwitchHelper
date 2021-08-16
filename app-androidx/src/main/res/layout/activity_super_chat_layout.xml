@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <com.example.demo.systemui.StatusBarView
+            android:layout_marginTop="-1px"
             android:id="@+id/status_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,13 +19,13 @@
         <RelativeLayout
             android:id="@+id/cus_title_bar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary">
+            android:layout_height="wrap_content">
 
             <TextView
+                android:background="@color/colorPrimary"
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
@@ -32,6 +33,25 @@
                 android:textColor="@android:color/white"
                 android:textSize="8sp"
                 android:textStyle="bold" />
+
+            <EditText
+                android:layout_below="@+id/title"
+                android:id="@+id/mutil_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:hint="模拟第二个Edittext驱动输入法显示"
+                android:background="@drawable/selector_edit_focus"
+                android:imeOptions="actionSearch"
+                android:maxLines="5"
+                android:minHeight="@dimen/dp_35"
+                android:paddingLeft="@dimen/dp_3"
+                android:paddingTop="@dimen/dp_7.5"
+                android:paddingRight="@dimen/dp_3"
+                android:paddingBottom="@dimen/dp_3"
+                android:textCursorDrawable="@drawable/shape_edit_cursor"
+                android:textSize="@dimen/sp_16" />
         </RelativeLayout>
 
         <com.effective.android.panel.view.PanelSwitchLayout
@@ -49,10 +69,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:relative_edit_view="@id/edit_text"
+                app:edit_view="@id/edit_text"
                 tools:layout_height="500dp">
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -23,6 +23,9 @@ class DeviceRuntime(val context: Context, val window: Window) {
 
     init {
         isPad = (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+        isPortrait = DisplayUtil.isPortrait(context)
+        isNavigationBarShow = DisplayUtil.isNavigationBarShow(context, window)
+        isFullScreen = DisplayUtil.isFullScreen(window)
     }
 
     fun getDeviceInfoByOrientation(cache: Boolean = false): DeviceInfo {
@@ -38,7 +41,7 @@ class DeviceRuntime(val context: Context, val window: Window) {
             }
         }
 
-        val navigationBarHeight = DisplayUtil.getNavigationBarHeight(context)
+        val navigationBarHeight = DisplayUtil.getNavigationBarHeight(context,window)
         val statusBarHeight = DisplayUtil.getStatusBarHeight(window)
         //以这种方式计算出来的toolbar，如果和statusBarHeight一样，则实际上就是statusBar的高度，大于statusBar的才是toolBar的高度。
         var toolbarH = DisplayUtil.getToolbarHeight(window)
@@ -50,12 +53,12 @@ class DeviceRuntime(val context: Context, val window: Window) {
         val screenWithoutNavigationHeight = DisplayUtil.getScreenHeightWithoutNavigationBar(context)
 
         return if (isPortrait) {
-            deviceInfoP = DeviceInfo(window,true,
+            deviceInfoP = DeviceInfo(window, true,
                     statusBarHeight, navigationBarHeight, toolbarH,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoP!!
         } else {
-            deviceInfoL = DeviceInfo(window,false,
+            deviceInfoL = DeviceInfo(window, false,
                     statusBarHeight, navigationBarHeight, toolbarH,
                     screenHeight, screenWithoutSystemUIHeight, screenWithoutNavigationHeight)
             deviceInfoL!!

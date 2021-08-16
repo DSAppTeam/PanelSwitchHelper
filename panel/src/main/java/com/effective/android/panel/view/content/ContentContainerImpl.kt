@@ -2,17 +2,23 @@ package com.effective.android.panel.view.content
 
 import android.graphics.Rect
 import android.support.annotation.IdRes
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnFocusChangeListener
+import android.view.View.*
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import com.effective.android.panel.LogTracker
+import com.effective.android.panel.Constants
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.ViewAssertion
+import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.PanelSwitchLayout
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * 内容区域代理
@@ -23,10 +29,12 @@ import com.effective.android.panel.view.PanelSwitchLayout
  */
 class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
+    private val context = mViewGroup.context;
     private val mResetView: View? = mViewGroup.findViewById(resetId)
     private val mInputAction: IInputAction
     private val mResetAction: IResetAction
     private val tag = ContentContainerImpl::class.java.simpleName
+    private val mPixelInputView = EditText(mEditText?.context)
 
     init {
         assertView()
@@ -34,6 +42,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         if (imeOptions != null) {
             imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_EXTRACT_UI
             mEditText?.imeOptions = imeOptions
+            mPixelInputView.imeOptions = imeOptions
         }
         mResetAction = object : IResetAction {
 
@@ -107,30 +116,206 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         }
         mInputAction = object : IInputAction {
 
-            override fun getInputText(): EditText = mEditText!!
+            private val mainInputView: EditText = mEditText!!
+            private var mainFocusIndex = -1
 
-            override fun setEditTextClickListener(l: View.OnClickListener) {
-                mEditText!!.setOnClickListener(l)
+            private val secondaryViews = WeakHashMap<Int, EditText>()
+            private var secondaryViewRequestFocus = false
+            private var onClickListener: OnClickListener? = null
+            private var realEditViewAttach: Boolean = true
+            private var curPanelId = Int.MAX_VALUE
+            private var checkoutInputRight = true
+            private val requestFocusRunnable = RequestFocusRunnable()
+            private val resetSelectionRunnable = ResetSelectionRunnable()
+
+            inner class RequestFocusRunnable : Runnable {
+                var resetSelection = false
+                override fun run() {
+                    mainInputView.requestFocus()
+                    if (resetSelection) {
+                        mainInputView.postDelayed(resetSelectionRunnable, 100)
+                    } else {
+                        checkoutInputRight = false
+                    }
+                }
+            }
+
+            inner class ResetSelectionRunnable : Runnable {
+                override fun run() {
+                    if (mainFocusIndex != -1 && mainFocusIndex <= mainInputView.text.length) {
+                        mainInputView.setSelection(mainFocusIndex)
+                    } else {
+                        mainInputView.setSelection(mainInputView.text.length)
+                    }
+                    checkoutInputRight = false
+                }
+            }
+
+            init {
+                mainInputView.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        if (realEditViewAttach && mainInputView.hasFocus() && !checkoutInputRight) {
+                            mainFocusIndex = mainInputView.selectionStart
+                        }
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    }
+                })
+                mainInputView.accessibilityDelegate = object : View.AccessibilityDelegate() {
+                    override fun sendAccessibilityEvent(host: View?, eventType: Int) {
+                        super.sendAccessibilityEvent(host, eventType)
+                        if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
+                            if (realEditViewAttach && mainInputView.hasFocus() && !checkoutInputRight) {
+                                mainFocusIndex = mainInputView.selectionStart
+                            }
+                        }
+                    }
+                }
+            }
+
+            private fun giveUpFocusRight() {
+                checkoutInputRight = true
+                realEditViewAttach = false
+                if (mPixelInputView.hasFocus()) {
+                    mPixelInputView.clearFocus()
+                }
+                checkoutInputRight = false
+            }
+
+            override fun getFullScreenPixelInputView(): EditText {
+                mPixelInputView.background = null
+                return mPixelInputView
+            }
+
+            override fun recycler() {
+                mainInputView.removeCallbacks(requestFocusRunnable)
+                mainInputView.removeCallbacks(resetSelectionRunnable)
+            }
+
+            /**
+             * 对于全屏模式：
+             * 1. 如果拉起的是输入法，焦点权利归属到 realEditView，重新获取焦点及重置光标
+             * 2. 如果拉起的面板且面板高度大于输入法，焦点权利也归属到 realEditView，
+             * 3. 其他比如隐藏面板或者面板比输入法低，焦点权利让给 mPixelInputView
+             * 非全屏模式下：
+             * 所有焦点权利都在 realEditView
+             */
+            override fun updateFullScreenParams(isFullScreen: Boolean, panelId: Int, panelHeight: Int) {
+                if (panelId == curPanelId) {
+                    return
+                }
+                curPanelId = panelId
+                if (secondaryViewRequestFocus) {
+                    secondaryViewRequestFocus = false
+                    return
+                }
+                //解决部分手机抢占焦点，可能出现重复显示/隐藏输入法
+                mPixelInputView.visibility = if (isFullScreen) VISIBLE else GONE
+                if (mPixelInputView.parent is ViewGroup) {
+                    (mPixelInputView.parent as ViewGroup).isFocusableInTouchMode = true
+                    (mPixelInputView.parent as ViewGroup).isFocusable = true
+                }
+                if (isFullScreen) {
+                    if (panelId == Constants.PANEL_KEYBOARD) {
+                        retrieveFocusRight(requestFocus = true, resetSelection = true)
+                    } else if (panelId != Constants.PANEL_NONE && !PanelUtil.isPanelHeightBelowKeyboardHeight(context, panelHeight)) {
+                        retrieveFocusRight(requestFocus = false, resetSelection = true)
+                    } else {
+                        giveUpFocusRight()
+                    }
+                } else {
+                    retrieveFocusRight()
+                }
+            }
+
+            override fun addSecondaryInputView(editText: EditText) {
+                val key = editText.hashCode()
+                if (!secondaryViews.containsKey(key)) {
+                    editText.setOnFocusChangeListener { v, hasFocus ->
+                        secondaryViewRequestFocus = hasFocus
+                    }
+                    secondaryViews[key] = editText
+                }
+            }
+
+            override fun removeSecondaryInputView(editText: EditText) {
+                val key = editText.hashCode()
+                if (secondaryViews.containsKey(key)) {
+                    secondaryViews.remove(key)
+                }
+            }
+
+            private fun retrieveFocusRight(requestFocus: Boolean = false, resetSelection: Boolean = false) {
+                checkoutInputRight = true
+                realEditViewAttach = true
+                if (mPixelInputView.hasFocus()) {
+                    mPixelInputView.clearFocus()
+                }
+                recycler()
+                if (requestFocus) {
+                    requestFocusRunnable.resetSelection = resetSelection
+                    mainInputView.postDelayed(requestFocusRunnable, 200L)
+                } else {
+                    if (resetSelection) {
+                        resetSelectionRunnable.run()
+                    } else {
+                        checkoutInputRight = false
+                    }
+                }
+            }
+
+            override fun setEditTextClickListener(l: OnClickListener) {
+                onClickListener = l
+                mainInputView.setOnClickListener { v ->
+                    if (realEditViewAttach) {
+                        onClickListener?.onClick(v)
+                    } else {
+                        mPixelInputView.requestFocus()
+                    }
+                }
             }
 
             override fun setEditTextFocusChangeListener(l: OnFocusChangeListener) {
-                mEditText!!.onFocusChangeListener = l
+                mainInputView.setOnFocusChangeListener { v, hasFocus ->
+                    if (hasFocus) {
+                        if (realEditViewAttach) {
+                            l.onFocusChange(v, hasFocus)
+                        } else {
+                            mPixelInputView.requestFocus()
+                        }
+                    }
+                }
+                mPixelInputView.setOnFocusChangeListener { v, hasFocus ->
+                    if (hasFocus) {
+                        l.onFocusChange(v, hasFocus)
+                    }
+                }
             }
 
-            override fun clearFocusByEditText() {
-                mEditText!!.clearFocus()
+            override fun hideKeyboard(clearFocus: Boolean) {
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
+                PanelUtil.hideKeyboard(context, targetView)
+                if (clearFocus) {
+                    targetView.clearFocus()
+                }
             }
 
-            override fun requestFocusByEditText() {
-                mEditText!!.requestFocus()
+            override fun showKeyboard(): Boolean {
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
+                return PanelUtil.showKeyboard(context, targetView)
             }
 
-            override fun editTextHasFocus(): Boolean {
-                return mEditText!!.hasFocus()
-            }
-
-            override fun preformClickForEditText() {
-                mEditText!!.performClick()
+            override fun requestKeyboard() {
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
+                if (targetView.hasFocus()) {
+                    targetView.performClick()
+                } else {
+                    targetView.requestFocus()
+                }
             }
         }
     }
@@ -206,7 +391,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                             willScrollDistance = 0
                         }
                         val diffY = defaultScrollHeight - willScrollDistance;
-                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b  + diffY);
+                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b + diffY);
                         view.layout(viewPosition.changeL, viewPosition.changeT, viewPosition.changeR, viewPosition.changeB)
                     }
                     LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")

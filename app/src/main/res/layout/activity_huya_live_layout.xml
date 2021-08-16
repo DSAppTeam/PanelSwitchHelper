@@ -135,9 +135,9 @@
             <com.effective.android.panel.view.content.RelativeContentContainer
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:relative_edit_view="@id/input">
+                app:edit_view="@id/input">
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:id="@+id/chat_list"
                     android:layout_above="@+id/action"
                     android:layout_width="match_parent"

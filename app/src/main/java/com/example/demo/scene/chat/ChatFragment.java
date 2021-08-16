@@ -33,7 +33,6 @@ import com.rd.PageIndicatorView;
 
 public class ChatFragment extends Fragment {
 
-
     private CommonChatWithTitlebarLayoutBinding mBinding;
     private PanelSwitchHelper mHelper;
     private ChatAdapter mAdapter;
@@ -171,6 +170,7 @@ public class ChatFragment extends Fragment {
                     .logTrack(true)             //output log
                     .build();
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
     public boolean hookOnBackPressed() {

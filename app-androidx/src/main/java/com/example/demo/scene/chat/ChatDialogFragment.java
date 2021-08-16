@@ -164,6 +164,7 @@ public class ChatDialogFragment extends DialogFragment implements DialogInterfac
                     .logTrack(true)             //output log
                     .build();
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
 
