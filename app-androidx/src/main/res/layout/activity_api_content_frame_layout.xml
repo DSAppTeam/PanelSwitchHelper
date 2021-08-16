@@ -41,9 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:frame_edit_view="@id/edit_text">
+                app:edit_view="@id/edit_text">
 
-                <com.example.demo.scene.chat.view.HookActionUpRecyclerView
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

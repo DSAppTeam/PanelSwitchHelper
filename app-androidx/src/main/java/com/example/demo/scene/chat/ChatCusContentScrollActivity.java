@@ -243,6 +243,7 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                 }
             });
         }
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
     private int listUnfilledHeight = 0;

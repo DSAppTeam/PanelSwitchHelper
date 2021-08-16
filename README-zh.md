@@ -1,7 +1,7 @@
 [![](https://travis-ci.org/YummyLau/PanelSwitchHelper.svg?branch=master)](https://travis-ci.org/YummyLau/panelSwitchHelper)
 ![Language](https://img.shields.io/badge/language-java-orange.svg)
 ![Language](https://img.shields.io/badge/language-kotlin-orange.svg)
-![Version](https://img.shields.io/badge/version-1.3.8-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.13-blue.svg)
 ![Size](https://img.shields.io/badge/size-14K-brightgreen.svg)
 
 README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README.md)
@@ -18,11 +18,13 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 * 丰富的机型适配，适配 全面屏/刘海屏/挖孔屏/Pad 等非常规 Phone 机型
 * 丰富的场景支持，支持 Activity/Fragment/Dialog/PopupWindow，应用到聊天/视频/直播/信息流评论等场景
 * 丰富的 API 支持，可自定义内容容器，业务面板，灵活控制面板隐藏，灵活控制切换面板速度
+* 支持全屏模式，FullScreen 模式下也能处理面板切换
 
 更多细节可参考
 
  * [场景使用介绍](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE-zh.md)
  * [API 使用指南](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API-zh.md)
+ * [库版本更新日志](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE-zh.md)
 
 Demo 内容如下
 
@@ -39,10 +41,10 @@ Demo 内容如下
 1. 在模块脚本 `build.gradle` 添加库依赖
 
 ```
-implementation 'com.effective.android:panelSwitchHelper:1.3.8'
+implementation 'com.effective.android:panelSwitchHelper:1.3.13'
 
 //or for androidx
-implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
+implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.13'
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -93,7 +95,7 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:linear_edit_view="@id/edit_text">
+                app:edit_view="@id/edit_text">
 
                 <com.example.demo.scene.chat.view.HookActionUpRecyclerView
                     android:id="@+id/recycler_view"
@@ -270,70 +272,9 @@ implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.8'
 
 ```
 
-### 版本更新
-
-* 1.0.1 支持兼容AndroidQ+焦点冲突，支持视频模式
-* 1.0.2 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
-* 1.0.3 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
-* 1.0.4 新增支持 Dialog/Fragment/DialogFragment
-* 1.0.5 支持适配华为/小米等支持动态导航栏隐藏的特殊机型
-* 1.1.0 追求极致的切换体验
-	* 支持切换流程中动画加持，效果同步“微信聊天”场景，但支持的场景远远不止这些（见Demo），同时支持自定义动画速度
-	* 优化框架内部切换流程，摈弃旧逻辑实现，新实现通过自定义绘制切换界面，无需担心内存泄漏
-	* Demo新增自定义标题栏场景，优化视频场景体验
-* 1.1.1 支持适配全面屏/刘海屏/水滴屏幕等特殊场景
-	* 优化内部计算有效面积高度，兼容特殊场景
-	* 免去 bindPanelSwitchLayout api 调用，框架内部自定完成逻辑
-	* Demo新增复杂IM交互场景
-* 1.1.2 新增内容滑动模式/内容固定模式动态切换api
-	* 优化隐藏面板逻辑，提升动画流畅性
-	* 新增内容滑动模式，内容区域可动态滑动到界面外部，类 adjustPan，默认开启
-	* 新增内容固定模式，内容区域动态调整绘制区域，类 adjustResize
-	* 解决 IM 场景下可能因为内容过少而被滑动外部的问题，支持动态切换模式，优化体验
-* 1.1.3 兼容谷歌渠道非公开SDK-API的使用要求，优化固定模式的绘制实现
-* 1.2.0 kotlin版本/新增支持多种布局类型的内容区域容器
-	* panel 调整为 kotlin 语言实现，完全兼容现有功能及 Java，支持 DSL
-	* 新增内容区域容器，默认提供线性/相对/帧布局，支持实现自定义内容区域容器
-	* Demo 新增 kotlin 使用约束布局实现自定义容器，新增 4 种不同布局的容器场景
-* 1.2.2 修复已知缺陷及优化
-    * 合并 pr 修复 emptyView 引用错误问题
-    * 优化固定模式下切换的流畅性
-* 1.2.3 兼容 android pad 机型
-* 1.3.0 支持自动隐藏面板，开放自定义面板，优化性调整
-    * 新增 auto_reset_enable 及 auto_reset_area api 用于开放自动隐藏面板，摒弃 EmptyView
-    * 新增 IPanelView 接口，外部可自主实现 PanelView，更灵活
-    * 优化滑动模式下的动画实
-
-    `1.3.0` 为重要版本，建议升级，同时注意以下 Api 更改
-        * EmptyView 移除，可参考 Demo 如何更优雅实现隐藏面板
-        * 面板类规范命名，已原生 Linear/Relative/Frame 为前缀，更容易区分
-        * PanelView 迁移到 panel 包
-* 1.3.1 支持适配采用底部系统布局来捕获用户手势的机型，这部分机型在界面底部多出的系统view可能导致输入法计算有偏差。比如 Findx，红米等机型。
-* 1.3.2 支持xml布局预览，优化动画，解决Demo存在背景时切换面板背景可见的问题
-    * 1.3.2.1 兼容使用autoSize库的项目，解决可能因为状态栏高度被修改导致输入法高度计算错误的问题
-* 1.3.3 优化体验，修复已知问题
-    * 修复多fragment场景下 window 可能引起 fragment 内存泄漏问题
-    * 新增 `toPanelState`api 用于外部拉起面板
-    * 新增 `addDistanceMeasurer` 用于外部自主控制内容区域滑动，兼容 IM 场景下未满一屏数据被滑走的问题
-* 1.3.4 修复已知问题，增强功能
-    * 更改 api `contentCanScrollOutside` -> `contentScrollOutsideEnable`，用于切换固定/滑动模式
-    * 更改 api `addDistanceMeasurer` -> `addContentScrollMeasurer`, 当处于滑动模式时，可自主控制内容滑动距离
-    * 新增 api `addPanelHeightMeasurer` 用于设置默认面板高度，兼容未获取输入法场景
-    * 优化动画及内部逻辑
-* 1.3.5 兼容 AndroidQ 全屏虚拟导航栏手势模式，如 MiUI12 设备等
-* 1.3.6 扩展 api
-    * 扩展 `animationSpeed`，支持设置动画速度， `standard` 标准速，`slow` 慢速,`slowest` 最慢速,`fast` 快速,`fastest`最快速
-    * PanelSwitchHelper 新增判断当前面板状态，如 `isPanelState()` 等
-    * 优化全面屏软键盘高度计算逻辑，修复已知问题 
-* 1.3.7 兼容OneUI 2版本前 s8/note8 等三星设备 
-* 1.3.8 扩展 api
-    * 扩展 `PanelHeightMeasurer` 接口新增 `synchronizeKeyboardHeight` 方法控制面板高度是否同步软键盘高度
-    * Container 容器支持控制内部多层嵌套布局自由滑动
-
 ### 期望
 
 编写该项目只是希望能提高日常开发的效率，专注于处理业务。如果更好的做法或者意见建议，欢迎写信到 yummyl.lau@gmail.com 。
-
 也可以添加微信，进反馈群讨论反馈。
 
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code_wx.jpg" width = "385" height = "385"/>

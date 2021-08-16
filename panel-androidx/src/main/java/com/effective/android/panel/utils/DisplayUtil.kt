@@ -15,10 +15,11 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import com.effective.android.panel.Constants
-import java.lang.Exception
+import com.effective.android.panel.R
 
 
 object DisplayUtil {
+
     /**
      * 获取toolar的高度，但是这个方法仅仅在非沉浸下才有用。
      *
@@ -117,8 +118,17 @@ object DisplayUtil {
 
 
     @JvmStatic
-    fun getNavigationBarHeight(context: Context): Int {
-        return getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
+    fun getNavigationBarHeight(context: Context, window: Window): Int {
+        val deviceNavigationHeight = getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
+        //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
+        val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
+        if (manufacturer.toLowerCase().contains("samsung") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            val stableBottom = window.decorView.rootWindowInsets.stableInsetBottom
+            if (stableBottom < deviceNavigationHeight) {
+                return stableBottom;
+            }
+        }
+        return deviceNavigationHeight;
     }
 
     private fun getInternalDimensionSize(res: Resources, key: String): Int {
@@ -174,12 +184,20 @@ object DisplayUtil {
     fun isNavBarVisible(context: Context, window: Window): Boolean {
         var isVisible = false
         var viewGroup: ViewGroup? = window.decorView as ViewGroup?
-        if (viewGroup != null) {
-            for (i in 0 until viewGroup.childCount) {
-                var id: Int = viewGroup.getChildAt(i).id
+        viewGroup?.let {
+            for (i in 0 until it.childCount) {
+                var id: Int = it.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
                     var resourceEntryName: String? = context.resources.getResourceEntryName(id)
-                    if ((("navigationBarBackground" == resourceEntryName) && viewGroup.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                    if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                        isVisible = true
+                    }
+                }
+            }
+            if (!isVisible) {
+                val navigationBarView: View? = it.findViewById(R.id.immersion_navigation_bar_view)
+                navigationBarView?.let { navigationBar ->
+                    if (navigationBar.visibility == View.VISIBLE) {
                         isVisible = true
                     }
                 }

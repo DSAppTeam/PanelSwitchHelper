@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -62,6 +63,7 @@ public class ChatSuperActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_super_chat_layout);
         mBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this, R.color.common_page_bg_color));
         initView();
@@ -70,7 +72,7 @@ public class ChatSuperActivity extends AppCompatActivity {
     private void initView() {
         mBinding.tipViewTop.setVisibility(View.VISIBLE);
         mBinding.tipViewBottom.setVisibility(View.VISIBLE);
-        mBinding.tipView.setVisibility(View.VISIBLE);
+
         mLinearLayoutManager = new LinearLayoutManager(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new ChatAdapter(this, 4);
@@ -91,7 +93,6 @@ public class ChatSuperActivity extends AppCompatActivity {
             Toast.makeText(ChatSuperActivity.this, "已清除面板高度缓存，可拉起功能面板测试默认高度", Toast.LENGTH_SHORT).show();
         });
     }
-
 
     private void scrollToBottom() {
         mBinding.getRoot().post(() -> mLinearLayoutManager.scrollToPosition(mAdapter.getItemCount() - 1));
@@ -135,6 +136,7 @@ public class ChatSuperActivity extends AppCompatActivity {
                         public void onNone() {
                             Log.d(TAG, "隐藏所有面板");
                             mBinding.emotionBtn.setSelected(false);
+                            mBinding.mutilEditText.clearFocus();
                         }
 
                         @Override
@@ -293,6 +295,10 @@ public class ChatSuperActivity extends AppCompatActivity {
                 }
             });
         }
+        mHelper.addSecondaryInputView(mBinding.mutilEditText);
+        //如果Edittext的生命周期小于当前activity，则需要remove避免内存泄漏
+        // mHelper.removeSecondaryInputView(mBinding.mutilEditText);
+        mBinding.recyclerView.setPanelSwitchHelper(mHelper);
     }
 
     private int unfilledHeight = 0;

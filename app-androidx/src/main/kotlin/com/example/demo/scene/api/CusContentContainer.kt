@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.effective.R
@@ -31,21 +33,23 @@ class CusContentContainer @JvmOverloads constructor(context: Context?, attrs: At
     private lateinit var contentContainer: ContentContainerImpl
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CusContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.CusContentContainer_cus_edit_view, -1)
-        resetViewId = typedArray.getResourceId(R.styleable.CusContentContainer_cus_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.CusContentContainer_cus_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.CusContentContainer_edit_view, -1)
+        resetViewId = typedArray.getResourceId(R.styleable.CusContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.CusContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, resetViewId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        addView(editText, 0, LayoutParams(1, 1))
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
-        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize, reset)
     }
 
     override fun findTriggerView(id: Int): View? {

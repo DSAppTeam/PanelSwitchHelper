@@ -1,8 +1,9 @@
-package com.effective.android.panel
+package com.effective.android.panel.log
 
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import com.effective.android.panel.Constants
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener
@@ -46,7 +47,8 @@ object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelC
     }
 
     override fun onPanel(panel: IPanelView?) {
-        log("OnPanelChangeListener#onPanel", "panel：" + (panel?.toString() ?: "null"))
+        log("OnPanelChangeListener#onPanel", "panel：" + (panel?.toString()
+                ?: "null"))
     }
 
     override fun onPanelSizeChange(panel: IPanelView?, portrait: Boolean, oldWidth: Int, oldHeight: Int, width: Int, height: Int) {
@@ -58,6 +60,7 @@ object LogTracker : OnEditFocusChangeListener, OnKeyboardStateListener, OnPanelC
     }
 
     override fun onClickBefore(view: View?) {
-        log("OnViewClickListener#onViewClick", "view is " + (view?.toString() ?: " null "))
+        log("OnViewClickListener#onViewClick", "view is " + (view?.toString()
+                ?: " null "))
     }
 }

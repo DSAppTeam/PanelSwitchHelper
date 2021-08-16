@@ -47,9 +47,9 @@ class LinearContentContainer : LinearLayout, IContentContainer {
 
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinearContentContainer, defStyleAttr, 0)
-        editTextId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_edit_view, -1)
-        autoResetId = typedArray.getResourceId(R.styleable.LinearContentContainer_linear_auto_reset_area, -1)
-        autoResetByOnTouch = typedArray.getBoolean(R.styleable.LinearContentContainer_linear_auto_reset_enable, autoResetByOnTouch)
+        editTextId = typedArray.getResourceId(R.styleable.LinearContentContainer_edit_view, -1)
+        autoResetId = typedArray.getResourceId(R.styleable.LinearContentContainer_auto_reset_area, -1)
+        autoResetByOnTouch = typedArray.getBoolean(R.styleable.LinearContentContainer_auto_reset_enable, autoResetByOnTouch)
         typedArray.recycle()
         orientation = VERTICAL
     }
@@ -57,6 +57,10 @@ class LinearContentContainer : LinearLayout, IContentContainer {
     override fun onFinishInflate() {
         super.onFinishInflate()
         contentContainer = ContentContainerImpl(this, autoResetByOnTouch, editTextId, autoResetId)
+        val editText = getInputActionImpl().getFullScreenPixelInputView()
+        val layoutParams = LayoutParams(1, 1)
+        layoutParams.topMargin = -1
+        addView(editText,0,layoutParams)
     }
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
