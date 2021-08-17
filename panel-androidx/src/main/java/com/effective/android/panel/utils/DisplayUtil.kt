@@ -10,10 +10,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import com.effective.android.panel.Constants
 import com.effective.android.panel.R
 
@@ -180,15 +177,14 @@ object DisplayUtil {
      * @param window
      * @return
      */
-    @JvmStatic
     fun isNavBarVisible(context: Context, window: Window): Boolean {
         var isVisible = false
-        var viewGroup: ViewGroup? = window.decorView as ViewGroup?
+        val viewGroup: ViewGroup? = window.decorView as ViewGroup?
         viewGroup?.let {
             for (i in 0 until it.childCount) {
-                var id: Int = it.getChildAt(i).id
+                val id: Int = it.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
-                    var resourceEntryName: String? = context.resources.getResourceEntryName(id)
+                    val resourceEntryName: String? = context.resources.getResourceEntryName(id)
                     if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
                         isVisible = true
                     }
@@ -203,22 +199,64 @@ object DisplayUtil {
                 }
             }
         }
+        val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
+        val isSamsung = manufacturer.toLowerCase().contains("samsung")
+        if((viewGroup == null || !isVisible) && isSamsung){
+            isVisible = hasNavBar(context)
+        }
         if (isVisible) {
             // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入之后判断错误
             // 这个问题在 OneUI 2 & android 10 版本已修复，
-            val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
-            if (manufacturer.toLowerCase().contains("samsung")
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (isSamsung && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 try {
-                    isVisible = Settings.Global.getInt(context.contentResolver, "navigationbar_hide_bar_enabled") == 0
-                    if(isVisible) return true
+                    isVisible = Settings.Global.getInt(
+                        context.contentResolver,
+                        "navigationbar_hide_bar_enabled"
+                    ) == 0
+                    if (isVisible) return true
                 } catch (e: Exception) {
-                    //nothing to do
+                    e.printStackTrace()
                 }
             }
             isVisible = !hasSystemUIFlag(window, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
         }
         return isVisible
+    }
+
+    private fun hasNavBar(context: Context): Boolean {
+        val res = context.resources
+        val resourceId = res.getIdentifier(
+            Constants.SHOW_NAV_BAR_RES_NAME,
+            "bool",
+            "android"
+        )
+        return if (resourceId != 0) {
+            var hasNav = res.getBoolean(resourceId)
+            // check override flag (see static block)
+
+            // Android allows a system property to override the presence of the navigation bar.
+            // Used by the emulator.
+            // See https://github.com/android/platform_frameworks_base/blob/master/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java#L1076
+            var sNavBarOverride:String? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                try {
+                    val c = Class.forName("android.os.SystemProperties")
+                    val m = c.getDeclaredMethod("get", String::class.java)
+                    m.isAccessible = true
+                    sNavBarOverride = m.invoke(null, "qemu.hw.mainkeys") as? String
+                } catch (e: Throwable) {
+                    sNavBarOverride = null
+                }
+            }
+            if ("1" == sNavBarOverride) {
+                hasNav = false
+            } else if ("0" == sNavBarOverride) {
+                hasNav = true
+            }
+            hasNav
+        } else { // fallback
+            !ViewConfiguration.get(context).hasPermanentMenuKey()
+        }
     }
 
     @JvmStatic
