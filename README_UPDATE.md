@@ -64,3 +64,7 @@
 * 1.3.11 Fixed some MiUI mobile phone horizontal screen status bar pull up the input method abnormal problem, optimize the Log display, unify the prefix of all custom panel container property names
 * 1.3.12 compatible with floating keyboard scene
 * 1.3.12 Compatible with some mobile phone lock screen input method issues; compatible with Huawei customized tablet issues; optimize the full screen display speed;
+* Starting from 1.4.0, only Androidx is supported, non-Androidx is no longer maintained
+     * Fix the compatibility issue of some Samsung devices
+     * Added `setTriggerViewClickInterceptor` to support dynamic control of whether TriggerView automatically responds to the "click to trigger switch panel" behavior, the default is corresponding
+     * Added `DisUtils#setCompatSizeProxy` to support dynamic setting of pixel conversion logic

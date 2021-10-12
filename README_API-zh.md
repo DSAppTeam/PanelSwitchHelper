@@ -172,6 +172,7 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
 5. resetState，隐藏所有面板
 6. hookSystemBackByPanelSwitcher 拦截返回，如果当前用户按下返回或者业务返回键，则优先隐藏面板
 7. addSecondaryInputView/removeSecondaryInputView 添加额外输入源，用于驱动输入法显示
+8. setTriggerViewClickInterceptor 支持动态控制 TriggerView 是否自动响应"点击触发切换面板"行为，默认相应
 
 
 
