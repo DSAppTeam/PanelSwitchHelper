@@ -29,7 +29,7 @@ interface IInputAction {
     fun setEditTextClickListener(l: View.OnClickListener)
     fun setEditTextFocusChangeListener(l: OnFocusChangeListener)
     fun requestKeyboard()
-    fun hideKeyboard(clearFocus : Boolean)
+    fun hideKeyboard(isKeyboardShowing : Boolean,clearFocus : Boolean)
     fun showKeyboard() : Boolean
     fun getFullScreenPixelInputView(): EditText
     fun updateFullScreenParams(isFullScreen : Boolean, panelId : Int, panelHeight : Int)

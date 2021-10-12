@@ -222,9 +222,26 @@ object DisplayUtil {
 
     @JvmStatic
     fun dip2px(context: Context, dipValue: Float): Int {
+        compatSizeProxy?.let {
+            return it.dip2px(context, dipValue)
+        }
         val scale: Float = context.resources.displayMetrics.density
         return (dipValue * scale + 0.5f).toInt()
     }
 
     fun hasSystemUIFlag(window: Window, flag: Int): Boolean = window.decorView.systemUiVisibility and flag == flag
+
+    interface CompatSizeProxy {
+        fun dip2px(context: Context, dipValue: Float): Int
+    }
+
+    private var compatSizeProxy: CompatSizeProxy? = null
+
+    /**
+     * 兼容autoSize
+     */
+    @JvmStatic
+    fun setCompatSizeProxy(proxy: CompatSizeProxy) {
+        this.compatSizeProxy = compatSizeProxy
+    }
 }

@@ -296,9 +296,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 }
             }
 
-            override fun hideKeyboard(clearFocus: Boolean) {
+            override fun hideKeyboard(isKeyboardShowing: Boolean, clearFocus: Boolean) {
                 val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
-                PanelUtil.hideKeyboard(context, targetView)
+                if (isKeyboardShowing) {
+                    PanelUtil.hideKeyboard(context, targetView)
+                }
                 if (clearFocus) {
                     targetView.clearFocus()
                 }
