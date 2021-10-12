@@ -24,7 +24,7 @@ For more details, please refer to
 
  * [Introduction to scenario usage](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE.md)
  * [API Usage Guide](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API.md)
- * [Library version update log] (https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE.md)
+ * [Library version update log](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE.md)
 
 Demo content is as follows
 
