@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion config.compile_sdk_version
@@ -31,11 +31,30 @@ dependencies {
     implementation deps.androidx.appcompat
 }
 
-publish {
-    userOrg = 'yummylau'
-    groupId = 'com.effective.android'
-    artifactId = 'panelSwitchHelper-androidx'
-    publishVersion = '1.3.13'
-    desc = 'the helper that is used to checkout panel when we are chatting'
-    website = 'https://github.com/YummyLau/Anchors'
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
 }
+
+def versionName = "1.4.0"
+
+// Because the components are created only during the afterEvaluate phase, you must
+// configure your publications using the afterEvaluate() lifecycle method.
+afterEvaluate {
+    publishing {
+        publications {
+            Production(MavenPublication) {
+                // Creates a Maven publication called "release".
+                // Applies the component for the release build variant.
+                from components.release
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.github.Yummylau'
+                artifactId = 'panelSwitchHelper-androidx'
+                version = versionName
+                // 上传source，这样使用放可以看到方法注释
+                artifact generateSourcesJar
+            }
+        }
+    }
+}
+
