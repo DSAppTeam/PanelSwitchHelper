@@ -173,3 +173,4 @@ In addition to the functions provided in the above construction process, the fol
 5. resetState, hide all panels
 6. hookSystemBackByPanelSwitcher intercepts the return, if the current user presses the return or business return button, the panel is preferentially hidden
 7. addSecondaryInputView/removeSecondaryInputView to add an additional input source to drive the input method display
+8. setTriggerViewClickInterceptor supports dynamic control of whether TriggerView automatically responds to the "click to trigger the switch panel" behavior, the default is corresponding
