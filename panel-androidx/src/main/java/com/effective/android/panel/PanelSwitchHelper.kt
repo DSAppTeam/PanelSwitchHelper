@@ -9,10 +9,7 @@ import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.effective.android.panel.interfaces.ContentScrollMeasurer
-import com.effective.android.panel.interfaces.ContentScrollMeasurerBuilder
-import com.effective.android.panel.interfaces.PanelHeightMeasurer
-import com.effective.android.panel.interfaces.PanelHeightMeasurerBuilder
+import com.effective.android.panel.interfaces.*
 import com.effective.android.panel.interfaces.listener.*
 import com.effective.android.panel.log.LogTracker
 import com.effective.android.panel.view.PanelSwitchLayout
@@ -40,6 +37,7 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
             builder.editFocusChangeListeners.add(LogTracker)
         }
         mPanelSwitchLayout = builder.panelSwitchLayout!!
+        mPanelSwitchLayout.setTriggerViewClickInterceptor(builder.triggerViewClickInterceptor)
         mPanelSwitchLayout.setContentScrollOutsizeEnable(builder.contentScrollOutsideEnable)
         mPanelSwitchLayout.setScrollMeasurers(builder.contentScrollMeasurers)
         mPanelSwitchLayout.setPanelHeightMeasurers(builder.panelHeightMeasurers)
@@ -50,11 +48,11 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         }
     }
 
-    fun addSecondaryInputView(editText: EditText){
+    fun addSecondaryInputView(editText: EditText) {
         mPanelSwitchLayout.getContentContainer().getInputActionImpl().addSecondaryInputView(editText)
     }
 
-    fun removeSecondaryInputView(editText: EditText){
+    fun removeSecondaryInputView(editText: EditText) {
         mPanelSwitchLayout.getContentContainer().getInputActionImpl().removeSecondaryInputView(editText)
     }
 
@@ -111,6 +109,7 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         internal var editFocusChangeListeners: MutableList<OnEditFocusChangeListener> = mutableListOf()
         internal var contentScrollMeasurers: MutableList<ContentScrollMeasurer> = mutableListOf()
         internal var panelHeightMeasurers: MutableList<PanelHeightMeasurer> = mutableListOf()
+        internal var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
         internal var panelSwitchLayout: PanelSwitchLayout? = null
         internal var window: Window
         internal var rootView: View
@@ -126,6 +125,11 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
             this.window = window
             requireNotNull(root) { "PanelSwitchHelper\$Builder#build : rootView can't be null!please set value by call #Builder" }
             this.rootView = root
+        }
+
+        fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor): Builder {
+            this.triggerViewClickInterceptor = interceptor;
+            return this;
         }
 
         /**

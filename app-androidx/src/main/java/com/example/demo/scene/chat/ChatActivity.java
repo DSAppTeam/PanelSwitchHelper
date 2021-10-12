@@ -23,6 +23,7 @@ import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.PanelHeightMeasurer;
+import com.effective.android.panel.interfaces.TriggerViewClickInterceptor;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.utils.DisplayUtil;
 import com.effective.android.panel.view.panel.IPanelView;
@@ -47,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ChatActivity extends AppCompatActivity {
 
-     public static void start(Context context, @ChatPageType int type) {
+    public static void start(Context context, @ChatPageType int type) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(Constants.KEY_PAGE_TYPE, type);
         context.startActivity(intent);
@@ -146,6 +147,13 @@ public class ChatActivity extends AppCompatActivity {
                         if (hasFocus) {
                             scrollToBottom();
                         }
+                    })
+                    .setTriggerViewClickInterceptor((TriggerViewClickInterceptor) triggerId -> {
+                        if (R.id.emotion_btn == triggerId) {
+                            Toast.makeText(ChatActivity.this, "R.id.emotion_btn 被拦截，可在 setTriggerViewClickInterceptor 解除", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        return false;
                     })
                     //可选
                     .addViewClickListener(view -> {

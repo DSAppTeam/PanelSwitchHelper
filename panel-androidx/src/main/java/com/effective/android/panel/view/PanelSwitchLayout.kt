@@ -19,6 +19,7 @@ import com.effective.android.panel.device.DeviceInfo
 import com.effective.android.panel.device.DeviceRuntime
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.PanelHeightMeasurer
+import com.effective.android.panel.interfaces.TriggerViewClickInterceptor
 import com.effective.android.panel.interfaces.ViewAssertion
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
 import com.effective.android.panel.interfaces.listener.OnKeyboardStateListener
@@ -67,6 +68,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
+    private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
     private val panelHeightMeasurers = HashMap<Int, PanelHeightMeasurer>()
 
@@ -116,6 +118,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed)
         typedArray.recycle()
         TAG = "${PanelSwitchLayout::class.java.simpleName}(${hashCode()})"
+    }
+
+    internal fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor?) {
+        this.triggerViewClickInterceptor = interceptor
     }
 
     internal fun setContentScrollOutsizeEnable(enable: Boolean) {
@@ -184,6 +190,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             val keyView = contentContainer.findTriggerView(panelView.getBindingTriggerViewId())
             keyView?.setOnClickListener(object : OnClickListener {
                 override fun onClick(v: View) {
+                    triggerViewClickInterceptor?.let {
+                        if (it.intercept(v.id)) {
+                            return
+                        }
+                    }
                     val currentTime = System.currentTimeMillis()
                     if (currentTime - preClickTime <= Constants.PROTECT_KEY_CLICK_DURATION) {
                         LogTracker.log("$TAG#initListener", "panelItem invalid click! preClickTime: $preClickTime currentClickTime: $currentTime")
@@ -625,7 +636,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             //模仿系统输入法隐藏，如果直接掉  checkoutPanel(Constants.PANEL_NONE)，可能导致隐藏时上层 recyclerview 因为 layout 导致界面出现短暂卡顿。
             if (isKeyboardState()) {
                 if (isKeyboardShowing) {
-                    contentContainer.getInputActionImpl().hideKeyboard(true)
+                    contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, true)
                 } else {
                     checkoutPanel(Constants.PANEL_NONE)
                     return false
@@ -667,7 +678,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
         when (panelId) {
             Constants.PANEL_NONE -> {
-                contentContainer.getInputActionImpl().hideKeyboard(true)
+                contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, true)
                 contentContainer.getResetActionImpl().enableReset(false)
             }
 
@@ -687,7 +698,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 if (size.first != oldSize.first || size.second != oldSize.second) {
                     notifyPanelSizeChange(panelContainer.getPanelView(panelId), isPortrait(context), oldSize.first, oldSize.second, size.first, size.second)
                 }
-                contentContainer.getInputActionImpl().hideKeyboard(false)
+                contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, false)
                 contentContainer.getResetActionImpl().enableReset(true)
             }
         }
