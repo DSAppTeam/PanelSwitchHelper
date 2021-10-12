@@ -49,5 +49,6 @@
 * 自定义各个子View滑动
 * 支持模拟多个EditText拉起面板
 
+<img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/api/cus_scroll_content.gif" width = "289" height = "638"/>
 
 
