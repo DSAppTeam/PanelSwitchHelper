@@ -18,6 +18,8 @@ object Constants {
     const val NAVIGATION_BAR_HEIGHT_RES_NAME = "navigation_bar_height"
     const val DIMEN = "dimen"
     const val ANDROID = "android"
+    const val SHOW_NAV_BAR_RES_NAME = "config_showNavigationBar"
+
     /**
      * panel id, custom panel (PanelView) id is panelView's triggerViewId
      * [PanelView.getTriggerViewId]
