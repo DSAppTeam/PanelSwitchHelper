@@ -11,13 +11,13 @@
         <RelativeLayout
             android:id="@+id/video_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/dp_200">
 
             <!-- 模仿视频 -->
             <VideoView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_200" />
+                android:layout_height="match_parent" />
 
             <RelativeLayout
                 android:id="@+id/cover_layout"
@@ -41,20 +41,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/sh_bilibili_input_l"
                     android:gravity="center"
                     android:paddingLeft="15dp"
                     android:paddingTop="3dp"
                     android:paddingRight="45dp"
-                    android:visibility="gone"
-                    tools:visibility="visible"
                     android:paddingBottom="3dp"
                     android:text="发个友善的弹幕见证当下"
                     android:textColor="@android:color/white"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/checkout"

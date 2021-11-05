@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -90,23 +91,29 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBinding.videoView.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mBinding.videoContainer.getLayoutParams();
+        RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) mBinding.videoView.getLayoutParams();
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             checkoutSystemUIMode(true);
             psize = DisplayUtils.getScreenSize(this);
             layoutParams.width = psize.first;
+            videoViewLayoutParams.width = psize.first;
             layoutParams.height = psize.first * 9 / 16;
+            videoViewLayoutParams.height = psize.first * 9 / 16;
             mBinding.inputH.setVisibility(View.GONE);
             mBinding.checkout.setVisibility(View.VISIBLE);
         } else {
             checkoutSystemUIMode(false);
             Pair<Integer, Integer> size = DisplayUtils.getScreenSize(this);
             layoutParams.width = size.first;
+            videoViewLayoutParams.width = size.first;
             layoutParams.height = psize.first;
+            videoViewLayoutParams.height = psize.first;
             mBinding.inputH.setVisibility(View.VISIBLE);
             mBinding.checkout.setVisibility(View.GONE);
         }
-        mBinding.videoView.setLayoutParams(layoutParams);
+        mBinding.videoContainer.setLayoutParams(layoutParams);
+        mBinding.videoView.setLayoutParams(videoViewLayoutParams);
     }
 
     private void checkoutSystemUIMode(boolean isP){

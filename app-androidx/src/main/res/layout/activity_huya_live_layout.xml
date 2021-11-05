@@ -11,13 +11,13 @@
         <RelativeLayout
             android:id="@+id/video_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/dp_200">
 
             <!-- 模仿视频 -->
             <VideoView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_200" />
+                android:layout_height="match_parent" />
 
             <RelativeLayout
                 android:id="@+id/cover_layout"
