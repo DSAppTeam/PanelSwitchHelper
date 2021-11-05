@@ -119,6 +119,7 @@ public class ChatActivity extends AppCompatActivity {
         mAdapter = new ChatAdapter(this, 4);
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.send.setOnClickListener(v -> {
+            this.finish();
             String content = mBinding.editText.getText().toString();
             if (TextUtils.isEmpty(content)) {
                 Toast.makeText(ChatActivity.this, "当前没有输入", Toast.LENGTH_SHORT).show();
