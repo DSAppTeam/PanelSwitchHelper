@@ -303,20 +303,14 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             val keyboardH = if (imeVisible && hasNavigation) imeHeight - navigationH else imeHeight
             LogTracker.log("$TAG#WindowInsetsListener", "KeyBoardHeight : $keyboardH，isShow $imeVisible")
 
-            if (keyboardH != lastKeyboardHeight) {
-                PanelUtil.setKeyBoardHeight(context, keyboardH)
-                requestLayout()
-                LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
-            }
             if (isKeyboardShowing xor imeVisible) {
                 isKeyboardShowing = imeVisible
-                notifyKeyboardState(isKeyboardShowing)
             }
-            val contentHeight = getScreenHeightWithoutSystemUI(window)
-            lastNavigationBarShow = deviceRuntime?.isNavigationBarShow
-            lastKeyboardHeight = keyboardH
-            lastContentHeight = contentHeight
-
+            if (keyboardH != lastKeyboardHeight) {
+                val contentHeight = getScreenHeightWithoutSystemUI(window)
+                handleKeyboardStateChanged(keyboardH, keyboardH, contentHeight)
+                LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
+            }
             ViewCompat.onApplyWindowInsets(view, insets)
         }
     }
@@ -366,52 +360,60 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             logFormatter.addContent("minLimitOpenKeyboardH", "$minLimitOpenKeyboardHeight")
             logFormatter.addContent("lastKeyboardH", "$lastKeyboardHeight")
             logFormatter.addContent("currentKeyboardInfo", "keyboardH : $keyboardHeight, realKeyboardH : $realHeight, isShown : $isKeyboardShowing")
-            if (isKeyboardShowing) {
-                if (keyboardHeight <= minLimitOpenKeyboardHeight) {
-                    isKeyboardShowing = false
-                    if (isKeyboardState()) {
-                        checkoutPanel(Constants.PANEL_NONE)
-                    }
-                    notifyKeyboardState(false)
-                } else {
-                    /**
-                     * 拉起输入法的时候递增，隐藏输入法的时候递减，机型较差的手机需要 requestLayout() 动态更新布局
-                     */
-                    if (keyboardHeight != lastKeyboardHeight) {
-                        LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
-                        PanelUtil.setKeyBoardHeight(context, realHeight)
-                        requestLayout()
-                    }
+            handleKeyboardStateChanged(keyboardHeight, realHeight, contentHeight)
+            logFormatter.log("$TAG#onGlobalLayout")
+
+        }
+        window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+    }
+
+    /**
+     * 键盘高度变化时，状态更新
+     */
+    private fun handleKeyboardStateChanged(keyboardHeight: Int, realHeight: Int, contentHeight: Int) {
+        if (isKeyboardShowing) {
+            if (keyboardHeight <= minLimitOpenKeyboardHeight) {
+                isKeyboardShowing = false
+                if (isKeyboardState()) {
+                    checkoutPanel(Constants.PANEL_NONE)
                 }
+                notifyKeyboardState(false)
             } else {
-                if (keyboardHeight > minLimitOpenKeyboardHeight) {
-                    isKeyboardShowing = true
-                    if (keyboardHeight > lastKeyboardHeight) {
-                        LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
-                        PanelUtil.setKeyBoardHeight(context, realHeight)
-                        requestLayout()
-                    }
-                    if (!isKeyboardState()) {
-                        checkoutPanel(Constants.PANEL_KEYBOARD, false)
-                    }
-                    notifyKeyboardState(true)
-                } else {
-                    //1.3.5 实时兼容导航栏动态隐藏调整布局
-                    lastContentHeight?.let { lastHeight ->
-                        lastNavigationBarShow?.let { lastShow ->
-                            if (lastHeight != contentHeight && lastShow != it.isNavigationBarShow) {
-                                requestLayout()
-                                LogTracker.log("$TAG#onGlobalLayout", "update layout by navigation visibility State change")
-                            }
+                /**
+                 * 拉起输入法的时候递增，隐藏输入法的时候递减，机型较差的手机需要 requestLayout() 动态更新布局
+                 */
+                if (keyboardHeight != lastKeyboardHeight) {
+                    LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
+                    PanelUtil.setKeyBoardHeight(context, realHeight)
+                    requestLayout()
+                }
+            }
+        } else {
+            if (keyboardHeight > minLimitOpenKeyboardHeight) {
+                isKeyboardShowing = true
+                if (keyboardHeight > lastKeyboardHeight) {
+                    LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
+                    PanelUtil.setKeyBoardHeight(context, realHeight)
+                    requestLayout()
+                }
+                if (!isKeyboardState()) {
+                    checkoutPanel(Constants.PANEL_KEYBOARD, false)
+                }
+                notifyKeyboardState(true)
+            } else {
+                //1.3.5 实时兼容导航栏动态隐藏调整布局
+                lastContentHeight?.let { lastHeight ->
+                    lastNavigationBarShow?.let { lastShow ->
+                        if (lastHeight != contentHeight && lastShow != deviceRuntime?.isNavigationBarShow) {
+                            requestLayout()
+                            LogTracker.log("$TAG#onGlobalLayout", "update layout by navigation visibility State change")
                         }
                     }
                 }
             }
-            lastKeyboardHeight = keyboardHeight
-            lastContentHeight = contentHeight
-            logFormatter.log("$TAG#onGlobalLayout")
         }
-        window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+        lastKeyboardHeight = keyboardHeight
+        lastContentHeight = contentHeight
     }
 
 
