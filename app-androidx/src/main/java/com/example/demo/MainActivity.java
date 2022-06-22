@@ -23,6 +23,9 @@ import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.api.ContentActivity;
 import com.example.demo.scene.api.CusPanelActivity;
 import com.example.demo.scene.api.DefaultHeightPanelActivity;
+import com.example.demo.scene.api.FloatContentView;
+import com.example.demo.scene.api.FloatWindowManager;
+import com.example.demo.scene.api.FloatWindowPermissionChecker;
 import com.example.demo.scene.api.ResetActivity;
 import com.example.demo.scene.chat.ChatActivity;
 import com.example.demo.scene.chat.ChatCusContentScrollActivity;
@@ -31,10 +34,9 @@ import com.example.demo.scene.chat.ChatDialogFragment;
 import com.example.demo.scene.chat.ChatFragmentActivity;
 import com.example.demo.scene.chat.ChatPopupWindow;
 import com.example.demo.scene.chat.ChatSuperActivity;
-import com.example.demo.scene.feed.FeedActivity;
 import com.example.demo.scene.feed.FeedDialogActivity;
-import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.scene.live.douyin.PhoneDouyinLiveActivity;
+import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.scene.video.BiliBiliSampleActivity;
 
 import java.util.ArrayList;
@@ -72,6 +74,8 @@ public class MainActivity extends AppCompatActivity{
     final String scene_3 = "PC直播(优于虎牙效果)";
     final String scene_4 = "手机直播(优于抖音效果)";
     final String scene_5 = "复杂聊天场景";
+    final String scene_6 = "悬浮窗聊天场景-无权限";
+    final String scene_7 = "悬浮窗聊天场景-有权限";
 
     final String api_content_container_title = "api 内容容器及扩展";
     final String api_content_container_1 = "基于 LinearLayout 实现";
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity{
             {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {window_1,window_2,window_3},
-            {scene_1,scene_2,scene_3,scene_4,scene_5},
+            {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7},
             {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
             {api_define_content_container_scroll},
             {api_cus_panel,api_cus_panel_height},
@@ -232,6 +236,16 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
 
+                    case scene_6: {
+                        showFloatWithoutPermission();
+                        break;
+                    }
+
+                    case scene_7: {
+                        showFloatWithPermission();
+                        break;
+                    }
+
                     case api_cus_panel:{
                         startActivity(new Intent(MainActivity.this, CusPanelActivity.class));
                         break;
@@ -288,5 +302,27 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+    }
+
+    private void showFloatWithoutPermission() {
+        FloatContentView contentView = new FloatContentView(MainActivity.this);
+        contentView.setBackPressedListener(() -> {
+            FloatWindowManager.removeViewWithoutPermission(MainActivity.this, contentView);
+            return true;
+        });
+        FloatWindowManager.addViewWithoutPermission(MainActivity.this, contentView);
+    }
+
+    private void showFloatWithPermission() {
+        if (FloatWindowPermissionChecker.checkFloatWindowPermission(MainActivity.this)) {
+            FloatContentView contentView = new FloatContentView(MainActivity.this);
+            contentView.setBackPressedListener(() -> {
+                FloatWindowManager.removeViewWithoutPermission(MainActivity.this, contentView);
+                return true;
+            });
+            FloatWindowManager.addViewWithPermission(MainActivity.this, contentView);
+        } else {
+            FloatWindowManager.requestPermission(MainActivity.this);
+        }
     }
 }

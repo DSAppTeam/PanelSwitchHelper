@@ -12,6 +12,7 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.effective.android.panel.Constants
@@ -70,6 +71,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
+    private var windowInsetsRootView: View? = null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
     private val panelHeightMeasurers = HashMap<Int, PanelHeightMeasurer>()
@@ -273,13 +275,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var minLimitOpenKeyboardHeight = 300
     private var minLimitCloseKeyboardHeight: Int = 0
 
-    internal fun bindWindow(window: Window) {
+
+    internal fun bindWindow(window: Window, windowInsetsRootView: View?) {
         this.window = window
+        this.windowInsetsRootView = windowInsetsRootView
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         deviceRuntime = DeviceRuntime(context, window)
         deviceRuntime?.let {
             contentContainer.getInputActionImpl().updateFullScreenParams(it.isFullScreen, panelId, getCompatPanelHeight(panelId))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (supportKeyboardFeature()) {
                 keyboardChangedListener30Impl()
             } else {
                 keyboardChangedListener(window, it)
@@ -288,11 +292,23 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
+    /**
+     * 是否支持Android 11 方案获取键盘高度
+     */
+    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.R)
+    private fun supportKeyboardFeature(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    }
+
+    /**
+     * Android 11 监听键盘变化
+     */
     private fun keyboardChangedListener30Impl() {
         if (!this::window.isInitialized) {
             return
         }
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView.rootView) { view, insets ->
+        val rootView = windowInsetsRootView ?: window.decorView.rootView
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
             // 键盘
             val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
             val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
@@ -300,12 +316,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             val hasNavigation = insets.isVisible(WindowInsetsCompat.Type.navigationBars())
             val navigationH = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
 
-            val keyboardH = if (imeVisible && hasNavigation) imeHeight - navigationH else imeHeight
+            var keyboardH = if (imeVisible && hasNavigation) imeHeight - navigationH else imeHeight
+            // 发现部分机型键盘可见时，键盘高度返回0，因此这里用已保存的键盘高度
+            if (imeVisible && keyboardH == 0) {
+                keyboardH = getKeyBoardHeight(context)
+            }
             LogTracker.log("$TAG#WindowInsetsListener", "KeyBoardHeight : $keyboardH，isShow $imeVisible")
 
-            if (isKeyboardShowing xor imeVisible) {
-                isKeyboardShowing = imeVisible
-            }
             if (keyboardH != lastKeyboardHeight) {
                 val contentHeight = getScreenHeightWithoutSystemUI(window)
                 handleKeyboardStateChanged(keyboardH, keyboardH, contentHeight)
@@ -418,7 +435,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun tryBindKeyboardChangedListener() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (supportKeyboardFeature()) {
             keyboardChangedListener30Impl()
         } else {
             globalLayoutListener?.let {
@@ -430,7 +447,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun releaseKeyboardChangedListener() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (supportKeyboardFeature()) {
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
         } else {
             globalLayoutListener?.let {

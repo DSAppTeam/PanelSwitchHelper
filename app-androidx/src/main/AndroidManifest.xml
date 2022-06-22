@@ -3,6 +3,8 @@
     package="com.effective">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 
     <application
         android:name="com.example.demo.App"
