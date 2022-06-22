@@ -42,7 +42,7 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         mPanelSwitchLayout.setScrollMeasurers(builder.contentScrollMeasurers)
         mPanelSwitchLayout.setPanelHeightMeasurers(builder.panelHeightMeasurers)
         mPanelSwitchLayout.bindListener(builder.viewClickListeners, builder.panelChangeListeners, builder.keyboardStatusListeners, builder.editFocusChangeListeners)
-        mPanelSwitchLayout.bindWindow(builder.window)
+        mPanelSwitchLayout.bindWindow(builder.window, builder.windowInsetsRootView)
         if (showKeyboard) {
             mPanelSwitchLayout.toKeyboardState(true)
         }
@@ -113,8 +113,10 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         internal var panelSwitchLayout: PanelSwitchLayout? = null
         internal var window: Window
         internal var rootView: View
+        internal var windowInsetsRootView: View? = null  // // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
         internal var logTrack = false
         internal var contentScrollOutsideEnable = true
+
 
         constructor(activity: Activity) : this(activity.window, activity.window.decorView.findViewById<View>(R.id.content))
         constructor(fragment: Fragment) : this(fragment.activity?.window, fragment.view)
@@ -126,6 +128,16 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
             requireNotNull(root) { "PanelSwitchHelper\$Builder#build : rootView can't be null!please set value by call #Builder" }
             this.rootView = root
         }
+
+        /**
+         * 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
+         * 当 windowInsetsRootView == null 时，会默认使用 window.decorView 作为 rootView
+         */
+        fun setWindowInsetsRootView(view: View) : Builder{
+            windowInsetsRootView = view
+            return this
+        }
+
 
         fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor): Builder {
             this.triggerViewClickInterceptor = interceptor;
