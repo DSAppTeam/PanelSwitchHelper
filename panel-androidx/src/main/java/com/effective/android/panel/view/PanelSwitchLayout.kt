@@ -1,5 +1,6 @@
 package com.effective.android.panel.view
 
+import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Rect
@@ -7,6 +8,7 @@ import android.os.Build
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
+import android.util.Log
 import android.util.Pair
 import android.view.*
 import android.view.View.OnClickListener
@@ -14,6 +16,7 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.effective.android.panel.Constants
 import com.effective.android.panel.R
@@ -36,9 +39,11 @@ import com.effective.android.panel.utils.DisplayUtil.getScreenRealHeight
 import com.effective.android.panel.utils.DisplayUtil.isPortrait
 import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.utils.PanelUtil.getKeyBoardHeight
+import com.effective.android.panel.utils.isSystemInsetsAnimationSupport
 import com.effective.android.panel.view.content.IContentContainer
 import com.effective.android.panel.view.panel.IPanelView
 import com.effective.android.panel.view.panel.PanelContainer
+import kotlin.math.min
 
 
 /**
@@ -71,6 +76,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
+//    private lateinit var myRootView: View
     private var windowInsetsRootView: View? = null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
@@ -274,23 +280,102 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastKeyboardHeight: Int = 0
     private var minLimitOpenKeyboardHeight = 300
     private var minLimitCloseKeyboardHeight: Int = 0
-
+    private var keyboardAnimation = false
 
     internal fun bindWindow(window: Window, windowInsetsRootView: View?) {
         this.window = window
         this.windowInsetsRootView = windowInsetsRootView
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        deviceRuntime = DeviceRuntime(context, window)
-        deviceRuntime?.let {
-            contentContainer.getInputActionImpl().updateFullScreenParams(it.isFullScreen, panelId, getCompatPanelHeight(panelId))
-            if (supportKeyboardFeature()) {
-                keyboardChangedListener30Impl()
-            } else {
-                keyboardChangedListener(window, it)
+        if (supportKeyboardAnimation()) {
+            keyboardChangedSmooth()
+            keyboardAnimation = true
+        } else {
+            deviceRuntime = DeviceRuntime(context, window)
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            deviceRuntime?.let {
+                contentContainer.getInputActionImpl().updateFullScreenParams(it.isFullScreen, panelId, getCompatPanelHeight(panelId))
+                if (supportKeyboardFeature()) {
+                    keyboardChangedListener30Impl()
+                } else {
+                    keyboardChangedListener(window, it)
+                }
+                hasAttachLister = true
             }
-            hasAttachLister = true
         }
     }
+
+
+
+    private fun keyboardChangedSmooth() {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+        var hasSoftInput = false
+        var floatInitialBottom = 0
+        var startAnimation: WindowInsetsAnimationCompat? = null
+        var transitionY = 0f
+        val callback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
+
+            override fun onPrepare(animation: WindowInsetsAnimationCompat) {
+                super.onPrepare(animation)
+                Log.d("setWindowSoftInput", "onPrepare: ")
+            }
+
+
+            override fun onStart(animation: WindowInsetsAnimationCompat, bounds: WindowInsetsAnimationCompat.BoundsCompat): WindowInsetsAnimationCompat.BoundsCompat {
+                val insetsCompat = ViewCompat.getRootWindowInsets(window.decorView)
+                hasSoftInput = insetsCompat?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
+                startAnimation = animation
+                if (hasSoftInput) {
+                    val location = IntArray(2)
+                    getLocationInWindow(location)
+                    floatInitialBottom = location[1] + height
+                    val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+                    val keyboardH = bounds.upperBound.bottom
+                    val realKeyboardH = keyboardH - navigationBarH
+                    Log.d("Dodge", "keyboard height = $keyboardH")
+                    Log.d("Dodge", "realKeyboardH height = $realKeyboardH")
+                    val panelHeight = panelContainer.layoutParams.height
+                    if (realKeyboardH > 0 && panelHeight != realKeyboardH) {
+                        panelContainer.layoutParams.height = realKeyboardH
+                        lastKeyboardHeight = realKeyboardH
+                        PanelUtil.setKeyBoardHeight(context, realKeyboardH)
+                    }
+                }
+                return bounds
+            }
+
+            override fun onEnd(animation: WindowInsetsAnimationCompat) {
+                super.onEnd(animation)
+            }
+
+            override fun onProgress(insets: WindowInsetsCompat, runningAnimations: MutableList<WindowInsetsAnimationCompat>): WindowInsetsCompat {
+                if (isPanelState(panelId)) {
+                    Log.d("setWindowSoftInput", "isPanelState: ture")
+                } else {
+                    val fraction = startAnimation?.fraction ?: return insets
+                    Log.d("Dodge", "onProgress: fraction = $fraction")
+                    val softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                    Log.d("setWindowSoftInput", "onProgress: softInputHeight = $softInputHeight")
+                    val softInputTop = window.decorView.bottom - softInputHeight
+                    if (hasSoftInput && softInputTop < floatInitialBottom) {
+                        val offset = (softInputTop - floatInitialBottom).toFloat()
+                        if (panelContainer.translationY > offset) {
+                            panelContainer.translationY = offset
+                            (contentContainer as? View)?.translationY = offset
+                            Log.d("Dodge", "onProgress: translationY = $offset")
+                            transitionY = offset
+                        }
+                    } else if (!hasSoftInput) {
+                        val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
+                        panelContainer.translationY = offset
+                        (contentContainer as? View)?.translationY = offset
+                        Log.d("Dodge", "onProgress: translationY = $offset")
+                    }
+                }
+                return insets
+            }
+        }
+        ViewCompat.setWindowInsetsAnimationCallback(window.decorView, callback)
+    }
+
 
     /**
      * 是否支持Android 11 方案获取键盘高度
@@ -299,6 +384,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun supportKeyboardFeature(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
     }
+
+    /**
+     * 是否支持键盘过渡动画
+     */
+    private fun supportKeyboardAnimation(): Boolean {
+        return window.decorView.isSystemInsetsAnimationSupport()
+//        return false
+    }
+
 
     /**
      * Android 11 监听键盘变化
@@ -769,6 +863,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             Constants.PANEL_NONE -> {
                 contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, true)
                 contentContainer.getResetActionImpl().enableReset(false)
+                if (keyboardAnimation) {
+                    updatePanelStateByAnimation(0)
+                }
             }
 
             Constants.PANEL_KEYBOARD -> {
@@ -789,6 +886,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 }
                 contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, false)
                 contentContainer.getResetActionImpl().enableReset(true)
+                // Android 11 修改偏移量来显示面板
+                if (keyboardAnimation) {
+                    val compatPanelHeight = getCompatPanelHeight(panelId)
+                    updatePanelStateByAnimation(compatPanelHeight)
+                }
             }
         }
         this.lastPanelId = this.panelId
@@ -800,8 +902,33 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         return true
     }
 
+    /**
+     * 更新面板状态
+     * @param expectHeight 期望高度
+     */
+    private fun updatePanelStateByAnimation(expectHeight: Int) {
+        val translationY = panelContainer.translationY
+        val targetY = -expectHeight.toFloat()
+        if (translationY != targetY) {
+            val animation = ValueAnimator.ofFloat(translationY, targetY)
+                .setDuration(200)
+            animation.addUpdateListener {
+                val y = it.animatedValue as? Float ?: 0F
+                panelContainer.translationY = y
+                (contentContainer as? View)?.translationY = y
+            }
+            animation.start()
+        }
+        // 尝试对其键盘高度
+        val panelHeight = panelContainer.layoutParams.height
+        if (expectHeight > 0 && panelHeight != expectHeight) {
+            panelContainer.layoutParams.height = expectHeight
+        }
+    }
+
+
     companion object {
-        val TAG = PanelSwitchLayout::class.java.simpleName
+        const val TAG = "PanelSwitchLayout"
         private var preClickTime: Long = 0
     }
 }
