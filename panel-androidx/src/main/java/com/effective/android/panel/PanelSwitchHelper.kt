@@ -113,7 +113,7 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         internal var panelSwitchLayout: PanelSwitchLayout? = null
         internal var window: Window
         internal var rootView: View
-        internal var windowInsetsRootView: View? = null  // // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
+        internal var windowInsetsRootView: View? = null  // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
         internal var logTrack = false
         internal var contentScrollOutsideEnable = true
 

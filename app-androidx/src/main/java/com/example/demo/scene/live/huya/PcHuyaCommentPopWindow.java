@@ -37,7 +37,7 @@ public class PcHuyaCommentPopWindow extends PopupWindow {
         ColorDrawable dw = new ColorDrawable(Color.TRANSPARENT);
         setBackgroundDrawable(dw);
         setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         setContentView(view);
         view.findViewById(R.id.send).setOnClickListener(v -> ((EditText) view.findViewById(R.id.input)).setText(""));
         ((EditText) view.findViewById(R.id.input)).addTextChangedListener(new TextWatcher() {
