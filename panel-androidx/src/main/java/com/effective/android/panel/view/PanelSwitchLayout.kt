@@ -669,6 +669,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             return
         }
 
+        if (keyboardAnimation) {
+            super.onLayout(changed, l, t, r, b)
+            return
+        }
         deviceRuntime?.let {
             val logFormatter = LogFormatter.setUp()
             val deviceInfo = it.getDeviceInfoByOrientation()
