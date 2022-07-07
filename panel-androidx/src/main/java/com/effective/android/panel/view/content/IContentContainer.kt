@@ -14,6 +14,9 @@ interface IContentContainer {
                         contentScrollMeasurer: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                         reset: Boolean)
 
+    fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float)
+
+
     fun changeContainerHeight(targetHeight: Int)
 
     //输入相关

@@ -3,6 +3,7 @@ package com.effective.android.panel.view.content
 import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.*
@@ -400,6 +401,27 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) layout parent(l $l,t $t,r $r,b $b) self(l ${viewPosition.changeL},t ${viewPosition.changeT},r ${viewPosition.changeR}, b${viewPosition.changeB})")
                 }
             }
+        }
+    }
+
+    /**
+     * Android 11 键盘动画方式的控件干预实现
+     */
+    override fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float) {
+        mViewGroup.translationY = contentTranslationY
+        contentScrollMeasurers.forEach {  contentMeasure ->
+            val viewId = contentMeasure.getScrollViewId()
+            val view = (mViewGroup).findViewById<View>(viewId)
+            val willScrollDistance = contentMeasure.getScrollDistance(885)
+            val x = 885 - willScrollDistance
+            val y = -contentTranslationY
+
+            if (y < x) {
+                view.translationY = y
+            } else {
+                view.translationY = x.toFloat()
+            }
+            Log.d("translationContainer", "translationContainer: willScrollDistance = $willScrollDistance , y = $y")
         }
     }
 

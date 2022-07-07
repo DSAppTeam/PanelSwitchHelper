@@ -5,9 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import com.effective.android.panel.R
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
@@ -67,6 +65,10 @@ class FrameContentContainer : FrameLayout, IContentContainer {
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
         contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
+    }
+
+    override fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float) {
+        contentContainer.translationContainer(contentScrollMeasurers,defaultScrollHeight, contentTranslationY)
     }
 
     override fun findTriggerView(id: Int): View? {

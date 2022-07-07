@@ -67,6 +67,10 @@ class RelativeContentContainer : RelativeLayout, IContentContainer {
         contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize, reset)
     }
 
+    override fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float) {
+        contentContainer.translationContainer(contentScrollMeasurers,defaultScrollHeight, contentTranslationY)
+    }
+
     override fun findTriggerView(id: Int): View? {
         return contentContainer.findTriggerView(id)
     }
