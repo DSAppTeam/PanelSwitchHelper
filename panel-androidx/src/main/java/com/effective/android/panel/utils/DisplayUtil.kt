@@ -120,12 +120,14 @@ object DisplayUtil {
         //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
         val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
         if (manufacturer.toLowerCase().contains("samsung") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            val stableBottom = window.decorView.rootWindowInsets.stableInsetBottom
-            if (stableBottom < deviceNavigationHeight) {
-                return stableBottom;
+            window.decorView.rootWindowInsets?.let {
+                val stableBottom = it.stableInsetBottom
+                if (stableBottom < deviceNavigationHeight) {
+                    return stableBottom
+                }
             }
         }
-        return deviceNavigationHeight;
+        return deviceNavigationHeight
     }
 
     private fun getInternalDimensionSize(res: Resources, key: String): Int {
