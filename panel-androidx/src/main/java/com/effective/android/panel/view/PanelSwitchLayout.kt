@@ -354,19 +354,20 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     Log.d("Dodge", "onProgress: fraction = $fraction")
                     val softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
                     Log.d("setWindowSoftInput", "onProgress: softInputHeight = $softInputHeight")
+                    Log.d("setWindowSoftInput", "onProgress: decorView.bottom = ${window.decorView.bottom}")
                     val softInputTop = window.decorView.bottom - softInputHeight
                     if (hasSoftInput && softInputTop < floatInitialBottom) {
                         val offset = (softInputTop - floatInitialBottom).toFloat()
                         if (panelContainer.translationY > offset) {
                             panelContainer.translationY = offset
-                            (contentContainer as? View)?.translationY = offset
+                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
                             Log.d("Dodge", "onProgress: translationY = $offset")
                             transitionY = offset
                         }
                     } else if (!hasSoftInput) {
                         val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
                         panelContainer.translationY = offset
-                        (contentContainer as? View)?.translationY = offset
+                        contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
                         Log.d("Dodge", "onProgress: translationY = $offset")
                     }
                 }
@@ -390,7 +391,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      */
     private fun supportKeyboardAnimation(): Boolean {
         return window.decorView.isSystemInsetsAnimationSupport()
-//        return false
+//        return true
     }
 
 
@@ -915,7 +916,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             animation.addUpdateListener {
                 val y = it.animatedValue as? Float ?: 0F
                 panelContainer.translationY = y
-                (contentContainer as? View)?.translationY = y
+                contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, y)
             }
             animation.start()
         }

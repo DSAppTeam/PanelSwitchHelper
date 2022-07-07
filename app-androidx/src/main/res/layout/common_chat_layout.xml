@@ -60,6 +60,7 @@
                     android:tag="recycler_view" />
 
                 <TextView
+                    tools:visibility="visible"
                     android:visibility="gone"
                     android:id="@+id/tip_view_top"
                     android:layout_width="wrap_content"
@@ -77,38 +78,40 @@
                     android:typeface="sans" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tip_view"
                     android:layout_width="wrap_content"
-                    android:layout_marginRight="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="200dp"
+                    android:layout_marginRight="100dp"
                     android:background="@android:color/holo_blue_bright"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:layout_marginTop="200dp"
                     android:text="不做干预，默认 ContentContainer 内的布局会随面板展开而滑动"
                     android:textColor="@android:color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:typeface="sans" />
+                    android:typeface="sans"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tip_view_bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/bottom_action"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="100dp"
                     android:background="@android:color/holo_blue_bright"
                     android:gravity="center"
                     android:padding="10dp"
                     android:tag="tip_view_bottom"
-                    android:layout_above="@+id/bottom_action"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="100dp"
                     android:text="干预滑动，偏底部布局滑动时让其不被盖住"
                     android:textColor="@android:color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:typeface="sans" />
+                    android:typeface="sans"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/bottom_action"
