@@ -86,6 +86,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastPanelId = Constants.PANEL_NONE
     private var lastPanelHeight = -1
     private var animationSpeed = 200 //standard
+    private var enableKeyboardAnimator = false   // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
     private var contentScrollOutsizeEnable = true
 
     private var deviceRuntime: DeviceRuntime? = null
@@ -93,7 +94,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var keyboardStateRunnable = Runnable { toKeyboardState(false) }
 
     private var doingCheckout = false
-    lateinit var TAG: String
 
     private val retryCheckoutKbRunnable = CheckoutKbRunnable()
 
@@ -125,8 +125,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PanelSwitchLayout, defStyleAttr, 0)
         animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed)
+        enableKeyboardAnimator = typedArray.getBoolean(R.styleable.PanelSwitchLayout_enableKeyboardAnimator, false)
         typedArray.recycle()
-        TAG = "${PanelSwitchLayout::class.java.simpleName}(${hashCode()})"
     }
 
     internal fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor?) {
@@ -284,7 +284,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     internal fun bindWindow(window: Window, windowInsetsRootView: View?) {
         this.window = window
         this.windowInsetsRootView = windowInsetsRootView
-        if (supportKeyboardAnimation()) {
+        if (enableKeyboardAnimator && supportKeyboardAnimation()) {
             // 通过监听键盘动画，修改translationY线上面板
             keyboardChangedAnimation()
             keyboardAnimation = true
@@ -415,7 +415,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
             if (keyboardH != lastKeyboardHeight) {
                 val contentHeight = getScreenHeightWithoutSystemUI(window)
-                handleKeyboardStateChanged(keyboardH, keyboardH, contentHeight)
+                val androidQCompatNavH = deviceRuntime?.run { getAndroidQNavHIfNavIsInvisible(this, window) } ?: 0
+                val realHeight = keyboardH + androidQCompatNavH
+                handleKeyboardStateChanged(keyboardH, realHeight, contentHeight)
                 LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
             }
             ViewCompat.onApplyWindowInsets(view, insets)
@@ -913,7 +915,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         val targetY = -expectHeight.toFloat()
         if (translationY != targetY) {
             val animation = ValueAnimator.ofFloat(translationY, targetY)
-                .setDuration(200)
+                .setDuration(animationSpeed.toLong())
             animation.addUpdateListener {
                 val y = it.animatedValue as? Float ?: 0F
                 panelContainer.translationY = y
