@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion config.compile_sdk_version
-    buildToolsVersion config.build_tool_version
+//    buildToolsVersion config.build_tool_version
 
     dataBinding {
         enabled = true

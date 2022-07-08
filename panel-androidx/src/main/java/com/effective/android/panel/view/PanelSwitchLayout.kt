@@ -8,7 +8,6 @@ import android.os.Build
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Pair
 import android.view.*
 import android.view.View.OnClickListener
@@ -76,7 +75,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var contentContainer: IContentContainer
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
-//    private lateinit var myRootView: View
+
     private var windowInsetsRootView: View? = null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
@@ -286,9 +285,11 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         this.window = window
         this.windowInsetsRootView = windowInsetsRootView
         if (supportKeyboardAnimation()) {
-            keyboardChangedSmooth()
+            // 通过监听键盘动画，修改translationY线上面板
+            keyboardChangedAnimation()
             keyboardAnimation = true
         } else {
+            // 通过获取键盘高度，触发onLayout修改面板高度
             deviceRuntime = DeviceRuntime(context, window)
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             deviceRuntime?.let {
@@ -304,20 +305,16 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
 
-
-    private fun keyboardChangedSmooth() {
+    /**
+     * Android 11 ViewCompat.setWindowInsetsAnimationCallback
+     */
+    private fun keyboardChangedAnimation() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         var hasSoftInput = false
         var floatInitialBottom = 0
         var startAnimation: WindowInsetsAnimationCompat? = null
         var transitionY = 0f
         val callback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
-
-            override fun onPrepare(animation: WindowInsetsAnimationCompat) {
-                super.onPrepare(animation)
-                Log.d("setWindowSoftInput", "onPrepare: ")
-            }
-
 
             override fun onStart(animation: WindowInsetsAnimationCompat, bounds: WindowInsetsAnimationCompat.BoundsCompat): WindowInsetsAnimationCompat.BoundsCompat {
                 val insetsCompat = ViewCompat.getRootWindowInsets(window.decorView)
@@ -330,8 +327,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
                     val keyboardH = bounds.upperBound.bottom
                     val realKeyboardH = keyboardH - navigationBarH
-                    Log.d("Dodge", "keyboard height = $keyboardH")
-                    Log.d("Dodge", "realKeyboardH height = $realKeyboardH")
+                    LogTracker.log("onStart", "keyboard height = $keyboardH")
+                    LogTracker.log("onStart", "realKeyboardH height = $realKeyboardH")
                     val panelHeight = panelContainer.layoutParams.height
                     if (realKeyboardH > 0 && panelHeight != realKeyboardH) {
                         panelContainer.layoutParams.height = realKeyboardH
@@ -342,34 +339,33 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 return bounds
             }
 
-            override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                super.onEnd(animation)
-            }
-
             override fun onProgress(insets: WindowInsetsCompat, runningAnimations: MutableList<WindowInsetsAnimationCompat>): WindowInsetsCompat {
                 if (isPanelState(panelId)) {
-                    Log.d("setWindowSoftInput", "isPanelState: ture")
+                    LogTracker.log("onProgress", "isPanelState: ture")
                 } else {
+                    val logFormatter = LogFormatter.setUp()
+                    logFormatter.addContent(value = "keyboard animation progress")
                     val fraction = startAnimation?.fraction ?: return insets
-                    Log.d("Dodge", "onProgress: fraction = $fraction")
                     val softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-                    Log.d("setWindowSoftInput", "onProgress: softInputHeight = $softInputHeight")
-                    Log.d("setWindowSoftInput", "onProgress: decorView.bottom = ${window.decorView.bottom}")
                     val softInputTop = window.decorView.bottom - softInputHeight
+                    logFormatter.addContent("fraction", "$fraction")
+                    logFormatter.addContent("softInputHeight", "$softInputHeight")
+                    logFormatter.addContent("decorView.bottom", "${window.decorView.bottom}")
                     if (hasSoftInput && softInputTop < floatInitialBottom) {
                         val offset = (softInputTop - floatInitialBottom).toFloat()
                         if (panelContainer.translationY > offset) {
                             panelContainer.translationY = offset
                             contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
-                            Log.d("Dodge", "onProgress: translationY = $offset")
+                            logFormatter.addContent("translationY", "$offset")
                             transitionY = offset
                         }
                     } else if (!hasSoftInput) {
                         val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
                         panelContainer.translationY = offset
                         contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
-                        Log.d("Dodge", "onProgress: translationY = $offset")
+                        logFormatter.addContent("translationY", "$offset")
                     }
+                    logFormatter.log("onProgress")
                 }
                 return insets
             }
@@ -391,7 +387,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      */
     private fun supportKeyboardAnimation(): Boolean {
         return window.decorView.isSystemInsetsAnimationSupport()
-//        return true
     }
 
 
@@ -757,8 +752,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
             //处理第一个view contentContainer
             run {
-                contentContainer.layoutContainer(l, contentContainerTop, r, contentContainerTop + contentContainerHeight,
-                        contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState())
+                contentContainer.layoutContainer(
+                    l, contentContainerTop, r, contentContainerTop + contentContainerHeight,
+                    contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState()
+                )
                 logFormatter.addContent("contentContainer Layout", "($l,$contentContainerTop,$r,${contentContainerTop + contentContainerHeight})")
                 contentContainer.changeContainerHeight(contentContainerHeight)
             }

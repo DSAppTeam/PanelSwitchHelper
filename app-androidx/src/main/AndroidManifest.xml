@@ -16,7 +16,7 @@
 
         <activity android:name="com.example.demo.MainActivity"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
-            android:resizeableActivity="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,7 +72,6 @@
         <activity android:name="com.example.demo.scene.feed.FeedDialogActivity" />
         <activity android:name="com.example.demo.scene.feed.FeedActivity" />
         <activity android:name="com.example.demo.scene.chat.ChatCusContentScrollActivity" />
-        <activity android:name="com.example.demo.scene.chat.Android11TestActivity" />
 
     </application>
 
