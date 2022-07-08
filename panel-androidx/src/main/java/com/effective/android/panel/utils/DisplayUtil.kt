@@ -10,6 +10,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 import com.effective.android.panel.Constants
 import com.effective.android.panel.R
@@ -186,9 +187,13 @@ object DisplayUtil {
             for (i in 0 until it.childCount) {
                 val id: Int = it.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
-                    val resourceEntryName: String? = context.resources.getResourceEntryName(id)
-                    if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
-                        isVisible = true
+                    try {
+                        val resourceEntryName: String? = context.resources.getResourceEntryName(id)
+                        if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                            isVisible = true
+                        }
+                    } catch (e: Exception) {
+                        Log.d("isNavBarVisible", "error msg : ${e.message}")
                     }
                 }
             }
