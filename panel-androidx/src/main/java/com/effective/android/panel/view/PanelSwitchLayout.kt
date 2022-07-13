@@ -8,6 +8,7 @@ import android.os.Build
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.AttributeSet
+import android.util.Log
 import android.util.Pair
 import android.view.*
 import android.view.View.OnClickListener
@@ -361,9 +362,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         }
                     } else if (!hasSoftInput) {
                         val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
-                        panelContainer.translationY = offset
-                        contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
-                        logFormatter.addContent("translationY", "$offset")
+                        if (offset >= 0) {
+                            panelContainer.translationY = offset
+                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
+                            logFormatter.addContent("translationY", "$offset")
+                        } else {
+                            logFormatter.addContent("translationY", "$offset , skip")
+                        }
                     }
                     logFormatter.log("onProgress")
                 }
@@ -492,7 +497,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                  * 拉起输入法的时候递增，隐藏输入法的时候递减，机型较差的手机需要 requestLayout() 动态更新布局
                  */
                 if (keyboardHeight != lastKeyboardHeight) {
-                    LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
+                    LogTracker.log("$TAG#KeyboardStateChanged", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
                     PanelUtil.setKeyBoardHeight(context, realHeight)
                     requestLayout()
                 }
@@ -501,7 +506,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             if (keyboardHeight > minLimitOpenKeyboardHeight) {
                 isKeyboardShowing = true
                 if (keyboardHeight > lastKeyboardHeight) {
-                    LogTracker.log("$TAG#onGlobalLayout", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
+                    LogTracker.log("$TAG#KeyboardStateChanged", "try to set KeyBoardHeight : $realHeight，isShow $isKeyboardShowing")
                     PanelUtil.setKeyBoardHeight(context, realHeight)
                     requestLayout()
                 }
@@ -515,14 +520,31 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     lastNavigationBarShow?.let { lastShow ->
                         if (lastHeight != contentHeight && lastShow != deviceRuntime?.isNavigationBarShow) {
                             requestLayout()
-                            LogTracker.log("$TAG#onGlobalLayout", "update layout by navigation visibility State change")
+                            LogTracker.log("$TAG#KeyboardStateChanged", "update layout by navigation visibility State change")
                         }
                     }
                 }
             }
         }
+        // 这里为了兼容华为手机隐藏导航栏时会回调两次键盘高度，并且第一回调的高度不准确
+        if (lastContentHeight == contentHeight && lastKeyboardHeight != keyboardHeight) {
+            trySyncKeyboardHeight(keyboardHeight)
+        }
         lastKeyboardHeight = keyboardHeight
         lastContentHeight = contentHeight
+    }
+
+    /**
+     * 键盘高度发生变化时，同步键盘高度
+     */
+    private fun trySyncKeyboardHeight(keyboardHeight: Int) {
+        Log.d(TAG, "trySyncKeyboardHeight: $keyboardHeight")
+        if (lastKeyboardHeight > 0 && keyboardHeight > 0) {
+            // 采用键盘过渡动画的方案需要同步高度，采用 onLayout 方案的不需要通过这个方法进行同步
+            if (keyboardAnimation && panelContainer.translationY != 0F) {
+                updatePanelStateByAnimation(keyboardHeight)
+            }
+        }
     }
 
 
