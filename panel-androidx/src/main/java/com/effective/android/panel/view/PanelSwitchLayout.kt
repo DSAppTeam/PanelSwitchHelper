@@ -285,10 +285,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     internal fun bindWindow(window: Window, windowInsetsRootView: View?) {
         this.window = window
         this.windowInsetsRootView = windowInsetsRootView
-        if (enableKeyboardAnimator && supportKeyboardAnimation()) {
+        keyboardAnimation = enableKeyboardAnimator && supportKeyboardAnimation()
+        if (keyboardAnimation) {
             // 通过监听键盘动画，修改translationY线上面板
             keyboardChangedAnimation()
-            keyboardAnimation = true
         } else {
             // 通过获取键盘高度，触发onLayout修改面板高度
             deviceRuntime = DeviceRuntime(context, window)
@@ -335,6 +335,14 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         panelContainer.layoutParams.height = realKeyboardH
                         lastKeyboardHeight = realKeyboardH
                         PanelUtil.setKeyBoardHeight(context, realKeyboardH)
+                    }
+                    // 当键盘高度小于已偏移的高度时，调整回键盘高度
+                    if (keyboardH > 0 && hasSoftInput) {
+                        val maxSoftInputTop = window.decorView.bottom - keyboardH
+                        val maxOffset = (maxSoftInputTop - floatInitialBottom).toFloat()
+                        if (panelContainer.translationY < maxOffset) {
+                            updatePanelStateByAnimation(-maxOffset.toInt())
+                        }
                     }
                 }
                 return bounds
@@ -549,7 +557,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun tryBindKeyboardChangedListener() {
-        if (supportKeyboardFeature()) {
+        if (keyboardAnimation || supportKeyboardFeature()) {
             keyboardChangedListener30Impl()
         } else {
             globalLayoutListener?.let {
@@ -561,7 +569,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun releaseKeyboardChangedListener() {
-        if (supportKeyboardFeature()) {
+        if (keyboardAnimation || supportKeyboardFeature()) {
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
         } else {
             globalLayoutListener?.let {
