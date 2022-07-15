@@ -1,6 +1,7 @@
 package com.example.demo.scene.chat;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class ChatPopupWindow extends PopupWindow {
         setFocusable(true);
         setOutsideTouchable(true);
         setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         initView();
     }
 

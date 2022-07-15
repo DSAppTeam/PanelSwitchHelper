@@ -326,7 +326,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     getLocationInWindow(location)
                     floatInitialBottom = location[1] + height
                     val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
-                    val keyboardH = bounds.upperBound.bottom
+                    val imeH = insetsCompat?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+                    val keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
                     val realKeyboardH = keyboardH - navigationBarH
                     LogTracker.log("onStart", "keyboard height = $keyboardH")
                     LogTracker.log("onStart", "realKeyboardH height = $realKeyboardH")
@@ -941,6 +942,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @param expectHeight 期望高度
      */
     private fun updatePanelStateByAnimation(expectHeight: Int) {
+        Log.d(TAG, "updatePanelStateByAnimation: $expectHeight")
         val translationY = panelContainer.translationY
         val targetY = -expectHeight.toFloat()
         if (translationY != targetY) {
