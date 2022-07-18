@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                app:enableKeyboardAnimator="false"
                 app:animationSpeed="standard">
 
                 <!-- 内容区域 -->
