@@ -312,7 +312,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun keyboardChangedAnimation() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         var hasSoftInput = false
-        var floatInitialBottom = 0
         var startAnimation: WindowInsetsAnimationCompat? = null
         var transitionY = 0f
         val callback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
@@ -322,9 +321,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 hasSoftInput = insetsCompat?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
                 startAnimation = animation
                 if (hasSoftInput) {
-                    val location = IntArray(2)
-                    getLocationInWindow(location)
-                    floatInitialBottom = location[1] + height
                     val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
                     val imeH = insetsCompat?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
                     val keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
@@ -340,6 +336,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     // 当键盘高度小于已偏移的高度时，调整回键盘高度
                     if (keyboardH > 0 && hasSoftInput) {
                         val maxSoftInputTop = window.decorView.bottom - keyboardH
+                        val location = DisplayUtil.getLocationOnWindow(this@PanelSwitchLayout)
+                        val floatInitialBottom = location[1] + height
                         val maxOffset = (maxSoftInputTop - floatInitialBottom).toFloat()
                         if (panelContainer.translationY < maxOffset) {
                             updatePanelStateByAnimation(-maxOffset.toInt())
@@ -361,6 +359,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     logFormatter.addContent("fraction", "$fraction")
                     logFormatter.addContent("softInputHeight", "$softInputHeight")
                     logFormatter.addContent("decorView.bottom", "${window.decorView.bottom}")
+                    val location = DisplayUtil.getLocationOnWindow(this@PanelSwitchLayout)
+                    val floatInitialBottom = height + location[1]
                     if (hasSoftInput && softInputTop < floatInitialBottom) {
                         val offset = (softInputTop - floatInitialBottom).toFloat()
                         if (panelContainer.translationY > offset) {
