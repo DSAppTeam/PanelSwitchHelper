@@ -87,7 +87,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastPanelId = Constants.PANEL_NONE
     private var lastPanelHeight = -1
     private var animationSpeed = 200 //standard
-    private var enableKeyboardAnimator = false   // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
+    private var enableKeyboardAnimator = true   // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
     private var contentScrollOutsizeEnable = true
 
     private var deviceRuntime: DeviceRuntime? = null
@@ -126,7 +126,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PanelSwitchLayout, defStyleAttr, 0)
         animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed)
-        enableKeyboardAnimator = typedArray.getBoolean(R.styleable.PanelSwitchLayout_enableKeyboardAnimator, false)
+        enableKeyboardAnimator = typedArray.getBoolean(R.styleable.PanelSwitchLayout_enableKeyboardAnimator, true)
         typedArray.recycle()
     }
 
