@@ -22,9 +22,9 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 更多细节可参考
 
- * [场景使用介绍](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE-zh.md)
- * [API 使用指南](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API-zh.md)
- * [库版本更新日志](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE-zh.md)
+* [场景使用介绍](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE-zh.md)
+* [API 使用指南](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API-zh.md)
+* [库版本更新日志](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE-zh.md)
 
 Demo 内容如下
 
@@ -40,9 +40,23 @@ Demo 内容如下
 
 1. 在模块脚本 `build.gradle` 添加库依赖
 
+1.1、Add it in your root build.gradle at the end of repositories:
+
+```groovy
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
+
+1.2、Add the dependency
+```groovy
 //1.4.0 版本及后续，仅支持 Androidx
-implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
+dependencies {
+    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.4.0'
+}
 ```
 
 2. 在布局文件 Xml 中使用框架提供的容器
@@ -203,7 +217,6 @@ implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
 </layout>
 ```
 
-
 3. 初始化 PanelSwitchHelper 对象，框架会自动收集布局信息。同时在返回键会调时拦截处理即可。
 
 ```
@@ -251,8 +264,8 @@ implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
                     .addPanelHeightMeasurer {   //可选 用于设置未获取输入法高度前面板的高度，如果不设置则默认以框架内高度为主
                         getTargetPanelDefaultHeight { DisplayUtils.dip2px(this@DefaultHeightPanelActivity,400f)}
                         getPanelTriggerId { R.id.add_btn }
-                    }     
-                    .contentScrollOutsideEnable(true)  //可选，默认为true      
+                    }   
+                    .contentScrollOutsideEnable(true)  //可选，默认为true    
                     .logTrack(true)                   //可选，默认false，是否开启log信息输出
                     .build(true)			          //可选，默认false，是否默认打开输入法
         }
@@ -278,7 +291,3 @@ implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
 <img src="https://github.com/YummyLau/PanelSwitchHelper/blob/master/source/qr_code_wx.jpg" width = "385" height = "385"/>
 
 如果框架对你有帮助，可安利给身边的伙伴，每一个 star 都是对框架付出的肯定。
-
-
-
-
