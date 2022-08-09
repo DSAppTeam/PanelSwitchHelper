@@ -22,9 +22,9 @@ When developing a chat/video/live/information interface, users are expected to m
 
 For more details, please refer to
 
- * [Introduction to scenario usage](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE.md)
- * [API Usage Guide](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API.md)
- * [Library version update log](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE.md)
+* [Introduction to scenario usage](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_SENCE.md)
+* [API Usage Guide](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_API.md)
+* [Library version update log](https://github.com/YummyLau/PanelSwitchHelper/blob/master/README_UPDATE.md)
 
 Demo content is as follows
 
@@ -38,11 +38,26 @@ The Androidx version runs by default. If you need to open non-Androidx, open the
 
 ### Instructions
 
-1. Add library dependencies in module script `build.gradle`
+1. How to
 
+1.1 Add library dependencies in module script `build.gradle`
+
+```groovy
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
-// Version 1.4.0 and later, only supports Androidx
-implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
+
+1.2 Add the dependency
+
+```groovy
+//1.4.0 版本及后续，仅支持 Androidx
+dependencies {
+    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.4.0'
+}
 ```
 
 2. Use the container provided by the framework in the layout file Xml
@@ -202,7 +217,6 @@ implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
     </LinearLayout>
 </layout>
 ```
-
 
 3. Initialize the PanelSwitchHelper object, and the framework will automatically collect layout information. At the same time, intercept the processing when the return key is adjusted.
 
