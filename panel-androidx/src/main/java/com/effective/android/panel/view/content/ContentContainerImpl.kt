@@ -332,7 +332,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         return mViewGroup.findViewById(id)
     }
 
-    private data class ViewPosition(val id: Int, val l: Int, val t: Int, val r: Int, val b: Int) {
+    private data class ViewPosition(val id: Int, var l: Int, var t: Int, var r: Int, var b: Int) {
         var changeL: Int = l
         var changeT: Int = t
         var changeR: Int = r
@@ -353,6 +353,14 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             changeR = r
             changeB = b
         }
+
+        fun syncPosition(newL: Int, newT: Int, newR: Int, newB: Int) {
+            l = newL
+            t = newT
+            r = newR
+            b = newB
+        }
+
     }
 
     private val map = HashMap<Int, ViewPosition>()
@@ -360,30 +368,35 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean) {
+        // Step 1 这里执行了一次父控件的layout方法，这样每个子View的位置是默认状态
         mViewGroup.layout(l, t, r, b)
         if (!canScrollOutsize) {
             return
         }
+        // step 2 根据滚动偏移量的干预，再重新调整子View的位置
         for (contentScrollMeasurer in contentScrollMeasurers) {
             val viewId = contentScrollMeasurer.getScrollViewId()
             if (viewId != -1) {
                 val view = (mViewGroup).findViewById<View>(viewId)
-                view.let {
+                view?.let {
                     var viewPosition = map[viewId]
                     if (viewPosition == null) {
                         viewPosition = ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
                         map[viewId] = viewPosition
+                    } else {
+                        // 因为 Step 1 执行了父控件的layout方法，这里直接拿子View的初始位置
+                        viewPosition.syncPosition(view.left, view.top, view.right, view.bottom)
                     }
 
-                    var willScrollDistance = 0;
+                    var willScrollDistance = 0
                     if (reset) {
                         if (viewPosition.hasChange()) {
                             val viewLeft = viewPosition.l
                             val viewTop = viewPosition.t
                             val viewRight = viewPosition.r
-                            var viewBottom = viewPosition.b
+                            val viewBottom = viewPosition.b
                             view.layout(viewLeft, viewTop, viewRight, viewBottom)
-                            viewPosition.reset();
+                            viewPosition.reset()
                         }
                     } else {
                         willScrollDistance = contentScrollMeasurer.getScrollDistance(defaultScrollHeight)
@@ -393,11 +406,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                         if (willScrollDistance < 0) {
                             willScrollDistance = 0
                         }
-                        val diffY = defaultScrollHeight - willScrollDistance;
-                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b + diffY);
+                        val diffY = defaultScrollHeight - willScrollDistance
+                        viewPosition.change(viewPosition.l, viewPosition.t + diffY, viewPosition.r, viewPosition.b + diffY)
                         view.layout(viewPosition.changeL, viewPosition.changeT, viewPosition.changeR, viewPosition.changeB)
                     }
-                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.l}, b ${viewPosition.b})")
+                    LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) origin (l ${viewPosition.l},t ${viewPosition.t},r ${viewPosition.r}, b ${viewPosition.b})")
                     LogTracker.log("${PanelSwitchLayout.TAG}#onLayout", "ContentScrollMeasurer(id $viewId , defaultScrollHeight $defaultScrollHeight , scrollDistance $willScrollDistance reset $reset) layout parent(l $l,t $t,r $r,b $b) self(l ${viewPosition.changeL},t ${viewPosition.changeT},r ${viewPosition.changeR}, b${viewPosition.changeB})")
                 }
             }
