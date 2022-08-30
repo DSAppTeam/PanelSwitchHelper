@@ -130,6 +130,8 @@
             android:id="@+id/panel_root"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:orientation="vertical"
+            app:enableKeyboardAnimator="false"
             android:layout_weight="1">
 
             <com.effective.android.panel.view.content.RelativeContentContainer
@@ -139,9 +141,9 @@
 
                 <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
                     android:id="@+id/chat_list"
-                    android:layout_above="@+id/action"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/action" />
 
                 <RelativeLayout
                     android:id="@+id/action"

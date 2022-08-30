@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion config.compile_sdk_version
-    buildToolsVersion config.build_tool_version
+//    buildToolsVersion config.build_tool_version
 
     dataBinding {
         enabled = true
@@ -60,7 +60,7 @@ dependencies {
     implementation deps.androidx.constraint
     implementation deps.pageindicator
     implementation deps.circleimageview
-    implementation deps.panelSwitchHelper_androidx
-//    implementation project(":panel-androidx")
+//    implementation deps.panelSwitchHelper_androidx
+    implementation project(":panel-androidx")
 //    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }

@@ -3,6 +3,7 @@ package com.effective.android.panel.view.panel
 import android.annotation.TargetApi
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.util.Pair
 import android.util.SparseArray
 import android.view.View
@@ -73,8 +74,9 @@ class PanelContainer : FrameLayout, ViewAssertion {
         val panel = panelSparseArray[panelId]
         for (i in 0 until panelSparseArray.size()) {
             val panelView = panelSparseArray[panelSparseArray.keyAt(i)]
-            if (panelView is View)
+            if (panelView is View) {
                 panelView.visibility = if (panelView != panel) View.GONE else View.VISIBLE
+            }
         }
         val layoutParams = (panel as View).layoutParams
         val curSize = Pair(layoutParams.width, layoutParams.height)
@@ -91,4 +93,10 @@ class PanelContainer : FrameLayout, ViewAssertion {
             layoutParams.height = targetHeight
         }
     }
+
+    override fun setTranslationY(translationY: Float) {
+        super.setTranslationY(translationY)
+    }
+
+
 }
