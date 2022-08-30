@@ -64,7 +64,13 @@
 * 1.3.11 Fixed some MiUI mobile phone horizontal screen status bar pull up the input method abnormal problem, optimize the Log display, unify the prefix of all custom panel container property names
 * 1.3.12 compatible with floating keyboard scene
 * 1.3.12 Compatible with some mobile phone lock screen input method issues; compatible with Huawei customized tablet issues; optimize the full screen display speed;
-* Starting from 1.4.0, only Androidx is supported, non-Androidx is no longer maintained
+* 1.4.0 Starting from 1.4.0, only Androidx is supported, non-Androidx is no longer maintained
      * Fix the compatibility issue of some Samsung devices
      * Added `setTriggerViewClickInterceptor` to support dynamic control of whether TriggerView automatically responds to the "click to trigger switch panel" behavior, the default is corresponding
      * Added `DisUtils#setCompatSizeProxy` to support dynamic setting of pixel conversion logic
+* 1.5.0 Support WindowInsetsAnimation in android r (Android 11)
+  * Added use case for WindowManager#addView(View view, ViewGroup.LayoutParams params).
+  * Add Attributes `enableKeyboardAnimator` for `PanelSwitchLayout` , to enable support WindowInsetsAnimation in android r (Android 11).
+  * Note that WindowInsetsAnimation in android r (Android 11) should work with SOFT_INPUT_ADJUST_NOTHING.
+  * Currently WindowInsetsAnimation not supported well when use DialogFragment、PopupWindow and WindowManager.
+  * Fixed bug [issue](https://github.com/DSAppTeam/PanelSwitchHelper/issues)
