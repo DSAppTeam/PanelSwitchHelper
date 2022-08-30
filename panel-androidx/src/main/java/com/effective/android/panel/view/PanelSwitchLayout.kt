@@ -370,13 +370,17 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                             transitionY = offset
                         }
                     } else if (!hasSoftInput) {
-                        val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
-                        if (offset >= 0) {
+                        // 有些设备隐藏键盘时，softInputHeight的值一直等于0，此时用 fraction 来计算偏移量
+                        if (softInputHeight > 0) {
+                            val offset = min(softInputTop - floatInitialBottom, 0).toFloat()
                             panelContainer.translationY = offset
                             contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
                             logFormatter.addContent("translationY", "$offset")
                         } else {
-                            logFormatter.addContent("translationY", "$offset , skip")
+                            val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
+                            panelContainer.translationY = offset
+                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
+                            logFormatter.addContent("translationY", "$offset")
                         }
                     }
                     logFormatter.log("onProgress")
@@ -400,7 +404,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * 是否支持键盘过渡动画
      */
     private fun supportKeyboardAnimation(): Boolean {
-        return window.decorView.isSystemInsetsAnimationSupport()
+        return isSystemInsetsAnimationSupport()
     }
 
 

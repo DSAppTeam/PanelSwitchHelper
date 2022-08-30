@@ -11,6 +11,7 @@ package com.effective.android.panel.utils
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.view.ViewCompat
@@ -85,5 +86,10 @@ internal fun View.isSystemInsetsAnimationSupport(): Boolean {
     val windowInsetsController = ViewCompat.getWindowInsetsController(this)
     return !(windowInsetsController == null || windowInsetsController.systemBarsBehavior == 0)
 }
+
+fun Window.isSystemInsetsAnimationSupport() : Boolean {
+    return this.decorView.isSystemInsetsAnimationSupport()
+}
+
 
 
