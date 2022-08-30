@@ -404,7 +404,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * 是否支持键盘过渡动画
      */
     private fun supportKeyboardAnimation(): Boolean {
-        return isSystemInsetsAnimationSupport()
+        return window.decorView.isSystemInsetsAnimationSupport()
     }
 
 
