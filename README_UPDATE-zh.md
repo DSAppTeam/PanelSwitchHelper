@@ -65,3 +65,9 @@
     * 修复三星部分设备的兼容问题
     * 新增 `setTriggerViewClickInterceptor` 支持动态控制 TriggerView 是否自动响应"点击触发切换面板"行为，默认相应
     * 新增 `DisUtils#setCompatSizeProxy` 支持动态设置像素转化逻辑
+* 1.5.0 支持Android 11键盘过渡动画特性
+    * 添加了悬浮弹窗场景的用例。
+    * `PanelSwitchLayout` 控件添加了 `enableKeyboardAnimator` 属性，用来控制是否启用Android 11 的键盘动画效果，默认开启。
+    * Android 11 键盘过渡动画需要在 SOFT_INPUT_ADJUST_NOTHING 模式下才能生效。
+    * 暂时不支持DialogFragment、PopupWindow、悬浮弹窗等场景下Android 11键盘过渡动画效果。
+    * 修复已知Bug [issue](https://github.com/DSAppTeam/PanelSwitchHelper/issues)
