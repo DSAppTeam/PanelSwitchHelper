@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
+import com.effective.android.panel.utils.KeyboardExtKt;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.android.panel.window.PanelDialog;
@@ -58,7 +60,10 @@ public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyList
     @Override
     public void show() {
         if (mHelper == null) {
-            mHelper = new PanelSwitchHelper.Builder(activity.getWindow(), mBinding.getRoot())
+            Window window = getWindow();
+            boolean support = KeyboardExtKt.isSystemInsetsAnimationSupport(window);
+            Window bindWindow = support ? window : activity.getWindow();
+            mHelper = new PanelSwitchHelper.Builder(bindWindow, mBinding.getRoot())
                     //可选
                     .addKeyboardStateListener((visible, height) -> Log.d(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
                     //可选
