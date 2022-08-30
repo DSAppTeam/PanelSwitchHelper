@@ -10,9 +10,13 @@ import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.effective.android.panel.Constants
 import com.effective.android.panel.R
+import java.util.*
 
 
 object DisplayUtil {
@@ -34,6 +38,15 @@ object DisplayUtil {
         view.getLocationOnScreen(contentViewLocationInScreen)
         return contentViewLocationInScreen
     }
+
+
+    @JvmStatic
+    fun getLocationOnWindow(view: View): IntArray {
+        val location = IntArray(2)
+        view.getLocationInWindow(location)
+        return location
+    }
+
 
     @JvmStatic
     fun contentViewCanDrawStatusBarArea(window: Window): Boolean {
@@ -117,15 +130,25 @@ object DisplayUtil {
     @JvmStatic
     fun getNavigationBarHeight(context: Context, window: Window): Int {
         val deviceNavigationHeight = getInternalDimensionSize(context.resources, Constants.NAVIGATION_BAR_HEIGHT_RES_NAME)
-        //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
         val manufacturer = if (Build.MANUFACTURER == null) "" else Build.MANUFACTURER.trim { it <= ' ' }
-        if (manufacturer.toLowerCase().contains("samsung") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            val stableBottom = window.decorView.rootWindowInsets.stableInsetBottom
-            if (stableBottom < deviceNavigationHeight) {
-                return stableBottom;
+        if (manufacturer.toLowerCase(Locale.ROOT).contains("samsung")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                //三星android9 OneUI2.0一下打开全面屏手势，导航栏实际高度比 deviceHeight 小，需要做兼容
+                window.decorView.rootWindowInsets?.let {
+                    val stableBottom = it.stableInsetBottom
+                    if (stableBottom < deviceNavigationHeight) {
+                        return stableBottom
+                    }
+                }
+            } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                //三星android 11 显示可隐藏键盘的按钮，导致导航栏高度会变化
+                val navigationBarHeight = ViewCompat.getRootWindowInsets(window.decorView)?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+                if (navigationBarHeight > deviceNavigationHeight) {
+                    return navigationBarHeight
+                }
             }
         }
-        return deviceNavigationHeight;
+        return deviceNavigationHeight
     }
 
     private fun getInternalDimensionSize(res: Resources, key: String): Int {
@@ -184,9 +207,13 @@ object DisplayUtil {
             for (i in 0 until it.childCount) {
                 val id: Int = it.getChildAt(i).id
                 if (id != android.view.View.NO_ID) {
-                    val resourceEntryName: String? = context.resources.getResourceEntryName(id)
-                    if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
-                        isVisible = true
+                    try {
+                        val resourceEntryName: String? = context.resources.getResourceEntryName(id)
+                        if ((("navigationBarBackground" == resourceEntryName) && it.getChildAt(i).visibility == android.view.View.VISIBLE)) {
+                            isVisible = true
+                        }
+                    } catch (e: Exception) {
+                        Log.d("isNavBarVisible", "error msg : ${e.message}")
                     }
                 }
             }

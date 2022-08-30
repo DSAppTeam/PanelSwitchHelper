@@ -3,6 +3,8 @@
     package="com.effective">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 
     <application
         android:name="com.example.demo.App"
@@ -13,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name="com.example.demo.MainActivity"
-            android:resizeableActivity="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
