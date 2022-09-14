@@ -37,8 +37,10 @@ public class AutoHidePanelRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if(panelSwitchHelper != null){
-            panelSwitchHelper.hookSystemBackByPanelSwitcher();
+        if (e != null && e.getAction() != MotionEvent.ACTION_CANCEL) {
+            if (panelSwitchHelper != null) {
+                panelSwitchHelper.hookSystemBackByPanelSwitcher();
+            }
         }
         return super.onTouchEvent(e);
     }
