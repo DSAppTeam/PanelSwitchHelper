@@ -361,11 +361,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     logFormatter.addContent("decorView.bottom", "${window.decorView.bottom}")
                     val location = DisplayUtil.getLocationOnWindow(this@PanelSwitchLayout)
                     val floatInitialBottom = height + location[1]
+                    val compatPanelHeight = getCompatPanelHeight(panelId)
                     if (hasSoftInput && softInputTop < floatInitialBottom) {
                         val offset = (softInputTop - floatInitialBottom).toFloat()
                         if (panelContainer.translationY > offset) {
                             panelContainer.translationY = offset
-                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
+                            contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, offset)
                             logFormatter.addContent("translationY", "$offset")
                             transitionY = offset
                         }
@@ -374,12 +375,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                         if (softInputHeight > 0) {
                             val offset = min(softInputTop - floatInitialBottom, 0).toFloat()
                             panelContainer.translationY = offset
-                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
+                            contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, offset)
                             logFormatter.addContent("translationY", "$offset")
                         } else {
                             val offset = min(transitionY - transitionY * (fraction + 0.5f), 0f)
                             panelContainer.translationY = offset
-                            contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, offset)
+                            contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, offset)
                             logFormatter.addContent("translationY", "$offset")
                         }
                     }
@@ -791,7 +792,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             run {
                 contentContainer.layoutContainer(
                     l, contentContainerTop, r, contentContainerTop + contentContainerHeight,
-                    contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState()
+                    contentScrollMeasurers, compatPanelHeight, contentScrollOutsizeEnable, isResetState(), changed
                 )
                 logFormatter.addContent("contentContainer Layout", "($l,$contentContainerTop,$r,${contentContainerTop + contentContainerHeight})")
                 contentContainer.changeContainerHeight(contentContainerHeight)
@@ -950,12 +951,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         val translationY = panelContainer.translationY
         val targetY = -expectHeight.toFloat()
         if (translationY != targetY) {
+            val compatPanelHeight = getCompatPanelHeight(panelId)
             val animation = ValueAnimator.ofFloat(translationY, targetY)
                 .setDuration(animationSpeed.toLong())
             animation.addUpdateListener {
                 val y = it.animatedValue as? Float ?: 0F
                 panelContainer.translationY = y
-                contentContainer.translationContainer(contentScrollMeasurers, lastKeyboardHeight, y)
+                contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, y)
             }
             animation.start()
         }

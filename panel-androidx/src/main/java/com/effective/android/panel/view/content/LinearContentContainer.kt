@@ -67,8 +67,8 @@ class LinearContentContainer : LinearLayout, IContentContainer {
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
-                                 reset: Boolean) {
-        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset)
+                                 reset: Boolean, changed: Boolean) {
+        contentContainer.layoutContainer(l, t, r, b, contentScrollMeasurers, defaultScrollHeight, canScrollOutsize,reset, changed)
     }
 
     override fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float) {

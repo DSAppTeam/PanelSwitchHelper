@@ -12,7 +12,7 @@ interface IContentContainer {
     fun findTriggerView(@IdRes id: Int): View?
     fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                         contentScrollMeasurer: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
-                        reset: Boolean)
+                        reset: Boolean, changed: Boolean = false)
 
     fun translationContainer(contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, contentTranslationY: Float)
 
