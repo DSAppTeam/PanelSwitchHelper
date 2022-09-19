@@ -367,7 +367,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
 
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
-                                 reset: Boolean) {
+                                 reset: Boolean, changed: Boolean) {
         // Step 1 这里执行了一次父控件的layout方法，这样每个子View的位置是默认状态
         mViewGroup.layout(l, t, r, b)
         if (!canScrollOutsize) {
@@ -383,7 +383,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     if (viewPosition == null) {
                         viewPosition = ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
                         map[viewId] = viewPosition
-                    } else {
+                    } else if (changed) {
                         // 因为 Step 1 执行了父控件的layout方法，这里直接拿子View的初始位置
                         viewPosition.syncPosition(view.left, view.top, view.right, view.bottom)
                     }
@@ -425,16 +425,19 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
         contentScrollMeasurers.forEach {  contentMeasure ->
             val viewId = contentMeasure.getScrollViewId()
             val view = (mViewGroup).findViewById<View>(viewId)
-            val willScrollDistance = contentMeasure.getScrollDistance(885)
-            val x = 885 - willScrollDistance
-            val y = -contentTranslationY
+            val willScrollDistance = contentMeasure.getScrollDistance(defaultScrollHeight)
+            val maxDistance = defaultScrollHeight - willScrollDistance
+            val parentY = -contentTranslationY
 
-            if (y < x) {
-                view.translationY = y
+            if (parentY < maxDistance) {
+                view.translationY = parentY
             } else {
-                view.translationY = x.toFloat()
+                view.translationY = maxDistance.toFloat()
             }
-            Log.d("translationContainer", "translationContainer: willScrollDistance = $willScrollDistance , y = $y")
+            Log.d("translationContainer", "viewId = $viewId, maxDistance = $maxDistance, parentY = $parentY, y = ${view.translationY}")
+
+//            Log.d("translationContainer", "translationContainer: defaultScrollHeight = $defaultScrollHeight , contentTranslationY = $contentTranslationY")
+//            Log.d("translationContainer", "translationContainer: willScrollDistance = $willScrollDistance , y = ${view.translationY}")
         }
     }
 
