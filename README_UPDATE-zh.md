@@ -71,3 +71,7 @@
     * Android 11 键盘过渡动画需要在 SOFT_INPUT_ADJUST_NOTHING 模式下才能生效。
     * 暂时不支持DialogFragment、PopupWindow、悬浮弹窗等场景下Android 11键盘过渡动画效果。
     * 修复已知Bug [issue](https://github.com/DSAppTeam/PanelSwitchHelper/issues)
+* 1.5.1 修复已知Bug。
+    * 修复ContentScrollMeasurer计算子View高度不准确问题。
+    * IContentContainer#layoutContainer()添加了changed参数，用来判断是否需要重新布局。
+

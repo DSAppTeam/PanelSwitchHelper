@@ -30,7 +30,7 @@ import kotlin.collections.HashMap
  */
 class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
-    private val context = mViewGroup.context;
+    private val context = mViewGroup.context
     private val mResetView: View? = mViewGroup.findViewById(resetId)
     private val mInputAction: IInputAction
     private val mResetAction: IResetAction
