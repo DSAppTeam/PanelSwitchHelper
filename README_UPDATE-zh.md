@@ -74,4 +74,5 @@
 * 1.5.1 修复已知Bug。
     * 修复ContentScrollMeasurer计算子View高度不准确问题。
     * IContentContainer#layoutContainer()添加了changed参数，用来判断是否需要重新布局。
-
+* 1.5.2 修复已知Bug。
+    * 修复Android 11 以上布局偏移量变化后，布局位置没有同步的问题。

@@ -701,11 +701,17 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             LogTracker.log("$TAG#onLayout", "isGone，skip")
             return
         }
-
+        // 这里是使用键盘过渡动画方案
         if (keyboardAnimation) {
             super.onLayout(changed, l, t, r, b)
+            val compatPanelHeight = getCompatPanelHeight(panelId)
+            if (panelId != Constants.PANEL_NONE && compatPanelHeight != 0) {
+                val translationY = panelContainer.translationY
+                contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, translationY)
+            }
             return
         }
+        // 以下是使用layout方案
         deviceRuntime?.let {
             val logFormatter = LogFormatter.setUp()
             val deviceInfo = it.getDeviceInfoByOrientation()
