@@ -9,11 +9,6 @@ import android.widget.ExpandableListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleExpandableListAdapter;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
-
 import com.effective.BuildConfig;
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
@@ -24,6 +19,7 @@ import com.example.demo.scene.api.ContentActivity;
 import com.example.demo.scene.api.CusPanelActivity;
 import com.example.demo.scene.api.DefaultHeightPanelActivity;
 import com.example.demo.scene.api.FixIssuesActivity;
+import com.example.demo.scene.api.FixIssuesActivity2;
 import com.example.demo.scene.api.FloatContentView;
 import com.example.demo.scene.api.FloatWindowManager;
 import com.example.demo.scene.api.FloatWindowPermissionChecker;
@@ -44,6 +40,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity{
     final String scene_6 = "悬浮窗聊天场景-无权限";
     final String scene_7 = "悬浮窗聊天场景-有权限";
     final String scene_8 = "修复issues";
+    final String scene_9 = "EditText问题";
 
     final String api_content_container_title = "api 内容容器及扩展";
     final String api_content_container_1 = "基于 LinearLayout 实现";
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
             {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {window_1,window_2,window_3},
-            {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7, scene_8},
+            {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7, scene_8,scene_9},
             {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
             {api_define_content_container_scroll},
             {api_cus_panel,api_cus_panel_height},
@@ -250,6 +252,10 @@ public class MainActivity extends AppCompatActivity{
 
                     case scene_8: {
                         FixIssuesActivity.start(MainActivity.this);
+                        break;
+                    }
+                    case scene_9: {
+                        FixIssuesActivity2.start(MainActivity.this);
                         break;
                     }
 
