@@ -72,6 +72,7 @@
         <activity android:name="com.example.demo.scene.feed.FeedActivity" />
         <activity android:name="com.example.demo.scene.chat.ChatCusContentScrollActivity" />
         <activity android:name="com.example.demo.scene.api.FixIssuesActivity" />
+        <activity android:name="com.example.demo.scene.api.FixIssuesActivity2" />
 
     </application>
 
