@@ -10,6 +10,7 @@
 
     <com.effective.android.panel.view.content.LinearContentContainer
         android:layout_width="match_parent"
+        android:id="@+id/content_layout"
         android:layout_height="match_parent"
         android:background="#B3AEE4AF"
         android:orientation="vertical"
@@ -25,7 +26,7 @@
             <LinearLayout
                 android:id="@+id/header_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="#B3B6DCE4"
                 android:orientation="vertical">
 
@@ -34,6 +35,8 @@
                     android:id="@+id/edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:hint="输入内容"
                     android:background="@drawable/selector_edit_focus"
                     android:imeOptions="actionSearch"
                     android:textCursorDrawable="@drawable/shape_edit_cursor"
@@ -45,6 +48,25 @@
                     android:layout_height="64dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/icon_add" />
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_add" />
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_add" />
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_add" />
+
 
             </LinearLayout>
 

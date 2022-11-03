@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
+import com.effective.android.panel.utils.PanelUtil
 import com.effective.android.panel.view.panel.PanelView
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
@@ -28,6 +30,9 @@ class FixIssuesActivity2 : AppCompatActivity() {
 
     private val editView: EditText
         get() = findViewById(R.id.edit_text)
+
+    private val scrollView: ScrollView
+        get() = findViewById(R.id.scrollView)
 
     private val emotionView: View
         get() = findViewById(R.id.emotion_btn)
@@ -74,22 +79,25 @@ class FixIssuesActivity2 : AppCompatActivity() {
                 }
                 .addContentScrollMeasurer {
                     getScrollDistance { 0 }
-                    getScrollViewId { R.id.header_layout }
+                    getScrollViewId { R.id.scrollView }
                 }
                 .addPanelChangeListener {
                     onKeyboard {
                         Log.d(TAG, "唤起系统输入法")
                         emotionView.isSelected = false
+                        scrollView.setPadding(0, 0, 0, PanelUtil.getKeyBoardHeight(this@FixIssuesActivity2))
                     }
                     onNone {
                         Log.d(TAG, "隐藏所有面板")
                         emotionView.isSelected = false
+                        scrollView.setPadding(0, 0, 0, 0)
                     }
                     onPanel {
                         Log.d(TAG, "唤起面板 : $it")
                         if (it is PanelView) {
                             emotionView.isSelected = it.id == R.id.panel_emotion
                         }
+                        scrollView.setPadding(0, 0, 0, PanelUtil.getKeyBoardHeight(this@FixIssuesActivity2))
                     }
                     onPanelSizeChange { panelView, _, _, _, width, height ->
                         if (panelView is PanelView) {
@@ -100,7 +108,8 @@ class FixIssuesActivity2 : AppCompatActivity() {
                                     pagerView.buildEmotionViews(
                                         findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
                                         editView,
-                                        Emotions.getEmotions(), width, viewPagerSize)
+                                        Emotions.getEmotions(), width, viewPagerSize
+                                    )
                                 }
                                 R.id.panel_addition -> {
                                 }
