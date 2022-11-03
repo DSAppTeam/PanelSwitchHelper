@@ -83,6 +83,63 @@ public class EmotionPagerView extends ViewPager {
         });
     }
 
+    /**
+     * 当页面含有多个EditText时，可以通过 EditTextSelector 选择Emoji需要添加到哪个EditText中
+     */
+    public void buildEmotionViewsWithSelector(final PageIndicatorView indicatorView, final EditTextSelector textSelector, List<Emotion> data, int width, int height) {
+        if (data == null || data.isEmpty() || indicatorView == null || textSelector == null) {
+            return;
+        }
+        if (currentWidth == width && currentHeight == height) {
+            return;
+        }
+        currentWidth = width;
+        currentHeight = height;
+        int emotionViewContainSize = EmotionView.calSizeForContainEmotion(getContext(), currentWidth, currentHeight);
+        if (emotionViewContainSize == 0) {
+            return;
+        }
+        int pagerCount = data.size() / emotionViewContainSize;
+        pagerCount += (data.size() % emotionViewContainSize == 0) ? 0 : 1;
+        int index = 0;
+        List<EmotionView> emotionViews = new ArrayList<>();
+        for (int i = 0; i < pagerCount; i++) {
+            EmotionView emotionView = new EmotionView(getContext(), textSelector);
+            int end = (i + 1) * emotionViewContainSize;
+            if (end > data.size()) {
+                end = data.size();
+            }
+            emotionView.buildEmotions(data.subList(index, end));
+            emotionViews.add(emotionView);
+            index = end;
+        }
+        mAdapter = new Adapter(emotionViews);
+        setAdapter(mAdapter);
+        addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                indicatorView.setSelection(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+
+
+
+
+
+
+
     public static class Adapter extends PagerAdapter {
 
         private List<EmotionView> mList;

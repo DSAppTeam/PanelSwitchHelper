@@ -31,6 +31,7 @@ public class EmotionView extends GridView {
     private static int sPadding = 0;
     private static int sEmotionSize = 0;
     private EditText mEditText;
+    private EditTextSelector mEditTextSelector;
 
     public static int calSizeForContainEmotion(Context context, int width, int height) {
         sPadding = DisplayUtils.dip2px(context, 5f);
@@ -45,6 +46,12 @@ public class EmotionView extends GridView {
         this.mEditText = editText;
     }
 
+    public EmotionView(Context context, EditTextSelector editTextSelector) {
+        super(context);
+        this.mEditTextSelector = editTextSelector;
+    }
+
+
     public void buildEmotions(final List<Emotion> data) {
         setNumColumns(sNumColumns);
         setPadding(sPadding, sPadding, sPadding, sPadding);
@@ -54,12 +61,20 @@ public class EmotionView extends GridView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Emotion emotion = data.get(position);
-                int start = mEditText.getSelectionStart();
-                Editable editable = mEditText.getEditableText();
+                EditText editText = getEditText();
+                int start = editText.getSelectionStart();
+                Editable editable = editText.getEditableText();
                 Spannable emotionSpannable = EmojiSpanBuilder.buildEmotionSpannable(getContext(), emotion.text);
                 editable.insert(start, emotionSpannable);
             }
         });
+    }
+
+    private EditText getEditText() {
+        if (mEditTextSelector != null) {
+            return mEditTextSelector.getEditText();
+        }
+        return mEditText;
     }
 
     public static class EmotionAdapter extends BaseAdapter {

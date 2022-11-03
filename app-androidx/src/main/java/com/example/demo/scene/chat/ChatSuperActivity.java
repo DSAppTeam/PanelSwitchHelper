@@ -2,13 +2,12 @@ package com.example.demo.scene.chat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.effective.R;
-import com.effective.android.panel.Constants;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.PanelHeightMeasurer;
@@ -28,16 +26,12 @@ import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.databinding.ActivitySuperChatLayoutBinding;
-import com.effective.databinding.CommonChatLayoutBinding;
-import com.example.demo.anno.ChatPageType;
-import com.example.demo.scene.api.CusPanelView;
 import com.example.demo.scene.chat.adapter.ChatAdapter;
 import com.example.demo.scene.chat.adapter.ChatInfo;
+import com.example.demo.scene.chat.emotion.EditTextSelector;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
-import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
-import com.rd.PageIndicatorView;
 
 /**
  * 复杂的聊天界面，演示所有可能用到的api
@@ -46,7 +40,7 @@ import com.rd.PageIndicatorView;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
-public class ChatSuperActivity extends AppCompatActivity {
+public class ChatSuperActivity extends AppCompatActivity implements EditTextSelector {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ChatCusContentScrollActivity.class);
@@ -155,9 +149,9 @@ public class ChatSuperActivity extends AppCompatActivity {
                                     case R.id.panel_emotion: {
                                         EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
                                         int viewPagerSize = height - DisplayUtils.dip2px(ChatSuperActivity.this, 30f);
-                                        pagerView.buildEmotionViews(
-                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                                mBinding.editText,
+                                        pagerView.buildEmotionViewsWithSelector(
+                                                mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                                ChatSuperActivity.this,
                                                 Emotions.getEmotions(), width, viewPagerSize);
                                         break;
                                     }
@@ -318,5 +312,15 @@ public class ChatSuperActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    @NonNull
+    @Override
+    public EditText getEditText() {
+        if (mBinding.mutilEditText.isFocused()) {
+            return mBinding.mutilEditText;
+        } else {
+            return mBinding.editText;
+        }
     }
 }
