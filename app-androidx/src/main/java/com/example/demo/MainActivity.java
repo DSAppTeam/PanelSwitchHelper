@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity{
     final String scene_5 = "复杂聊天场景";
     final String scene_6 = "悬浮窗聊天场景-无权限";
     final String scene_7 = "悬浮窗聊天场景-有权限";
-    final String scene_8 = "修复issues";
-    final String scene_9 = "EditText问题";
 
     final String api_content_container_title = "api 内容容器及扩展";
     final String api_content_container_1 = "基于 LinearLayout 实现";
@@ -101,21 +99,29 @@ public class MainActivity extends AppCompatActivity{
     final String api_reset_4 = "点击自定义 RecyclerView 收起面板";
     final String api_reset_5 = "关闭点击内容容器收起面板";
 
+    final String issues_title = "issues场景";
+    final String issues_0 = "issues场景0";
+    final String issues_1 = "ScrollView & EditText问题";
+
+
     final String[] groupStrings = {
             activity_title,
             fragment_title,
             window_title,
             scene_title,
+            issues_title,
             api_content_container_title,
             api_define_content_container_scroll_title,
             api_cus_panel_title,
-            api_reset_title};
+            api_reset_title
+    };
 
     final String[][] childStrings = {
             {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {window_1,window_2,window_3},
-            {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7, scene_8,scene_9},
+            {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7},
+            {issues_0,issues_1},
             {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
             {api_define_content_container_scroll},
             {api_cus_panel,api_cus_panel_height},
@@ -250,15 +256,6 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     }
 
-                    case scene_8: {
-                        FixIssuesActivity.start(MainActivity.this);
-                        break;
-                    }
-                    case scene_9: {
-                        FixIssuesActivity2.start(MainActivity.this);
-                        break;
-                    }
-
                     case api_cus_panel:{
                         startActivity(new Intent(MainActivity.this, CusPanelActivity.class));
                         break;
@@ -311,6 +308,16 @@ public class MainActivity extends AppCompatActivity{
                         ResetActivity.start(MainActivity.this, ApiResetType.DISABLE);
                         break;
                     }
+
+                    case issues_0: {
+                        FixIssuesActivity.start(MainActivity.this);
+                        break;
+                    }
+                    case issues_1: {
+                        FixIssuesActivity2.start(MainActivity.this);
+                        break;
+                    }
+
                 }
                 return true;
             }
