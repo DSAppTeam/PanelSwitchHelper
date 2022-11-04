@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,9 @@ class FixIssuesActivity2 : AppCompatActivity() {
 
     private val editView: EditText
         get() = findViewById(R.id.edit_text)
+
+    private val contentLayout: View
+        get() = findViewById(R.id.header_layout)
 
     private val scrollView: ScrollView
         get() = findViewById(R.id.scrollView)
@@ -86,11 +90,13 @@ class FixIssuesActivity2 : AppCompatActivity() {
                         Log.d(TAG, "唤起系统输入法")
                         emotionView.isSelected = false
                         scrollView.setPadding(0, 0, 0, PanelUtil.getKeyBoardHeight(this@FixIssuesActivity2))
+                        scrollView.invalidate()
                     }
                     onNone {
                         Log.d(TAG, "隐藏所有面板")
                         emotionView.isSelected = false
                         scrollView.setPadding(0, 0, 0, 0)
+                        scrollView.invalidate()
                     }
                     onPanel {
                         Log.d(TAG, "唤起面板 : $it")
@@ -98,6 +104,7 @@ class FixIssuesActivity2 : AppCompatActivity() {
                             emotionView.isSelected = it.id == R.id.panel_emotion
                         }
                         scrollView.setPadding(0, 0, 0, PanelUtil.getKeyBoardHeight(this@FixIssuesActivity2))
+                        scrollView.invalidate()
                     }
                     onPanelSizeChange { panelView, _, _, _, width, height ->
                         if (panelView is PanelView) {
@@ -122,6 +129,18 @@ class FixIssuesActivity2 : AppCompatActivity() {
         }
 
     }
+
+
+    private fun test(bottomMargin : Int) {
+
+        val layoutParams = contentLayout.layoutParams as? ViewGroup.MarginLayoutParams ?: return
+        layoutParams.bottomMargin = bottomMargin
+        contentLayout.layoutParams = layoutParams
+
+        scrollView.invalidate()
+
+    }
+
 
 
 }

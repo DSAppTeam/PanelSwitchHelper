@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.effective.android.panel.Constants
 import com.effective.android.panel.R
+import com.effective.android.panel.compat.KeyboardHeightCompat
 import com.effective.android.panel.device.DeviceInfo
 import com.effective.android.panel.device.DeviceRuntime
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
@@ -278,7 +279,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastContentHeight: Int? = null
     private var lastNavigationBarShow: Boolean? = null
     private var lastKeyboardHeight: Int = 0
-    private var minLimitOpenKeyboardHeight = 300
+    private val minLimitOpenKeyboardHeight by lazy { KeyboardHeightCompat.getMinLimitHeight() }
     private var minLimitCloseKeyboardHeight: Int = 0
     private var keyboardAnimation = false
 
