@@ -26,7 +26,7 @@
             <LinearLayout
                 android:id="@+id/header_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="#B3B6DCE4"
                 android:orientation="vertical">
 
@@ -48,24 +48,32 @@
                     android:layout_height="64dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/icon_add" />
+                <View
+                    android:layout_width="match_parent"
+                    android:background="@color/btn_bg"
+                    android:layout_height="match_parent"/>
 
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icon_add" />
 
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icon_add" />
 
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icon_add" />
+
+
+<!--                <ImageView-->
+<!--                    android:layout_width="64dp"-->
+<!--                    android:layout_height="64dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/icon_add" />-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="64dp"-->
+<!--                    android:layout_height="64dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/icon_add" />-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="64dp"-->
+<!--                    android:layout_height="64dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/icon_add" />-->
 
 
             </LinearLayout>
