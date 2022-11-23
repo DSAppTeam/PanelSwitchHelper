@@ -34,6 +34,7 @@
 
 
             <ImageView
+                android:id="@+id/iv_add_test"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:scaleType="centerCrop"
