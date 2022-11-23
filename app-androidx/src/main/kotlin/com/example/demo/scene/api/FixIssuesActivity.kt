@@ -10,10 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.view.panel.PanelView
+import com.example.demo.TestSecondActivity
 import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
 import com.example.demo.util.DisplayUtils
 import com.rd.PageIndicatorView
+import kotlinx.android.synthetic.main.activity_fix_issues_layout.*
 
 /**
  * author : linzheng
@@ -54,6 +56,11 @@ class FixIssuesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fix_issues_layout)
+        iv_add_test.setOnClickListener {
+            val intent = Intent(this, TestSecondActivity::class.java)
+            startActivity(intent)
+
+        }
     }
 
 
