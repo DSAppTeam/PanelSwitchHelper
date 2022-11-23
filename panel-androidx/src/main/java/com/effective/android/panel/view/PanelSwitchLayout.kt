@@ -313,15 +313,14 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun keyboardChangedAnimation() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         var hasSoftInput = false
-        var startAnimation: WindowInsetsAnimationCompat? = null
         var transitionY = 0f
         val callback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
 
             override fun onStart(animation: WindowInsetsAnimationCompat, bounds: WindowInsetsAnimationCompat.BoundsCompat): WindowInsetsAnimationCompat.BoundsCompat {
+                val typeFlag = animation.typeMask.and(WindowInsetsCompat.Type.ime())
                 val insetsCompat = ViewCompat.getRootWindowInsets(window.decorView)
                 hasSoftInput = insetsCompat?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
-                startAnimation = animation
-                if (hasSoftInput) {
+                if (hasSoftInput && typeFlag != 0) {
                     val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
                     val imeH = insetsCompat?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
                     val keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
@@ -354,7 +353,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 } else {
                     val logFormatter = LogFormatter.setUp()
                     logFormatter.addContent(value = "keyboard animation progress")
-                    val fraction = startAnimation?.fraction ?: return insets
+                    // 找到键盘（IME）动画
+                    val imeAnimation = runningAnimations.find { it.typeMask.and(WindowInsetsCompat.Type.ime()) != 0}
+                    val fraction = imeAnimation?.fraction ?: return insets
                     val softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
                     val softInputTop = window.decorView.bottom - softInputHeight
                     logFormatter.addContent("fraction", "$fraction")
