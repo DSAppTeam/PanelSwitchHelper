@@ -29,6 +29,7 @@ import kotlin.collections.HashMap
  * blog: yummylau.com
  */
 class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoReset: Boolean, @IdRes private val editTextId: Int, @IdRes private val resetId: Int) : IContentContainer, ViewAssertion {
+
     private val mEditText: EditText? = mViewGroup.findViewById(editTextId)
     private val context = mViewGroup.context
     private val mResetView: View? = mViewGroup.findViewById(resetId)
@@ -36,6 +37,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
     private val mResetAction: IResetAction
     private val tag = ContentContainerImpl::class.java.simpleName
     private val mPixelInputView = EditText(mEditText?.context)
+    private var skipLayoutListener = false
 
     init {
         assertView()
@@ -365,15 +367,20 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
 
     private val map = HashMap<Int, ViewPosition>()
 
+
+
+
     override fun layoutContainer(l: Int, t: Int, r: Int, b: Int,
                                  contentScrollMeasurers: MutableList<ContentScrollMeasurer>, defaultScrollHeight: Int, canScrollOutsize: Boolean,
                                  reset: Boolean, changed: Boolean) {
         // Step 1 这里执行了一次父控件的layout方法，这样每个子View的位置是默认状态
+        skipLayoutListener = false
         mViewGroup.layout(l, t, r, b)
         if (!canScrollOutsize) {
             return
         }
         // step 2 根据滚动偏移量的干预，再重新调整子View的位置
+        skipLayoutListener = true
         for (contentScrollMeasurer in contentScrollMeasurers) {
             val viewId = contentScrollMeasurer.getScrollViewId()
             if (viewId != -1) {
@@ -382,12 +389,13 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     var viewPosition = map[viewId]
                     if (viewPosition == null) {
                         viewPosition = ViewPosition(viewId, view.left, view.top, view.right, view.bottom)
+                        view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                            if (!skipLayoutListener) {
+                                viewPosition.syncPosition(view.left, view.top, view.right, view.bottom)
+                            }
+                        }
                         map[viewId] = viewPosition
-                    } else if (changed) {
-                        // 因为 Step 1 执行了父控件的layout方法，这里直接拿子View的初始位置
-                        viewPosition.syncPosition(view.left, view.top, view.right, view.bottom)
                     }
-
                     var willScrollDistance = 0
                     if (reset) {
                         if (viewPosition.hasChange()) {
