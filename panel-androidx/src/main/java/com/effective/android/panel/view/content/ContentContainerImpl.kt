@@ -434,7 +434,11 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
             val viewId = contentMeasure.getScrollViewId()
             val view = (mViewGroup).findViewById<View>(viewId)
             val willScrollDistance = contentMeasure.getScrollDistance(defaultScrollHeight)
-            val maxDistance = defaultScrollHeight - willScrollDistance
+            val maxDistance = if (willScrollDistance < defaultScrollHeight) {
+                defaultScrollHeight - willScrollDistance
+            } else {
+                0
+            }
             val parentY = -contentTranslationY
 
             if (parentY < maxDistance) {
@@ -443,9 +447,6 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                 view.translationY = maxDistance.toFloat()
             }
             Log.d("translationContainer", "viewId = $viewId, maxDistance = $maxDistance, parentY = $parentY, y = ${view.translationY}")
-
-//            Log.d("translationContainer", "translationContainer: defaultScrollHeight = $defaultScrollHeight , contentTranslationY = $contentTranslationY")
-//            Log.d("translationContainer", "translationContainer: willScrollDistance = $willScrollDistance , y = ${view.translationY}")
         }
     }
 
