@@ -67,6 +67,7 @@
         <activity
             android:name="com.example.demo.TestSecondActivity"
             android:exported="false" />
+        <activity android:name="com.example.demo.scene.api.FixIssuesActivity3" />
     </application>
 
 </manifest>
