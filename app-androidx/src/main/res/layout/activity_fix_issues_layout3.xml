@@ -1,58 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView"
+<com.effective.android.panel.view.PanelSwitchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:orientation="vertical"
+    app:animationSpeed="standard"
+    app:enableKeyboardAnimator="true">
 
-
-    <LinearLayout
-        android:id="@+id/header_layout"
+    <com.effective.android.panel.view.content.RelativeContentContainer
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#B3B6DCE4"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="#B397C298"
+        app:edit_view="@id/edit_text">
 
 
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="80dp"
-            android:hint="输入内容"
-            android:background="@drawable/selector_edit_focus"
+            android:layout_marginBottom="150dp"
+            android:background="#FDFDFD"
             android:imeOptions="actionSearch"
+            android:minHeight="200dp"
             android:textCursorDrawable="@drawable/shape_edit_cursor"
             android:textSize="@dimen/sp_16" />
 
+        <LinearLayout
+            android:id="@+id/bottom_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="@drawable/shape_input_layout"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:minHeight="@dimen/dp_50"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_7.5">
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_add" />
+            <!-- 表情入口 -->
+            <ImageView
+                android:id="@+id/emotion_btn"
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="@dimen/dp_35"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:src="@drawable/selector_emotion_btn" />
+
+        </LinearLayout>
 
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_add" />
-
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_add" />
-
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_add" />
+    </com.effective.android.panel.view.content.RelativeContentContainer>
 
 
-    </LinearLayout>
+    <com.effective.android.panel.view.panel.PanelContainer
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B3C18E8E"
+        tools:layout_height="160dp">
 
-</ScrollView>
+
+        <!-- 每一项面板 -->
+        <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+        <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+        <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+        <com.effective.android.panel.view.panel.PanelView
+            android:id="@+id/panel_emotion"
+            android:layout_width="match_parent"
+
+
+            android:layout_height="match_parent"
+            app:panel_layout="@layout/panel_emotion_layout"
+            app:panel_trigger="@id/emotion_btn" />
+
+
+    </com.effective.android.panel.view.panel.PanelContainer>
+
+
+</com.effective.android.panel.view.PanelSwitchLayout>
