@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/cus_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="自定义标题栏"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <com.effective.android.panel.view.PanelSwitchLayout
+            android:id="@+id/panel_switch_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:animationSpeed="standard"
+            app:enableKeyboardAnimator="true">
+
+            <!-- 内容区域 -->
+            <!-- edit_view 指定一个 EditText 用于输入 ，必须项-->
+            <!-- empty_view 指定用户点击该 ID 对应的 View 时实现面板或者输入法隐藏，非必须项 -->
+            <com.example.demo.scene.api.CusContentContainer
+                android:id="@+id/content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:edit_view="@id/edit_text">
+
+                <com.example.demo.scene.chat.view.AutoHidePanelRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toTopOf="@+id/bottom_action"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/bottom_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_view">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_reply"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_50"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center_vertical|left"
+                        android:paddingHorizontal="@dimen/dp_10"
+                        android:text="回复某某某"
+                        android:textColor="@color/gray_50"
+                        android:textSize="@dimen/sp_15"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_input_layout"
+                        android:gravity="bottom"
+                        android:minHeight="@dimen/dp_50"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_7.5">
+
+                        <!-- 更多入口 -->
+                        <ImageView
+                            android:id="@+id/add_btn"
+                            android:layout_width="@dimen/dp_35"
+                            android:layout_height="@dimen/dp_35"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:src="@drawable/icon_add" />
+
+                        <!-- 输入入口 -->
+                        <EditText
+                            android:id="@+id/edit_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_weight="1"
+                            android:background="@drawable/selector_edit_focus"
+                            android:imeOptions="actionSearch"
+                            android:maxLines="5"
+                            android:minHeight="@dimen/dp_35"
+                            android:paddingLeft="@dimen/dp_3"
+                            android:paddingTop="@dimen/dp_7.5"
+                            android:paddingRight="@dimen/dp_3"
+                            android:paddingBottom="@dimen/dp_3"
+                            android:textCursorDrawable="@drawable/shape_edit_cursor"
+                            android:textSize="@dimen/sp_16" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_35"
+                            android:orientation="horizontal">
+
+                            <!-- 表情入口 -->
+                            <ImageView
+                                android:id="@+id/emotion_btn"
+                                android:layout_width="@dimen/dp_35"
+                                android:layout_height="@dimen/dp_35"
+                                android:layout_marginEnd="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:src="@drawable/selector_emotion_btn" />
+
+                            <TextView
+                                android:id="@+id/send"
+                                android:layout_width="@dimen/dp_50"
+                                android:layout_height="@dimen/dp_35"
+                                android:background="@drawable/selector_send_btn"
+                                android:gravity="center"
+                                android:text="@string/send"
+                                android:textColor="@color/color_send_btn"
+                                android:textSize="@dimen/sp_15" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </com.example.demo.scene.api.CusContentContainer>
+
+
+            <!-- 面板区域，仅能包含PanelView-->
+            <com.effective.android.panel.view.panel.PanelContainer
+                android:id="@+id/panel_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/common_page_bg_color">
+
+                <!-- 每一项面板 -->
+                <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+                <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+                <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+                <com.effective.android.panel.view.panel.PanelView
+                    android:id="@+id/panel_emotion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:panel_layout="@layout/panel_emotion_layout"
+                    app:panel_trigger="@id/emotion_btn" />
+
+                <com.effective.android.panel.view.panel.PanelView
+                    android:id="@+id/panel_addition"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:panel_layout="@layout/panel_add_layout"
+                    app:panel_trigger="@id/add_btn" />
+
+            </com.effective.android.panel.view.panel.PanelContainer>
+        </com.effective.android.panel.view.PanelSwitchLayout>
+
+    </LinearLayout>
+</layout>
