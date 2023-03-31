@@ -63,6 +63,7 @@
         <activity android:name="com.example.demo.scene.chat.ChatCusContentScrollActivity" />
         <activity android:name="com.example.demo.scene.api.FixIssuesActivity" />
         <activity android:name="com.example.demo.scene.api.FixIssuesActivity2" />
+        <activity android:name="com.example.demo.scene.api.FixIssuesActivity4" />
         <activity android:name="com.example.demo.scene.api.FixIssuesForBackBerryActivity" />
         <activity
             android:name="com.example.demo.TestSecondActivity"

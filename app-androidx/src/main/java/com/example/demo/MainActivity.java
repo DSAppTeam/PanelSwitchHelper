@@ -9,6 +9,11 @@ import android.widget.ExpandableListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleExpandableListAdapter;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+
 import com.effective.BuildConfig;
 import com.effective.R;
 import com.effective.databinding.ActivityMainLayoutBinding;
@@ -21,6 +26,7 @@ import com.example.demo.scene.api.DefaultHeightPanelActivity;
 import com.example.demo.scene.api.FixIssuesActivity;
 import com.example.demo.scene.api.FixIssuesActivity2;
 import com.example.demo.scene.api.FixIssuesActivity3;
+import com.example.demo.scene.api.FixIssuesActivity4;
 import com.example.demo.scene.api.FixIssuesForBackBerryActivity;
 import com.example.demo.scene.api.FloatContentView;
 import com.example.demo.scene.api.FloatWindowManager;
@@ -42,11 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
     final String scene_title = "扩展场景";
     final String scene_1 = "视频播放(优于b站)";
     final String scene_2 = "信息流评论(同微信朋友圈效果)";
-//    final String scene_2_2 = "信息流评论(同微信朋友圈效果-非dialog)";
+    //    final String scene_2_2 = "信息流评论(同微信朋友圈效果-非dialog)";
     final String scene_3 = "PC直播(优于虎牙效果)";
     final String scene_4 = "手机直播(优于抖音效果)";
     final String scene_5 = "复杂聊天场景";
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity{
     final String issues_1 = "ScrollView & EditText问题";
     final String issues_2 = "Keyboard Height On BackBerry";
     final String issues_3 = "EditText";
+    final String issues_4 = "输入框顶部有根据场景出现内容";
 
 
     final String[] groupStrings = {
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity{
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {window_1,window_2,window_3},
             {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7},
-            {issues_0,issues_1,issues_2, issues_3},
+            {issues_0,issues_1,issues_2, issues_3,issues_4},
             {api_content_container_1,api_content_container_2,api_content_container_3,api_content_container_4},
             {api_define_content_container_scroll},
             {api_cus_panel,api_cus_panel_height},
@@ -327,6 +329,10 @@ public class MainActivity extends AppCompatActivity{
                     }
                     case issues_3: {
                         FixIssuesActivity3.start(MainActivity.this);
+                        break;
+                    }
+                    case issues_4: {
+                        FixIssuesActivity4.start(MainActivity.this);
                         break;
                     }
                 }
