@@ -578,6 +578,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     private fun releaseKeyboardChangedListener() {
         if (keyboardAnimation || supportKeyboardFeature()) {
+            val rootView = windowInsetsRootView ?: window.decorView.rootView
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
         } else {
             globalLayoutListener?.let {
