@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:animationSpeed="standard"
-    app:enableKeyboardAnimator="true">
+    app:android11KeyboardFeature="true">
 
     <com.effective.android.panel.view.content.FrameContentContainer
         android:layout_width="match_parent"

@@ -18,7 +18,7 @@
             android:id="@+id/panel_switch_layout"
             android:layout_width="match_parent"
             app:animationSpeed="standard"
-            app:enableKeyboardAnimator="true"
+            app:android11KeyboardFeature="true"
             android:layout_height="match_parent"
             android:orientation="vertical">
 

@@ -6,7 +6,7 @@
         android:id="@+id/panel_switch_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:enableKeyboardAnimator="false"
+        app:android11KeyboardFeature="false"
         android:orientation="vertical">
 
         <!-- 内容区域 -->

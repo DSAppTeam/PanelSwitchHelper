@@ -9,7 +9,7 @@
             <enum name="fast" value="150" />
             <enum name="fastest" value="100" />
         </attr>
-        <attr name="enableKeyboardAnimator" format="boolean"/>
+        <attr name="android11KeyboardFeature" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PanelView">

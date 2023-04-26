@@ -88,7 +88,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastPanelId = Constants.PANEL_NONE
     private var lastPanelHeight = -1
     private var animationSpeed = 200 //standard
-    private var enableKeyboardAnimator = true   // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
+    private var enableAndroid11KeyboardFeature = true   // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
     private var contentScrollOutsizeEnable = true
 
     private var deviceRuntime: DeviceRuntime? = null
@@ -100,6 +100,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private val retryCheckoutKbRunnable = CheckoutKbRunnable()
 
     internal fun getContentContainer() = contentContainer
+
+    // 针对Android 11以上开启键盘动画特性，高度获取失败时，对外提供兼容方案
+    var softInputHeightCalculatorOnStart: ((animation: WindowInsetsAnimationCompat, bounds: WindowInsetsAnimationCompat.BoundsCompat) -> Int)? = null
+    var softInputHeightCalculatorOnProgress: ((insets: WindowInsetsCompat, runningAnimations: MutableList<WindowInsetsAnimationCompat>) -> Int)? = null
 
     inner class CheckoutKbRunnable : Runnable {
         var retry = false
@@ -127,7 +131,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private fun initView(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PanelSwitchLayout, defStyleAttr, 0)
         animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed)
-        enableKeyboardAnimator = typedArray.getBoolean(R.styleable.PanelSwitchLayout_enableKeyboardAnimator, true)
+        enableAndroid11KeyboardFeature = typedArray.getBoolean(R.styleable.PanelSwitchLayout_android11KeyboardFeature, true)
         typedArray.recycle()
     }
 
@@ -281,13 +285,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private var lastKeyboardHeight: Int = 0
     private val minLimitOpenKeyboardHeight by lazy { KeyboardHeightCompat.getMinLimitHeight() }
     private var minLimitCloseKeyboardHeight: Int = 0
-    private var keyboardAnimation = false
+    private var keyboardAnimationFeature = false     // 是否使用Android 11键盘动画特性
 
     internal fun bindWindow(window: Window, windowInsetsRootView: View?) {
         this.window = window
         this.windowInsetsRootView = windowInsetsRootView
-        keyboardAnimation = enableKeyboardAnimator && supportKeyboardAnimation()
-        if (keyboardAnimation) {
+        keyboardAnimationFeature = enableAndroid11KeyboardFeature && supportKeyboardAnimation()
+        if (keyboardAnimationFeature) {
             // 通过监听键盘动画，修改translationY线上面板
             keyboardChangedAnimation()
         } else {
@@ -320,10 +324,15 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 val typeFlag = animation.typeMask.and(WindowInsetsCompat.Type.ime())
                 val insetsCompat = ViewCompat.getRootWindowInsets(window.decorView)
                 hasSoftInput = insetsCompat?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
+                LogTracker.log("onStart", "hasSoftInput = $hasSoftInput")
                 if (hasSoftInput && typeFlag != 0) {
                     val navigationBarH = insetsCompat?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
                     val imeH = insetsCompat?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
-                    val keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
+                    var keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
+                    if (keyboardH == 0) {
+                        LogTracker.log("onStart", "键盘高度获取失败，请实现softInputHeightCalculatorOnStart兼容正确的键盘高度")
+                        keyboardH = softInputHeightCalculatorOnStart?.invoke(animation, bounds)?: 0
+                    }
                     val realKeyboardH = keyboardH - navigationBarH
                     LogTracker.log("onStart", "keyboard height = $keyboardH")
                     LogTracker.log("onStart", "realKeyboardH height = $realKeyboardH")
@@ -354,25 +363,32 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     val logFormatter = LogFormatter.setUp()
                     logFormatter.addContent(value = "keyboard animation progress")
                     // 找到键盘（IME）动画
-                    val imeAnimation = runningAnimations.find { it.typeMask.and(WindowInsetsCompat.Type.ime()) != 0}
-                    val fraction = imeAnimation?.fraction ?: return insets
-                    val softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-                    val softInputTop = window.decorView.bottom - softInputHeight
+                    val imeAnimation = runningAnimations.find { it.typeMask.and(WindowInsetsCompat.Type.ime()) != 0 }
+                    val fraction = imeAnimation?.fraction ?: return insets                          // 动画进度 【0,1】
+                    var softInputHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom    // 键盘高度，这个高度包含了导航栏
+                    if (hasSoftInput && fraction != 0f && softInputHeight == 0) { // 部分手机在键盘动画执行过程中无法获取到键盘高度
+                        // 这里提供一个键盘计算的方法，业务方可以自行兼容
+                        LogTracker.log("onProgress", "键盘高度获取失败，请实现softInputHeightCalculatorOnProgress兼容正确的键盘高度，当前动画进度fraction = $fraction")
+                        softInputHeight = softInputHeightCalculatorOnProgress?.invoke(insets, runningAnimations) ?: 0
+                    }
+                    val softInputTop = window.decorView.bottom - softInputHeight            // 键盘top位于当前window的位置
                     logFormatter.addContent("fraction", "$fraction")
                     logFormatter.addContent("softInputHeight", "$softInputHeight")
                     logFormatter.addContent("decorView.bottom", "${window.decorView.bottom}")
                     val location = DisplayUtil.getLocationOnWindow(this@PanelSwitchLayout)
-                    val floatInitialBottom = height + location[1]
+                    val floatInitialBottom = height + location[1]                           // PanelSwitchLayout控件位于当前window的Bottom
                     val compatPanelHeight = getCompatPanelHeight(panelId)
-                    if (hasSoftInput && softInputTop < floatInitialBottom) {
-                        val offset = (softInputTop - floatInitialBottom).toFloat()
-                        if (panelContainer.translationY > offset) {
-                            panelContainer.translationY = offset
-                            contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, offset)
-                            logFormatter.addContent("translationY", "$offset")
-                            transitionY = offset
+                    if (hasSoftInput) { // 键盘显示时
+                        if (softInputTop < floatInitialBottom) {
+                            val offset = (softInputTop - floatInitialBottom).toFloat()
+                            if (panelContainer.translationY > offset) {
+                                panelContainer.translationY = offset
+                                contentContainer.translationContainer(contentScrollMeasurers, compatPanelHeight, offset)
+                                logFormatter.addContent("translationY", "$offset")
+                                transitionY = offset
+                            }
                         }
-                    } else if (!hasSoftInput) {
+                    } else {// 键盘关闭时
                         // 有些设备隐藏键盘时，softInputHeight的值一直等于0，此时用 fraction 来计算偏移量
                         if (softInputHeight > 0) {
                             val offset = min(softInputTop - floatInitialBottom, 0).toFloat()
@@ -557,7 +573,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         Log.d(TAG, "trySyncKeyboardHeight: $keyboardHeight")
         if (lastKeyboardHeight > 0 && keyboardHeight > 0) {
             // 采用键盘过渡动画的方案需要同步高度，采用 onLayout 方案的不需要通过这个方法进行同步
-            if (keyboardAnimation && panelContainer.translationY != 0F) {
+            if (keyboardAnimationFeature && panelContainer.translationY != 0F) {
                 updatePanelStateByAnimation(keyboardHeight)
             }
         }
@@ -565,7 +581,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun tryBindKeyboardChangedListener() {
-        if (keyboardAnimation || supportKeyboardFeature()) {
+        if (keyboardAnimationFeature || supportKeyboardFeature()) {
             keyboardChangedListener30Impl()
         } else {
             globalLayoutListener?.let {
@@ -577,7 +593,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun releaseKeyboardChangedListener() {
-        if (keyboardAnimation || supportKeyboardFeature()) {
+        if (keyboardAnimationFeature || supportKeyboardFeature()) {
             val rootView = windowInsetsRootView ?: window.decorView.rootView
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
         } else {
@@ -705,7 +721,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             return
         }
         // 这里是使用键盘过渡动画方案
-        if (keyboardAnimation) {
+        if (keyboardAnimationFeature) {
             super.onLayout(changed, l, t, r, b)
             val compatPanelHeight = getCompatPanelHeight(panelId)
             if (panelId != Constants.PANEL_NONE && compatPanelHeight != 0) {
@@ -912,7 +928,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
             Constants.PANEL_NONE -> {
                 contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, true)
                 contentContainer.getResetActionImpl().enableReset(false)
-                if (keyboardAnimation) {
+                if (keyboardAnimationFeature) {
                     updatePanelStateByAnimation(0)
                 }
             }
@@ -936,7 +952,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 contentContainer.getInputActionImpl().hideKeyboard(isKeyboardShowing, false)
                 contentContainer.getResetActionImpl().enableReset(true)
                 // Android 11 修改偏移量来显示面板
-                if (keyboardAnimation) {
+                if (keyboardAnimationFeature) {
                     val compatPanelHeight = getCompatPanelHeight(panelId)
                     updatePanelStateByAnimation(compatPanelHeight)
                 }

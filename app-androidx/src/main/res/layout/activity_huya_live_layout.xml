@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:enableKeyboardAnimator="false"
+            app:android11KeyboardFeature="false"
             android:layout_weight="1">
 
             <com.effective.android.panel.view.content.RelativeContentContainer

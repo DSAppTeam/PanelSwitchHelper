@@ -278,9 +278,9 @@ public class ChatSuperActivity extends AppCompatActivity implements EditTextSele
                     super.onScrolled(recyclerView, dx, dy);
                     RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                     if (layoutManager instanceof LinearLayoutManager) {
-                        int childCount = recyclerView.getChildCount();
-                        if (childCount > 0) {
-                            View lastChildView = recyclerView.getChildAt(childCount - 1);
+                        int position = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                        View lastChildView = layoutManager.findViewByPosition(position);
+                        if (lastChildView != null) {
                             int bottom = lastChildView.getBottom();
                             int listHeight = mBinding.recyclerView.getHeight() - mBinding.recyclerView.getPaddingBottom();
                             unfilledHeight = listHeight - bottom;

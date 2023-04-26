@@ -39,7 +39,7 @@ xmlns:tools="http://schemas.android.com/tools">
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:enableKeyboardAnimator="false"
+        app:android11KeyboardFeature="false"
         app:animationSpeed="standard">
 
         <!-- 内容区域 -->
