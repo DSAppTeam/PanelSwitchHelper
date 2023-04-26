@@ -21,9 +21,10 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 ```kotlin
 
-    // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
-    private var enableAndroid11KeyboardFeature = true   
-    private var contentScrollOutsizeEnable = true
+// 针对Android 11以上开启键盘动画特性，高度获取失败时，对外提供兼容方案
+var softInputHeightCalculatorOnStart: ((animation: WindowInsetsAnimationCompat, bounds: WindowInsetsAnimationCompat.BoundsCompat) -> Int)? = null
+var softInputHeightCalculatorOnProgress: ((insets: WindowInsetsCompat, runningAnimations: MutableList<WindowInsetsAnimationCompat>) -> Int)? = null
+
 
 ```
 
