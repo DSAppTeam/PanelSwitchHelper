@@ -10,6 +10,23 @@ README: [English Doc](https://github.com/YummyLau/PanelSwitchHelper/blob/master/
 
 在开发聊天/视频/直播/信息流界面时，希望用户在输入法与功能面板（比如表情面板/更多选项面板等）的切换过程中保持平滑过渡。调研了市场上主流的app效果及实现，实现了一套兼容多场景的输入面板切换框架。目前该框架已测试使用。
 
+### 原理介绍
+
+* 方案1：在 setSoftInputMode = SOFT_INPUT_ADJUST_RESIZE 的场景下，通过ViewTreeObserver.OnGlobalLayoutListener或者ViewCompat.setOnApplyWindowInsetsListener来获取键盘高度，通过修改onLayout的方式调整输入面板的高度。
+* 方案2：在 setSoftInputMode = SOFT_INPUT_ADJUST_NOTHING 的场景下，通过ViewCompat.setWindowInsetsAnimationCallback监听键盘过渡动画，获取实时的键盘高度后，通过修改控件translationY的方式实现。
+
+其中方案2是在1.5.0版本中引入的，可以通过android11KeyboardFeature属性控制是否开启Android 11键盘特性（默认是开启的）。在部分应用场景中Android 11键盘特性无法生效，我们会降级成方案1的方式。
+
+备注：由于Android手机设备碎片化严重，可能会出现部分手机的兼容问题，我们为PanelSwitchLayout提供了两个兼容方法，当你的设备无法正常获取到键盘高度时，你可以尝试实现这两个方法来做兼容。
+
+```kotlin
+
+    // 是否启用 Android 11 键盘动画方案，目前发现 dialog，popupWindow等子窗口场景不支持键盘动画
+    private var enableAndroid11KeyboardFeature = true   
+    private var contentScrollOutsizeEnable = true
+
+```
+
 ### 框架优势
 
 * 改进传统使用 `Weight+LinearLayout` 动态更改布局高度适配面板的技术方案，支持多种原生 ViewGroup 容器

@@ -76,3 +76,9 @@
     * IContentContainer#layoutContainer()添加了changed参数，用来判断是否需要重新布局。
 * 1.5.2 修复已知Bug。
     * 修复Android 11 以上布局偏移量变化后，布局位置没有同步的问题。
+* 1.5.3 修复已知Bug。
+    * 修复快速滑动列表时，偏移量计算异常的问题。
+    * 优化viewPosition位置变化的监听。
+* 1.5.4 修复已知Bug，提供兼容方案。
+    * 更改 api `enableKeyboardAnimator` -> `android11KeyboardFeature`，用来控制是否启用Android 11 的键盘动画效果，默认开启。
+    * 新增 `PanelSwitchLayout`提供两个兼容方法（`softInputHeightCalculatorOnStart`，`softInputHeightCalculatorOnProgress`），针对Android 11以上开启键盘动画特性，高度获取失败时，对外提供兼容方案。
