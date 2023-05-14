@@ -287,6 +287,6 @@ dependencies {
 
 The project was written only to improve the efficiency of daily development and focus on processing business. If you have better practices or suggestions, please write to yummyl.lau@gmail.com.
 
-Or search WeChat "sun_f_life" and add WeChat for feedback.
+Or search WeChat "lym_llllll" and add WeChat for feedback.
 
 If the framework is helpful to you, Amway can give the partners around you, and every star is an affirmation of the framework.
