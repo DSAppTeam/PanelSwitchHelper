@@ -2,10 +2,6 @@ package com.example.demo.scene.chat;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +28,6 @@ import com.example.demo.scene.chat.adapter.ChatAdapter;
 import com.example.demo.scene.chat.adapter.ChatInfo;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
-import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
@@ -41,6 +39,21 @@ public class ChatFragment extends Fragment {
     private ChatAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private static final String TAG = "ChatFragment";
+    private boolean releaseWithPager = false;
+    // 在ViewPager场景下，不可见时，尝试释放监听器
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initExtra();
+    }
+
+    private void initExtra() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            releaseWithPager = bundle.getBoolean(Constants.RELEASE_WITH_PAGER, false);
+        }
+    }
 
     @Nullable
     @Override
@@ -102,10 +115,11 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         if (mHelper == null) {
             mHelper = new PanelSwitchHelper.Builder(this)
+                    .setWindowInsetsRootView(mBinding.getRoot())
                     //可选
                     .addKeyboardStateListener((visible, height) -> Log.d(TAG, "系统键盘是否可见 : " + visible + " 高度为：" + height))
                     //可选
@@ -174,6 +188,16 @@ public class ChatFragment extends Fragment {
                     .build();
         }
         mBinding.recyclerView.setPanelSwitchHelper(mHelper);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (releaseWithPager) {
+            mBinding.panelSwitchLayout.recycle();
+            mHelper = null;
+        }
     }
 
     public boolean hookOnBackPressed() {

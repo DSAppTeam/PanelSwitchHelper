@@ -64,4 +64,6 @@ dependencies {
     implementation project(":panel-androidx")
 //    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.4'
 //    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
 }

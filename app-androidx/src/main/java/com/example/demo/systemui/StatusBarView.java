@@ -66,7 +66,7 @@ public class StatusBarView extends LinearLayout {
             int x = Integer.parseInt(field.get(obj).toString());
             sbar = context.getResources().getDimensionPixelSize(x);
         } catch (Exception var7) {
-            var7.printStackTrace();
+//            var7.printStackTrace();
         }
         return sbar;
     }

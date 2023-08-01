@@ -236,7 +236,9 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
         fun build(showKeyboard: Boolean = false): PanelSwitchHelper {
             findSwitchLayout(rootView)
             requireNotNull(panelSwitchLayout) { "PanelSwitchHelper\$Builder#build : not found PanelSwitchLayout!" }
-            return PanelSwitchHelper(this, showKeyboard)
+            return PanelSwitchHelper(this, showKeyboard).also {
+                panelSwitchLayout?.tryBindKeyboardChangedListener()
+            }
         }
 
         private fun findSwitchLayout(view: View) {

@@ -69,6 +69,8 @@
             android:name="com.example.demo.TestSecondActivity"
             android:exported="false" />
         <activity android:name="com.example.demo.scene.api.FixIssuesActivity3" />
+        <activity android:name="com.example.demo.scene.viewpager.ViewPagerActivity" />
+        <activity android:name="com.example.demo.scene.viewpager.ViewPager2Activity" />
     </application>
 
 </manifest>

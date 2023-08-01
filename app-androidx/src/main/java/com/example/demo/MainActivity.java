@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.effective.BuildConfig;
 import com.effective.R;
@@ -43,6 +44,8 @@ import com.example.demo.scene.feed.FeedDialogActivity;
 import com.example.demo.scene.live.douyin.PhoneDouyinLiveActivity;
 import com.example.demo.scene.live.huya.PcHuyaLiveActivity;
 import com.example.demo.scene.video.BiliBiliSampleActivity;
+import com.example.demo.scene.viewpager.ViewPager2Activity;
+import com.example.demo.scene.viewpager.ViewPagerActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +69,12 @@ public class MainActivity extends AppCompatActivity{
     final String fragment_2 = "fragment 自定义标题栏";
     final String fragment_3 = "fragment 自定义标题栏，状态栏着色";
     final String fragment_4 = "fragment 自定义标题栏，状态栏透明";
+
+    final String view_pager_title = "聊天场景 ViewPager + Fragment实现";
+    final String view_pager_0 = "ViewPager + Fragment";
+    final String view_pager_1 = "ViewPager2 + Fragment | VERTICAL";
+    final String view_pager_2 = "ViewPager2 + Fragment | HORIZONTAL";
+
 
     final String window_title = "聊天场景 other window 实现";
     final String window_1 = "DialogFragment";
@@ -113,6 +122,7 @@ public class MainActivity extends AppCompatActivity{
     final String[] groupStrings = {
             activity_title,
             fragment_title,
+            view_pager_title,
             window_title,
             scene_title,
             issues_title,
@@ -125,6 +135,7 @@ public class MainActivity extends AppCompatActivity{
     final String[][] childStrings = {
             {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
             {fragment_1,fragment_2,fragment_3,fragment_4},
+            {view_pager_0,view_pager_1,view_pager_2},
             {window_1,window_2,window_3},
             {scene_1,scene_2,scene_3,scene_4,scene_5,scene_6,scene_7},
             {issues_0,issues_1,issues_2, issues_3,issues_4},
@@ -208,6 +219,19 @@ public class MainActivity extends AppCompatActivity{
                     }
                     case fragment_4:{
                         ChatFragmentActivity.startFragment(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR);
+                        break;
+                    }
+
+                    case view_pager_0: {
+                        ViewPagerActivity.start(MainActivity.this);
+                        break;
+                    }
+                    case view_pager_1: {
+                        ViewPager2Activity.start(MainActivity.this, ViewPager2.ORIENTATION_VERTICAL);
+                        break;
+                    }
+                    case view_pager_2: {
+                        ViewPager2Activity.start(MainActivity.this, ViewPager2.ORIENTATION_HORIZONTAL);
                         break;
                     }
 

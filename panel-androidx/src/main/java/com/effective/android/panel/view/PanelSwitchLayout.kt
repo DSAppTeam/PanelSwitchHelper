@@ -152,12 +152,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!hasAttachLister) {
-            tryBindKeyboardChangedListener()
-        }
+        tryBindKeyboardChangedListener()
     }
 
-    private fun recycle() {
+    fun recycle() {
         removeCallbacks(retryCheckoutKbRunnable)
         removeCallbacks(keyboardStateRunnable)
         contentContainer.getInputActionImpl().recycler()
@@ -423,6 +421,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * 是否支持键盘过渡动画
      */
     private fun supportKeyboardAnimation(): Boolean {
+        if (!this::window.isInitialized) {
+            return false
+        }
         return window.decorView.isSystemInsetsAnimationSupport()
     }
 
@@ -580,7 +581,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     }
 
 
-    private fun tryBindKeyboardChangedListener() {
+    fun tryBindKeyboardChangedListener() {
+        if (hasAttachLister) {
+            return
+        }
+        if (!this::window.isInitialized) {
+            return
+        }
         if (keyboardAnimationFeature || supportKeyboardFeature()) {
             keyboardChangedListener30Impl()
         } else {
@@ -593,6 +600,9 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
 
 
     private fun releaseKeyboardChangedListener() {
+        if (!this::window.isInitialized) {
+            return
+        }
         if (keyboardAnimationFeature || supportKeyboardFeature()) {
             val rootView = windowInsetsRootView ?: window.decorView.rootView
             ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
