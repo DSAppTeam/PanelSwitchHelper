@@ -1,5 +1,5 @@
 //include ':app'
 //include ':panel'
 
-include ':app-androidx'
+//include ':app-androidx'
 include ':panel-androidx'
