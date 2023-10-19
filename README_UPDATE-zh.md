@@ -82,3 +82,5 @@
 * 1.5.4 修复已知Bug，提供兼容方案。
     * 更改 api `enableKeyboardAnimator` -> `android11KeyboardFeature`，用来控制是否启用Android 11 的键盘动画效果，默认开启。
     * 新增 `PanelSwitchLayout`提供两个兼容方法（`softInputHeightCalculatorOnStart`，`softInputHeightCalculatorOnProgress`），针对Android 11以上开启键盘动画特性，高度获取失败时，对外提供兼容方案。
+* 1.5.5 修复已知Bug，支持ViewPager、ViewPager2场景。
+    * 添加 PanelSwitchLayout.recycle() 方法，用于释放键盘高度变化监听器。
