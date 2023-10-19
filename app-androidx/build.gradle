@@ -62,7 +62,7 @@ dependencies {
     implementation deps.circleimageview
 //    implementation deps.panelSwitchHelper_androidx
     implementation project(":panel-androidx")
-//    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.5'
+//    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.6'
 //    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
