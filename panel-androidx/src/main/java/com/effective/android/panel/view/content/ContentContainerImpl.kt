@@ -322,6 +322,16 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     targetView.requestFocus()
                 }
             }
+
+            /**
+             * 输入框获取焦点并且显示光标
+             */
+            override fun focusAndShowSelection() {
+                val targetView = if (realEditViewAttach) mainInputView else mPixelInputView
+                targetView.requestFocus()
+            }
+
+
         }
     }
 

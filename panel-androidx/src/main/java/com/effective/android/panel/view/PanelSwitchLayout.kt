@@ -182,7 +182,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         })
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
-            checkoutKeyboard()
+            Log.d(TAG, "setEditTextFocusChangeListener: hasFocus = $hasFocus , panelId = $panelId")
+            if (isKeyboardState()) {
+                checkoutKeyboard()
+            }
         })
         contentContainer.getResetActionImpl().setResetCallback(Runnable {
             hookSystemBackByPanelSwitcher()
@@ -1000,6 +1003,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         val panelHeight = panelContainer.layoutParams.height
         if (expectHeight > 0 && panelHeight != expectHeight) {
             panelContainer.layoutParams.height = expectHeight
+        }
+    }
+
+
+    fun focusAndShowSelection() {
+        if (this::contentContainer.isInitialized) {
+            contentContainer.getInputActionImpl().focusAndShowSelection()
         }
     }
 

@@ -159,7 +159,11 @@ public class ChatFragment extends Fragment {
                         public void onPanel(IPanelView view) {
                             Log.d(TAG, "唤起面板 : " + view);
                             if(view instanceof PanelView){
-                                mBinding.emotionBtn.setSelected(((PanelView)view).getId() == R.id.panel_emotion ? true : false);
+                                boolean isEmotion = ((PanelView) view).getId() == R.id.panel_emotion;
+                                mBinding.emotionBtn.setSelected(isEmotion);
+                                if (isEmotion) {
+                                    mBinding.panelSwitchLayout.focusAndShowSelection();
+                                }
                             }
                         }
 

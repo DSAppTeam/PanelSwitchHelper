@@ -149,6 +149,7 @@ class ContentActivity : AppCompatActivity() {
                                                 findViewById<View>(R.id.pageIndicatorView) as PageIndicatorView,
                                                 editView,
                                                 Emotions.getEmotions(), width, viewPagerSize)
+
                                     }
                                     R.id.panel_addition -> {
                                     }

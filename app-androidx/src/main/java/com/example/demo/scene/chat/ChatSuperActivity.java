@@ -153,6 +153,7 @@ public class ChatSuperActivity extends AppCompatActivity implements EditTextSele
                                                 mBinding.getRoot().findViewById(R.id.pageIndicatorView),
                                                 ChatSuperActivity.this,
                                                 Emotions.getEmotions(), width, viewPagerSize);
+                                        mBinding.panelSwitchLayout.focusAndShowSelection();
                                         break;
                                     }
                                     case R.id.panel_addition: {

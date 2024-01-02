@@ -37,6 +37,7 @@ interface IInputAction {
     fun getFullScreenPixelInputView(): EditText
     fun updateFullScreenParams(isFullScreen : Boolean, panelId : Int, panelHeight : Int)
     fun recycler()
+    fun focusAndShowSelection()
 }
 
 interface IResetAction {
