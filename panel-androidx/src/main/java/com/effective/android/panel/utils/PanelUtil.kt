@@ -1,6 +1,7 @@
 package com.effective.android.panel.utils
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.effective.android.panel.Constants
@@ -29,6 +30,8 @@ object PanelUtil {
 
     @JvmStatic
     fun showKeyboard(context: Context, view: View): Boolean {
+        view.isFocusable = true
+        view.isFocusableInTouchMode = true
         view.requestFocus()
         val mInputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         return mInputManager.showSoftInput(view, 0)
