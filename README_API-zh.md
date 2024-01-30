@@ -135,6 +135,7 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
                 getScrollViewId { R.id.recycler_view }
             }
             .addPanelHeightMeasurer {   //可选 用于设置未获取输入法高度前面板的高度，如果不设置则默认以框架内高度为主
+                synchronizeKeyboardHeight { false } // 设置面板高度是否和键盘高度同步
                 getTargetPanelDefaultHeight { DisplayUtils.dip2px(this@DefaultHeightPanelActivity,400f)}
                 getPanelTriggerId { R.id.add_btn }
             }  
@@ -152,6 +153,7 @@ PanelSwitchHelper mHelper = new PanelSwitchHelper.Builder(this)
     * getScrollDistance 参数 defaultDistance 为框架默认距离，外部可自主返回其他距离
     * getScrollViewId，要干预处理的子view的id
 6. addPanelHeightMeasurer，用于设置面板的默认高度，当框架未获取输入法高度时，优先读取设置的高度，如果不存在则使用框架内默认高度
+    * synchronizeKeyboardHeight 面板高度是否同步使用键盘高度，返回值 = false 时，使用getTargetPanelDefaultHeight的值作为面板高度
     * getPanelTriggerId 对应面板的触发器id
     * getTargetPanelDefaultHeight 触发面板的默认高度
 7. logTrack 是否输出 log 信息

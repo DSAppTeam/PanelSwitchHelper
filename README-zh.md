@@ -280,6 +280,7 @@ dependencies {
                         getScrollViewId { R.id.recycler_view }
                     }
                     .addPanelHeightMeasurer {   //可选 用于设置未获取输入法高度前面板的高度，如果不设置则默认以框架内高度为主
+                        synchronizeKeyboardHeight { false } // 设置面板高度是否和键盘高度同步
                         getTargetPanelDefaultHeight { DisplayUtils.dip2px(this@DefaultHeightPanelActivity,400f)}
                         getPanelTriggerId { R.id.add_btn }
                     }   

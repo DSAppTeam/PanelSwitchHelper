@@ -114,6 +114,7 @@ class DefaultHeightPanelActivity : AppCompatActivity() {
                         getScrollViewId { R.id.recycler_view }
                     }
                     .addPanelHeightMeasurer {
+                        synchronizeKeyboardHeight { false }
                         getTargetPanelDefaultHeight { DisplayUtils.dip2px(this@DefaultHeightPanelActivity, 400f) }
                         getPanelTriggerId { R.id.add_btn }
                     }
