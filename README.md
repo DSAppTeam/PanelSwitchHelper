@@ -263,6 +263,7 @@ dependencies {
                         getScrollViewId { R.id.recycler_view }
                     }
                     .addPanelHeightMeasurer {   //Optional It is used to set the height of the front panel without obtaining the height of the input method. If it is not set, the height within the frame is the default
+                        synchronizeKeyboardHeight { false } 
                         getTargetPanelDefaultHeight { DisplayUtils.dip2px(this@DefaultHeightPanelActivity,400f)}
                         getPanelTriggerId { R.id.add_btn }
                     }  

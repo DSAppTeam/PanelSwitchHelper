@@ -153,6 +153,7 @@ Among them, the functions that the builder can specify during the build process 
     * getScrollDistance parameter defaultDistance is the default distance of the frame, the outside can return other distances autonomously
     * getScrollViewId, the id of the subview to be intervened
 6. addPanelHeightMeasurer, used to set the default height of the panel, when the frame does not get the height of the input method, the set height is read first, if not, the default height in the frame is used
+    * synchronizeKeyboardHeight 
     * getPanelTriggerId corresponds to the trigger id of the panel
     * getTargetPanelDefaultHeight triggers the default height of the panel
 7. Does logTrack output log information
