@@ -73,7 +73,7 @@ allprojects {
 ```groovy
 //1.4.0 版本及后续，仅支持 Androidx
 dependencies {
-    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.7'
+    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.8'
 }
 ```
 
