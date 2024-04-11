@@ -183,7 +183,8 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         contentContainer.getInputActionImpl().setEditTextFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
             notifyEditFocusChange(v, hasFocus)
             Log.d(TAG, "setEditTextFocusChangeListener: hasFocus = $hasFocus , panelId = $panelId")
-            if (isKeyboardState()) {
+            // 当前处于输入面板状态或者默认状态时，EditView获得焦点后，尝试弹出键盘
+            if (isKeyboardState() || isResetState()) {
                 checkoutKeyboard()
             }
         })
