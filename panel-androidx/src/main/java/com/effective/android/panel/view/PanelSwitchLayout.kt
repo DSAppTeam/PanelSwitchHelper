@@ -1012,6 +1012,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
      * @param expectHeight 期望高度
      */
     fun updatePanelStateDirect(expectHeight: Int) {
+        // 不支持键盘动画特性
+        if (!keyboardAnimationFeature) {
+            return
+        }
         Log.d(TAG, "updatePanelStateDirect: $expectHeight")
         val translationY = panelContainer.translationY
         val targetY = -expectHeight.toFloat()
