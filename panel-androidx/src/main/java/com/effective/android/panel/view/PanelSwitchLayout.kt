@@ -1007,6 +1007,26 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         }
     }
 
+    /**
+     * 更新面板状态
+     * @param expectHeight 期望高度
+     */
+    fun updatePanelStateDirect(expectHeight: Int) {
+        Log.d(TAG, "updatePanelStateDirect: $expectHeight")
+        val translationY = panelContainer.translationY
+        val targetY = -expectHeight.toFloat()
+        if (translationY != targetY) {
+            panelContainer.translationY = targetY
+            contentContainer.translationContainer(contentScrollMeasurers, expectHeight, targetY)
+        }
+        // 尝试对其键盘高度
+        val panelHeight = panelContainer.layoutParams.height
+        if (expectHeight > 0 && panelHeight != expectHeight) {
+            panelContainer.layoutParams.height = expectHeight
+        }
+    }
+
+
 
     fun focusAndShowSelection() {
         if (this::contentContainer.isInitialized) {
