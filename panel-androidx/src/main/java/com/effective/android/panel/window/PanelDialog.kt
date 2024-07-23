@@ -34,6 +34,7 @@ abstract class PanelDialog : Dialog {
     init {
         rootView = LayoutInflater.from(context).inflate(getDialogLayout(), null, false)
         setContentView(rootView)
+
         window?.let {
             it.setGravity(Gravity.CENTER)
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -43,7 +44,9 @@ abstract class PanelDialog : Dialog {
             it.attributes = lp
             it.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             it.setDimAmount(0f)
-            it.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+            it.attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            it.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
         }
     }
 }

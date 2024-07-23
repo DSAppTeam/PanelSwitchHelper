@@ -19,6 +19,7 @@ import com.effective.R;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.utils.KeyboardExtKt;
+import com.effective.android.panel.utils.PanelUtil;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.effective.android.panel.window.PanelDialog;
@@ -55,6 +56,14 @@ public class ChatDialog extends PanelDialog implements DialogInterface.OnKeyList
         getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, R.color.common_page_bg_color)));
         setOnKeyListener(this);
         initView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        KeyboardExtKt.showSoftInput(mBinding.editText);
+        int keyboardHeight = PanelUtil.getKeyBoardHeight(getContext());
+        mBinding.panelSwitchLayout.updatePanelStateDirect(keyboardHeight);
     }
 
     @Override

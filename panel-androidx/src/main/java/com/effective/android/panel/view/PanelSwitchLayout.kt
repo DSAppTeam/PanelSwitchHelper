@@ -133,6 +133,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         animationSpeed = typedArray.getInteger(R.styleable.PanelSwitchLayout_animationSpeed, animationSpeed)
         enableAndroid11KeyboardFeature = typedArray.getBoolean(R.styleable.PanelSwitchLayout_android11KeyboardFeature, true)
         typedArray.recycle()
+        orientation = VERTICAL
     }
 
     internal fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor?) {
