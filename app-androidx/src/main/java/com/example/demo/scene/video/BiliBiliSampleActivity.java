@@ -91,28 +91,32 @@ public class BiliBiliSampleActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mBinding.videoContainer.getLayoutParams();
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mBinding.videoContainer.getLayoutParams();
         RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) mBinding.videoView.getLayoutParams();
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             checkoutSystemUIMode(true);
             psize = DisplayUtils.getScreenSize(this);
-            layoutParams.width = psize.first;
+//            layoutParams.width = psize.first;
             videoViewLayoutParams.width = psize.first;
-            layoutParams.height = psize.first * 9 / 16;
+//            layoutParams.height = psize.first * 9 / 16;
             videoViewLayoutParams.height = psize.first * 9 / 16;
             mBinding.inputH.setVisibility(View.GONE);
             mBinding.checkout.setVisibility(View.VISIBLE);
+            mBinding.actionLayout.setVisibility(View.VISIBLE);
+            mBinding.actionLayout.requestLayout();
         } else {
             checkoutSystemUIMode(false);
             Pair<Integer, Integer> size = DisplayUtils.getScreenSize(this);
-            layoutParams.width = size.first;
+//            layoutParams.width = size.first;
             videoViewLayoutParams.width = size.first;
-            layoutParams.height = psize.first;
+//            layoutParams.height = psize.first;
             videoViewLayoutParams.height = psize.first;
             mBinding.inputH.setVisibility(View.VISIBLE);
             mBinding.checkout.setVisibility(View.GONE);
+            mBinding.actionLayout.setVisibility(View.GONE);
+            mBinding.actionLayout.requestLayout();
         }
-        mBinding.videoContainer.setLayoutParams(layoutParams);
+//        mBinding.videoContainer.setLayoutParams(layoutParams);
         mBinding.videoView.setLayoutParams(videoViewLayoutParams);
     }
 
