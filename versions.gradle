@@ -29,7 +29,7 @@ androidx.multidex = "androidx.multidex:multidex:$versions.androidx"
 androidx.constraint = "androidx.constraintlayout:constraintlayout:$versions.androidx"
 ext.deps.androidx = androidx
 
-ext.deps.pageindicator = "com.romandanylyk:pageindicatorview:$versions.pageindicator"
+ext.deps.pageindicator = "com.github.romandanylyk:PageIndicatorView:$versions.pageindicator"
 ext.deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 ext.deps.panelSwitchHelper_androidx = "com.github.YummyLau:PanelSwitchHelper:$versions.panelSwitchHelper"
 ext.deps.circleimageview = "de.hdodenhof:circleimageview:$versions.circleimageview"
