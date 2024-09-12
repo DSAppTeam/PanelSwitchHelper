@@ -133,6 +133,7 @@ class PanelSwitchHelper private constructor(builder: Builder, showKeyboard: Bool
          * 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
          * 当 windowInsetsRootView == null 时，会默认使用 window.decorView 作为 rootView
          */
+        @Deprecated("")
         fun setWindowInsetsRootView(view: View) : Builder{
             windowInsetsRootView = view
             return this
