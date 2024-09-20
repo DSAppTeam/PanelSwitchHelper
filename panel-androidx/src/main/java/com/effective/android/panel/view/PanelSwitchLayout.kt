@@ -14,7 +14,6 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -78,7 +77,6 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
 
-    @Deprecated("")
     private var windowInsetsRootView: View? = null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
@@ -331,7 +329,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                     var keyboardH = if (imeH != 0) imeH else bounds.upperBound.bottom
                     if (keyboardH == 0) {
                         LogTracker.log("onStart", "键盘高度获取失败，请实现softInputHeightCalculatorOnStart兼容正确的键盘高度")
-                        keyboardH = softInputHeightCalculatorOnStart?.invoke(animation, bounds) ?: 0
+                        keyboardH = softInputHeightCalculatorOnStart?.invoke(animation, bounds)?: 0
                     }
                     val realKeyboardH = keyboardH - navigationBarH
                     LogTracker.log("onStart", "keyboard height = $keyboardH")
@@ -421,6 +419,40 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         return window.decorView.isSystemInsetsAnimationSupport()
     }
 
+
+    /**
+     * Android 11 监听键盘变化
+     */
+    private fun keyboardChangedListener30Impl() {
+        if (!this::window.isInitialized) {
+            return
+        }
+        val rootView = windowInsetsRootView ?: window.decorView.rootView
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+            // 键盘
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            // 导航
+            val hasNavigation = insets.isVisible(WindowInsetsCompat.Type.navigationBars())
+            val navigationH = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+
+            var keyboardH = if (imeVisible && hasNavigation) imeHeight - navigationH else imeHeight
+            // 发现部分机型键盘可见时，键盘高度返回0，因此这里用已保存的键盘高度
+            if (imeVisible && keyboardH == 0) {
+                keyboardH = getKeyBoardHeight(context)
+            }
+            LogTracker.log("$TAG#WindowInsetsListener", "KeyBoardHeight : $keyboardH，isShow $imeVisible")
+
+            if (keyboardH != lastKeyboardHeight) {
+                val contentHeight = getScreenHeightWithoutSystemUI(window)
+                val androidQCompatNavH = deviceRuntime?.run { getAndroidQNavHIfNavIsInvisible(this, window) } ?: 0
+                val realHeight = keyboardH + androidQCompatNavH
+                handleKeyboardStateChanged(keyboardH, realHeight, contentHeight)
+                LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
+            }
+            ViewCompat.onApplyWindowInsets(view, insets)
+        }
+    }
 
     /**
      * 监听键盘变化
@@ -548,8 +580,12 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!this::window.isInitialized) {
             return
         }
-        globalLayoutListener?.let {
-            window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(it)
+        if (keyboardAnimationFeature) {
+            keyboardChangedListener30Impl()
+        } else {
+            globalLayoutListener?.let {
+                window.decorView.rootView.viewTreeObserver.addOnGlobalLayoutListener(it)
+            }
         }
         hasAttachLister = true
     }
@@ -559,8 +595,13 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         if (!this::window.isInitialized) {
             return
         }
-        globalLayoutListener?.let {
-            window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
+        if (keyboardAnimationFeature) {
+            val rootView = windowInsetsRootView ?: window.decorView.rootView
+            ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
+        } else {
+            globalLayoutListener?.let {
+                window.decorView.rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
+            }
         }
         hasAttachLister = false
     }
