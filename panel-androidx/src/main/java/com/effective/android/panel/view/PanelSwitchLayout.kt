@@ -77,6 +77,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
     private lateinit var panelContainer: PanelContainer
     private lateinit var window: Window
 
+    @Deprecated("")
     private var windowInsetsRootView: View? = null // 用于Android 11以上，通过OnApplyWindowInsetsListener获取键盘高度
     private var triggerViewClickInterceptor: TriggerViewClickInterceptor? = null
     private val contentScrollMeasurers = mutableListOf<ContentScrollMeasurer>()
