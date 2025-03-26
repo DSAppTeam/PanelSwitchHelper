@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.SystemBarStyle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -29,6 +31,7 @@ import com.example.demo.Constants;
 import com.example.demo.anno.ChatPageType;
 import com.example.demo.scene.chat.adapter.ChatAdapter;
 import com.example.demo.scene.chat.adapter.ChatInfo;
+import com.example.demo.scene.chat.emotion.Emotion;
 import com.example.demo.scene.chat.emotion.EmotionPagerView;
 import com.example.demo.scene.chat.emotion.Emotions;
 import com.example.demo.systemui.StatusbarHelper;
@@ -103,6 +106,19 @@ public class ChatActivity extends AppCompatActivity {
                 mBinding.getRoot().setBackgroundResource(R.drawable.bg_gradient);
                 break;
             }
+
+            case ChatPageType.EDGE_TO_EDGE: {
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+                SystemBarStyle statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT);
+                SystemBarStyle navigationBarStyle = SystemBarStyle.auto( Color.TRANSPARENT, Color.TRANSPARENT);
+                EdgeToEdge.enable(this, statusBarStyle, navigationBarStyle);
+                mBinding = DataBindingUtil.setContentView(this, R.layout.common_chat_layout);
+                break;
+            }
+
+            default:
+                break;
+
         }
         initView();
     }

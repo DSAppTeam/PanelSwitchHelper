@@ -19,6 +19,7 @@
             android:id="@+id/cus_title_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            tools:visibility="visible"
             android:background="@color/colorPrimary"
             android:visibility="gone">
 

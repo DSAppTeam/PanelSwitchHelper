@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.demo"
-        minSdkVersion config.min_sdk_version
+        minSdkVersion 21
         targetSdkVersion config.target_sdk_version
         versionCode config.version_code
         versionName config.version_name
@@ -60,11 +60,13 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation deps.androidx.core
     implementation deps.androidx.appcompat
     implementation deps.androidx.recyclerview
     implementation deps.androidx.constraint
     implementation deps.pageindicator
     implementation deps.circleimageview
+    implementation 'androidx.activity:activity-ktx:1.10.1'
 //    implementation deps.panelSwitchHelper_androidx
     implementation project(":panel-androidx")
 //    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.12'

@@ -28,6 +28,7 @@ import com.example.demo.util.DisplayUtils;
  * Email: yummyl.lau@gmail.com
  * blog: yummylau.com
  */
+/** @noinspection deprecation*/
 public class BiliBiliSampleActivity extends AppCompatActivity {
 
     private ActivityBilibiliVideoLayoutBinding mBinding;

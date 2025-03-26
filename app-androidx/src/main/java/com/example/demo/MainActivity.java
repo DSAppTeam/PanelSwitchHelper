@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity{
     final String activity_4 = "activity 有标题栏，状态栏着色";
     final String activity_5 = "activity 无标题栏，状态栏透明，不绘制到状态栏";
     final String activity_6 = "activity 无标题栏，状态栏透明，绘制到状态栏";
+    final String activity_7 = "activity EdgeToEdge";
 
     final String fragment_title = "聊天场景 Fragment实现";
     final String fragment_1 = "fragment 无标题栏";
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity{
     };
 
     final String[][] childStrings = {
-            {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6},
+            {activity_1,activity_2,activity_3,activity_4,activity_5,activity_6,activity_7},
             {fragment_1,fragment_2,fragment_3,fragment_4},
             {view_pager_0,view_pager_1,view_pager_2},
             {window_1,window_2,window_3},
@@ -202,6 +203,10 @@ public class MainActivity extends AppCompatActivity{
                     }
                     case activity_6:{
                         ChatActivity.start(MainActivity.this, ChatPageType.TRANSPARENT_STATUS_BAR_DRAW_UNDER);
+                        break;
+                    }
+                    case activity_7:{
+                        ChatActivity.start(MainActivity.this, ChatPageType.EDGE_TO_EDGE);
                         break;
                     }
 

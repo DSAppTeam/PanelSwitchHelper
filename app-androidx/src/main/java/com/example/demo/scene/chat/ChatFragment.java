@@ -32,6 +32,7 @@ import com.example.demo.systemui.StatusbarHelper;
 import com.example.demo.util.DisplayUtils;
 import com.rd.PageIndicatorView;
 
+/** @noinspection deprecation*/
 public class ChatFragment extends Fragment {
 
     private CommonChatWithTitlebarLayoutBinding mBinding;
