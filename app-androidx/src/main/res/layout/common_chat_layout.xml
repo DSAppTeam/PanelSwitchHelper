@@ -128,6 +128,17 @@
                     android:paddingRight="@dimen/dp_10"
                     android:paddingBottom="@dimen/dp_7.5">
 
+
+                    <TextView
+                        android:id="@+id/tv_dialog"
+                        android:layout_width="60dp"
+                        android:text="弹窗"
+                        android:background="#7BC4E087"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="match_parent"/>
+
+
                     <!-- 更多入口 -->
                     <ImageView
                         android:id="@+id/add_btn"

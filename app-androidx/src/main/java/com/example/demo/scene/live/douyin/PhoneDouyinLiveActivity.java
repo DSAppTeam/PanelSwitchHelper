@@ -128,11 +128,9 @@ public class PhoneDouyinLiveActivity extends AppCompatActivity {
                     })
                     //可选
                     .addViewClickListener(view -> {
-                        switch (view.getId()) {
-                            case R.id.edit_text:
-                            case R.id.emotion_btn: {
-                                scrollToBottom();
-                            }
+                        int id = view.getId();
+                        if (id == R.id.edit_text || id == R.id.emotion_btn) {
+                            scrollToBottom();
                         }
                         Log.d(TAG, "点击了View : " + view);
                     })
@@ -166,16 +164,13 @@ public class PhoneDouyinLiveActivity extends AppCompatActivity {
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_emotion: {
-                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                        int viewPagerSize = height - DisplayUtils.dip2px(PhoneDouyinLiveActivity.this, 30f);
-                                        pagerView.buildEmotionViews(
-                                                mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                                mBinding.input,
-                                                Emotions.getEmotions(), width, viewPagerSize);
-                                        break;
-                                    }
+                                if (((PanelView) panelView).getId() == R.id.panel_emotion) {
+                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(PhoneDouyinLiveActivity.this, 30f);
+                                    pagerView.buildEmotionViews(
+                                            mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                            mBinding.input,
+                                            Emotions.getEmotions(), width, viewPagerSize);
                                 }
                             }
                         }

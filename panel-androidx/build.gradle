@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 android {
+    namespace 'com.effective.android.panel'  // 替换为你的包名
     compileSdkVersion config.compile_sdk_version
 
     defaultConfig {
@@ -13,6 +14,11 @@ android {
         versionCode config.version_code
         versionName config.version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -33,8 +39,8 @@ dependencies {
 }
 
 task generateSourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
     from android.sourceSets.main.java.srcDirs
-    classifier 'sources'
 }
 
 def versionName = "1.5.12"

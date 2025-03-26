@@ -63,15 +63,13 @@ public class BiliBiliCommentPopWindow extends PopupWindow {
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_bilibili: {
-                                        View root = view.findViewById(R.id.danmu_setting);
-                                        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
-                                        if (layoutParams.width != width || layoutParams.height == height) {
-                                            layoutParams.width = width;
-                                            layoutParams.height = height;
-                                            root.setLayoutParams(layoutParams);
-                                        }
+                                if (((PanelView) panelView).getId() == R.id.panel_bilibili) {
+                                    View root = view.findViewById(R.id.danmu_setting);
+                                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) root.getLayoutParams();
+                                    if (layoutParams.width != width || layoutParams.height == height) {
+                                        layoutParams.width = width;
+                                        layoutParams.height = height;
+                                        root.setLayoutParams(layoutParams);
                                     }
                                 }
                             }

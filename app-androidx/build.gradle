@@ -1,10 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 
 android {
+    namespace 'com.effective'  // 替换为你的包名
     compileSdkVersion config.compile_sdk_version
 //    buildToolsVersion config.build_tool_version
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     dataBinding {
         enabled = true
@@ -38,8 +43,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     lintOptions {

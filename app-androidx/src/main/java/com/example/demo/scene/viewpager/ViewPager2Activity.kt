@@ -15,7 +15,6 @@ import com.example.demo.Constants
 import com.example.demo.anno.ChatPageType
 import com.example.demo.scene.chat.ChatFragment
 import com.example.demo.systemui.StatusbarHelper
-import kotlinx.android.synthetic.main.activity_view_pager_2_layout.view_pager
 
 /**
  * author : linzheng
@@ -28,6 +27,7 @@ class ViewPager2Activity : AppCompatActivity() {
 
 
     val orientation by lazy { intent.getIntExtra("extras_orientation", ViewPager2.ORIENTATION_VERTICAL) }
+    private val viewPager by lazy { findViewById<ViewPager2>(R.id.view_pager) }
 
 
     companion object {
@@ -45,8 +45,8 @@ class ViewPager2Activity : AppCompatActivity() {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT)
         setContentView(R.layout.activity_view_pager_2_layout)
-        view_pager.orientation = orientation
-        view_pager.adapter = ChatFragmentPager2Adapter(this)
+        viewPager.orientation = orientation
+        viewPager.adapter = ChatFragmentPager2Adapter(this)
     }
 
 }

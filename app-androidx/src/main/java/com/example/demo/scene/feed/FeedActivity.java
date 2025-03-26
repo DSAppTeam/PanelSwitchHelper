@@ -86,20 +86,15 @@ public class FeedActivity extends AppCompatActivity {
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_emotion: {
-                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                        int viewPagerSize = height - DisplayUtils.dip2px(FeedActivity.this, 30f);
-                                        pagerView.buildEmotionViews(
-                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                                mBinding.editText,
-                                                Emotions.getEmotions(), width, viewPagerSize);
-                                        break;
-                                    }
-                                    case R.id.panel_addition: {
-                                        //auto center,nothing to do
-                                        break;
-                                    }
+                                int id = ((PanelView) panelView).getId();
+                                if (id == R.id.panel_emotion) {
+                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(FeedActivity.this, 30f);
+                                    pagerView.buildEmotionViews(
+                                            (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                            mBinding.editText,
+                                            Emotions.getEmotions(), width, viewPagerSize);
+                                } else if (id == R.id.panel_addition) {//auto center,nothing to do
                                 }
                             }
                         }

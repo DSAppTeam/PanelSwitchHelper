@@ -15,7 +15,6 @@ import com.example.demo.scene.chat.emotion.EmotionPagerView
 import com.example.demo.scene.chat.emotion.Emotions
 import com.example.demo.util.DisplayUtils
 import com.rd.PageIndicatorView
-import kotlinx.android.synthetic.main.activity_fix_issues_layout.*
 
 /**
  * author : linzheng
@@ -34,6 +33,8 @@ class FixIssuesActivity : AppCompatActivity() {
     private val emotionView: View
         get() = findViewById(R.id.emotion_btn)
 
+
+    private val ivAddTest by lazy { findViewById<View>(R.id.iv_add_test) }
 
     companion object {
 
@@ -56,7 +57,7 @@ class FixIssuesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fix_issues_layout)
-        iv_add_test.setOnClickListener {
+        ivAddTest.setOnClickListener {
             val intent = Intent(this, TestSecondActivity::class.java)
             startActivity(intent)
 

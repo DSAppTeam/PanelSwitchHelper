@@ -106,12 +106,9 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                     })
                     //可选
                     .addViewClickListener(view -> {
-                        switch (view.getId()) {
-                            case R.id.edit_text:
-                            case R.id.add_btn:
-                            case R.id.emotion_btn: {
-                                scrollToBottom();
-                            }
+                        int id = view.getId();
+                        if (id == R.id.edit_text || id == R.id.add_btn || id == R.id.emotion_btn) {
+                            scrollToBottom();
                         }
                         Log.d(TAG, "点击了View : " + view);
                     })
@@ -143,20 +140,15 @@ public class ChatCusContentScrollActivity extends AppCompatActivity {
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_emotion: {
-                                        EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
-                                        int viewPagerSize = height - DisplayUtils.dip2px(ChatCusContentScrollActivity.this, 30f);
-                                        pagerView.buildEmotionViews(
-                                                (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
-                                                mBinding.editText,
-                                                Emotions.getEmotions(), width, viewPagerSize);
-                                        break;
-                                    }
-                                    case R.id.panel_addition: {
-                                        //auto center,nothing to do
-                                        break;
-                                    }
+                                int id = ((PanelView) panelView).getId();
+                                if (id == R.id.panel_emotion) {
+                                    EmotionPagerView pagerView = mBinding.getRoot().findViewById(R.id.view_pager);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(ChatCusContentScrollActivity.this, 30f);
+                                    pagerView.buildEmotionViews(
+                                            (PageIndicatorView) mBinding.getRoot().findViewById(R.id.pageIndicatorView),
+                                            mBinding.editText,
+                                            Emotions.getEmotions(), width, viewPagerSize);
+                                } else if (id == R.id.panel_addition) {//auto center,nothing to do
                                 }
                             }
                         }

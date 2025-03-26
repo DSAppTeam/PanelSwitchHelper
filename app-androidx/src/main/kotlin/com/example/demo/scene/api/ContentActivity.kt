@@ -163,6 +163,7 @@ class ContentActivity : AppCompatActivity() {
         findViewById<AutoHidePanelRecyclerView>(R.id.recycler_view).setPanelSwitchHelper(mHelper)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (mHelper != null && mHelper!!.hookSystemBackByPanelSwitcher()) {
             return

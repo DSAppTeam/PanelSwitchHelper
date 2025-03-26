@@ -169,7 +169,7 @@ class ContentContainerImpl(private val mViewGroup: ViewGroup, private val autoRe
                     }
                 })
                 mainInputView.accessibilityDelegate = object : View.AccessibilityDelegate() {
-                    override fun sendAccessibilityEvent(host: View?, eventType: Int) {
+                    override fun sendAccessibilityEvent(host: View, eventType: Int) {
                         super.sendAccessibilityEvent(host, eventType)
                         if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
                             if (realEditViewAttach && mainInputView.hasFocus() && !checkoutInputRight) {

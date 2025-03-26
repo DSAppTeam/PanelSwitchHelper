@@ -36,9 +36,9 @@ ext.deps.circleimageview = "de.hdodenhof:circleimageview:$versions.circleimagevi
 
 def config = [:]
 config.min_sdk_version = 16
-config.target_sdk_version = 31
-config.compile_sdk_version = 31
-config.build_tool_version = "30.0.3"
+config.target_sdk_version = 35
+config.compile_sdk_version = 35
+config.build_tool_version = "35.0.1"
 config.version_code = 1
 config.version_name = "1.0"
 config.java_source_version = "1.8"

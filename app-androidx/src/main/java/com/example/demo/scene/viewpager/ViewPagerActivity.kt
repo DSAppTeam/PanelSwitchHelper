@@ -6,9 +6,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.effective.R
 import com.example.demo.systemui.StatusbarHelper
-import kotlinx.android.synthetic.main.activity_view_pager_layout.view_pager
 
 /**
  * author : linzheng
@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_view_pager_layout.view_pager
  */
 class ViewPagerActivity : AppCompatActivity() {
 
+    private val viewPager by lazy { findViewById<ViewPager>(R.id.view_pager) }
 
     companion object {
 
@@ -34,7 +35,7 @@ class ViewPagerActivity : AppCompatActivity() {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT)
         setContentView(R.layout.activity_view_pager_layout)
-        view_pager.adapter = ChatFragmentPagerAdapter(supportFragmentManager)
+        viewPager.adapter = ChatFragmentPagerAdapter(supportFragmentManager)
     }
 
 

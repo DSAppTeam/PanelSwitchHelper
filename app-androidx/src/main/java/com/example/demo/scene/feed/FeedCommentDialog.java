@@ -100,16 +100,13 @@ public class FeedCommentDialog extends PanelDialog implements DialogInterface.On
                         @Override
                         public void onPanelSizeChange(IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
                             if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_emotion: {
-                                        EmotionPagerView pagerView = rootView.findViewById(R.id.view_pager);
-                                        int viewPagerSize = height - DisplayUtils.dip2px(getContext(), 30f);
-                                        pagerView.buildEmotionViews(
-                                                rootView.findViewById(R.id.pageIndicatorView),
-                                                rootView.findViewById(R.id.edit_text),
-                                                Emotions.getEmotions(), width, viewPagerSize);
-                                        break;
-                                    }
+                                if (((PanelView) panelView).getId() == R.id.panel_emotion) {
+                                    EmotionPagerView pagerView = rootView.findViewById(R.id.view_pager);
+                                    int viewPagerSize = height - DisplayUtils.dip2px(getContext(), 30f);
+                                    pagerView.buildEmotionViews(
+                                            rootView.findViewById(R.id.pageIndicatorView),
+                                            rootView.findViewById(R.id.edit_text),
+                                            Emotions.getEmotions(), width, viewPagerSize);
                                 }
                             }
                         }
