@@ -184,7 +184,19 @@ object DisplayUtil {
     @JvmStatic
     @TargetApi(14)
     fun isNavigationBarShow(context: Context, window: Window): Boolean {
-        return isNavBarVisible(context, window)
+        // 添加 windowInsetsCompat 判断是否含有导航栏
+        return isNavBarVisibleByInsets(window) || isNavBarVisible(context, window)
+    }
+
+
+    private fun isNavBarVisibleByInsets(window: Window): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val insets = window.decorView.rootWindowInsets ?: return false
+            val windowInsetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets)
+            return windowInsetsCompat.isVisible(WindowInsetsCompat.Type.navigationBars())
+        } else {
+            return false
+        }
     }
 
     /**

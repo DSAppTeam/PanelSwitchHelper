@@ -136,6 +136,10 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
         orientation = VERTICAL
     }
 
+    fun setAndroid11KeyboardFeature(enable: Boolean) {
+        enableAndroid11KeyboardFeature = enable
+    }
+
     internal fun setTriggerViewClickInterceptor(interceptor: TriggerViewClickInterceptor?) {
         this.triggerViewClickInterceptor = interceptor
     }
