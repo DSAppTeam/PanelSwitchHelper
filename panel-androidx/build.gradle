@@ -65,3 +65,18 @@ afterEvaluate {
     }
 }
 
+
+afterEvaluate {
+    // 查找所有 GenerateModuleMetadata 类型的任务
+    tasks.withType(org.gradle.api.publish.tasks.GenerateModuleMetadata).configureEach { metadataTask ->
+        println "metadataTask: $metadataTask"
+        // 确保 generateSourcesJar 任务存在
+        def sourcesJarTask = tasks.findByName('generateSourcesJar')
+        println "sourcesJarTask: $sourcesJarTask"
+        if (sourcesJarTask != null) {
+            metadataTask.dependsOn(sourcesJarTask)
+        }
+    }
+}
+
+
