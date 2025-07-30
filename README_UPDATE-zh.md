@@ -84,3 +84,5 @@
     * 新增 `PanelSwitchLayout`提供两个兼容方法（`softInputHeightCalculatorOnStart`，`softInputHeightCalculatorOnProgress`），针对Android 11以上开启键盘动画特性，高度获取失败时，对外提供兼容方案。
 * 1.5.5 修复已知Bug，支持ViewPager、ViewPager2场景。
     * 添加 PanelSwitchLayout.recycle() 方法，用于释放键盘高度变化监听器。
+* 1.5.13 适配Android 15 Edge-To-Edge
+    * 适配Android 15 部分设备判断 isNavBarVisibleByInsets 不正常，导致布局显示异常的问题。
