@@ -3,33 +3,23 @@ package com.example.demo.scene.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.WindowCallbackWrapper;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.effective.R;
 import com.effective.databinding.ActivityChatFragmentLayoutBinding;
 import com.example.demo.Constants;
 import com.example.demo.anno.ChatPageType;
 import com.example.demo.systemui.StatusbarHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 public class ChatFragmentActivity extends FragmentActivity {
 
@@ -47,6 +37,17 @@ public class ChatFragmentActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         //涉及fragment页面沉浸的，建议统一都在fragment里面，这样做是为了多fragment的时候灵活控制
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat_fragment_layout);
+        // 适配Android 15
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.getRoot(), new OnApplyWindowInsetsListener() {
+            @NonNull
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            }
+        });
+
         StatusbarHelper.setStatusBarColor(this, Color.TRANSPARENT);
         fragment = new ChatFragment();
         fragment.setArguments(getIntent().getExtras());

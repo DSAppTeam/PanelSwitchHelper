@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.effective.R
 import com.effective.android.panel.PanelSwitchHelper
@@ -59,6 +63,20 @@ class ContentActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.title).text = "自定义布局"
             }
         }
+
+        // 获取根视图（DecorView 下的 content FrameLayout）
+        val rootView = findViewById<ViewGroup>(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(
+                top = systemBars.top,
+                left = systemBars.left,
+                bottom = systemBars.bottom,
+                right = systemBars.right
+            )
+            insets
+        }
+
         initView()
     }
 

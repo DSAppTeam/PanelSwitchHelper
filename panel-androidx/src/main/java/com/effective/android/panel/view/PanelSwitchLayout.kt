@@ -455,7 +455,7 @@ class PanelSwitchLayout : LinearLayout, ViewAssertion {
                 handleKeyboardStateChanged(keyboardH, realHeight, contentHeight)
                 LogTracker.log("$TAG#WindowInsetsListener", "requestLayout")
             }
-            ViewCompat.onApplyWindowInsets(view, insets)
+            insets
         }
     }
 
