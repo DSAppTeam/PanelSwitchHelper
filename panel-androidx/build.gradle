@@ -43,7 +43,7 @@ task generateSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-def versionName = "1.5.13"
+def versionName = "1.5.14"
 
 // Because the components are created only during the afterEvaluate phase, you must
 // configure your publications using the afterEvaluate() lifecycle method.

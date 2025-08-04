@@ -69,7 +69,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.10.1'
 //    implementation deps.panelSwitchHelper_androidx
     implementation project(":panel-androidx")
-//    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.13'
+//    implementation 'com.github.DSAppTeam:PanelSwitchHelper:v1.5.14'
 //    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     // codeLocator
