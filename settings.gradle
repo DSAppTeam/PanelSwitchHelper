@@ -1,5 +1,7 @@
 //include ':app'
 //include ':panel'
 
-include ':app-androidx'
+if (System.getenv("JITPACK") != "true") {
+    include ':app-androidx'
+}
 include ':panel-androidx'

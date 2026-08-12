@@ -1,5 +1,6 @@
 ### 更新日志
 
+* 1.5.15 修复键盘弹出后 `localLocation` 计算错误的问题。
 * 1.0.1 支持兼容AndroidQ+焦点冲突，支持视频模式
 * 1.0.2 支持微信式滑动列表收起面板同时列表响应滑动事件，提升用户体验
 * 1.0.3 修复 [issue](https://github.com/YummyLau/PanelSwitchHelper/issues/10) 场景问题
